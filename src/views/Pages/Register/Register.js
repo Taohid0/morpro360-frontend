@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, Card, CardBody, CardFooter, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
 
 import {createUser} from "../../../ApiCalls/user";
-
+import validateInput from "../../../validation/input";
 
 class Register extends Component {
   constructor(props)
@@ -20,6 +20,7 @@ class Register extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+
   handleChange(event)
   {
     this.setState({[event.target.name]:event.target.value});
@@ -28,6 +29,20 @@ class Register extends Component {
   async handleSubmit(e)
   {
     e.preventDefault();
+
+    if(this.state.password !== this.state.repeatPassword)
+    {
+      alert("Password and repeated-password are not same");
+      return;
+    }
+    const validationErrors = validateInput(this.state,["email","username","password"]);
+
+    if(validationErrors)
+    {
+      alert(validationErrors);
+      return;
+    }
+
     console.log(this.state);
     try{
      const promise = await createUser(this.state); 

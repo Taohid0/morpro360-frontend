@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
 
 import {login} from "../../../ApiCalls/auth";
+import validateInput from "../../../validation/input";
+
 
 class Login extends Component {
 
@@ -26,6 +28,21 @@ class Login extends Component {
   async handleSubmit(e)
   {
     e.preventDefault();
+
+    if(this.state.password !== this.state.repeatPassword)
+    {
+      alert("Password and repeated-password are not same");
+      return;
+    }
+
+    const validationErros = validateInput(this.state,["email","password"]);
+
+    if(validationErros)
+    {
+      alert(validationErros);
+      return;
+    }
+
     try{
       const promise = await login(this.state);
       console.log(promise);
