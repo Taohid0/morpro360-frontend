@@ -8,7 +8,7 @@ function validateInput(obj,arr)
         "password" : "Password cannot be blank",
     }
     let errors = [];
-    for(let field in arr)
+    for(let field of arr)
     {
         if(!obj[field])
         {
@@ -19,6 +19,7 @@ function validateInput(obj,arr)
     {
         return false;
     }
+    console.log(errors);
     return errors;
 }
 export default validateInput;

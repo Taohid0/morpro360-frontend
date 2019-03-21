@@ -28,13 +28,6 @@ class Login extends Component {
   async handleSubmit(e)
   {
     e.preventDefault();
-
-    if(this.state.password !== this.state.repeatPassword)
-    {
-      alert("Password and repeated-password are not same");
-      return;
-    }
-
     const validationErros = validateInput(this.state,["email","password"]);
 
     if(validationErros)

@@ -35,7 +35,7 @@ class Register extends Component {
       alert("Password and repeated-password are not same");
       return;
     }
-    const validationErrors = validateInput(this.state,["email","username","password"]);
+    const validationErrors = validateInput(this.state,["email","userName","password"]);
 
     if(validationErrors)
     {
