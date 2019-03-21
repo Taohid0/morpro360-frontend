@@ -1,7 +1,7 @@
 import axios from "axios";
-import AppConfig from "../../config/AppConfig";
+import AppConfig from "../config/AppConfig";
 
-async function register(data)
+export async function createUser(data)
 {
     const {userURL} = AppConfig;
 
@@ -12,18 +12,8 @@ async function register(data)
     });
     return promise;
 }
-async function login(data){
-    const {loginURL} = AppConfig;
 
-    const promise = await axios({
-        method: "POST",
-        url:loginURL,
-        data
-    });
-    return promise;
-}
-
-async function getAllUsers()
+export async function getAllUsers()
 {
     const {userURL} = AppConfig;
 
@@ -34,9 +24,9 @@ async function getAllUsers()
     return promise;
 }
 
-async function getSingleUser(id){
+export async function getSingleUser(id){
     let {userURL} = AppConfig;
-    userURL +=id+"/";
+    userURL +=+"/"+id+"/";
     const promise = await axios({
         method:"GET",
         url:userURL

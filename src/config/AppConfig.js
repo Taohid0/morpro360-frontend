@@ -1,10 +1,10 @@
-const localhost = "http://127.0.0.1:8000";
+const localhost = "http://localhost:3000";
 const server = "";
 const host =localhost;
 
 const APPCONFIG = {
-    userURL : host+ "/api/user/",
-    loginURL : host+"/api/login/",
+    userURL : host+ "/user",
+    loginURL : host+"/login",
  
 };
 
