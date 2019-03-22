@@ -4,7 +4,7 @@ function validateInput(obj,arr)
         "firstName":"Fist name cannot be blank",
         "lastName": "Last name cannot be blank",
         "userName":"Username cannot be blank",
-        "email" :"Email cannot blank",
+        "email" :"Email cannot be blank",
         "password" : "Password cannot be blank",
     }
     let errors = [];

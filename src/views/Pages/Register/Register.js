@@ -19,6 +19,7 @@ import validateInput from "../../../validation/input";
 
 import userService from "../../../services/User";
 import { STATUS_CODES } from "http";
+import DangerModal from "../../CustomModals/DangerModal";
 
 class Register extends Component {
   constructor(props) {
@@ -29,31 +30,42 @@ class Register extends Component {
       firstName: "",
       lastName: "",
       password: "",
-      repeatPassword: ""
+      repeatPassword: "",
+      isVisible: false,
+      modalErrors: ""
     };
 
     this.userService = new userService();
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
   }
 
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
+  }
+  toggleModal() {
+    this.setState((state, props) => ({
+      isVisible: !state.isVisible
+    }));
   }
 
   async handleSubmit(e) {
     e.preventDefault();
 
     if (this.state.password !== this.state.repeatPassword) {
-      alert("Password and repeated-password are not same");
+      const errormessage = "Password and repeated-password are not same";
+      this.setState({ modalErrors: errormessage });
+      this.toggleModal();
+
       return;
     }
 
-    const stateData = Object.assign({},this.state);
+    const stateData = Object.assign({}, this.state);
     console.log(stateData);
     delete stateData.repeatPassword;
-    console.log(stateData)
+    console.log(stateData);
 
     const validationErrors = validateInput(stateData, [
       "email",
@@ -62,7 +74,11 @@ class Register extends Component {
     ]);
 
     if (validationErrors) {
-      alert(validationErrors);
+      const errormessage = validationErrors.join("\n");
+      console.log(errormessage);
+      this.setState({ modalErrors: errormessage });
+      this.toggleModal();
+
       return;
     }
 
@@ -88,6 +104,11 @@ class Register extends Component {
   render() {
     return (
       <div className="app flex-row align-items-center">
+        <DangerModal
+          isVisible={this.state.isVisible}
+          errors={this.state.modalErrors}
+          toggleModal={this.toggleModal}
+        />
         <Container>
           <Row className="justify-content-center">
             <Col md="9" lg="7" xl="6">
@@ -200,7 +221,7 @@ class Register extends Component {
                   <Row>
                     <Col xs="12" sm="12">
                       <Button className="btn-google-plus mb-1" block>
-                      <i className="fa fa-google-plus"></i>
+                        <i className="fa fa-google-plus" />
                         <span> Login With gmail</span>
                       </Button>
                     </Col>
