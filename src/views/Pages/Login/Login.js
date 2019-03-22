@@ -17,6 +17,7 @@ import {
 
 import { login } from "../../../ApiCalls/auth";
 import validateInput from "../../../validation/input";
+import DangerModal from "../../CustomModals/DangerModal";
 
 class Login extends Component {
   constructor(props) {
@@ -24,14 +25,22 @@ class Login extends Component {
 
     this.state = {
       email: "",
-      password: ""
+      password: "",
+      isVisible: false,
+      modalErrors: ""
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
   }
 
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
+  }
+  toggleModal() {
+    this.setState((state, props) => ({
+      isVisible: !state.isVisible
+    }));
   }
 
   async handleSubmit(e) {
@@ -49,13 +58,17 @@ class Login extends Component {
       if (data.status) {
         const status = this.userService.storeUser(data.data);
         if (!status) {
-          alert("something wrong, please try again later");
+          const errormessage = "Something wrong, please try again later";
+          this.setState({ modalErrors: errormessage });
+          this.toggleModal();
         }
       } else {
         alert("errors to be added later");
       }
     } catch (err) {
-      alert("Something wrong, please try again later");
+      const errormessage = "Something wrong, please try again later";
+      this.setState({ modalErrors: errormessage });
+      this.toggleModal();
       console.log(err);
     }
   }

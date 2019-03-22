@@ -55,7 +55,7 @@ class Register extends Component {
     e.preventDefault();
 
     if (this.state.password !== this.state.repeatPassword) {
-      const errormessage = "Password and repeated-password are not same";
+      const errormessage = "Password and repeated password are not same";
       this.setState({ modalErrors: errormessage });
       this.toggleModal();
 
@@ -75,7 +75,6 @@ class Register extends Component {
 
     if (validationErrors) {
       const errormessage = validationErrors.join("\n");
-      console.log(errormessage);
       this.setState({ modalErrors: errormessage });
       this.toggleModal();
 
@@ -90,14 +89,17 @@ class Register extends Component {
       if (data.status) {
         const status = this.userService.storeUser(data.data);
         if (!status) {
-          alert("something wrong, please try again later");
+          const errormessage = "Something wrong, please try again later";
+          this.setState({ modalErrors: errormessage });
+          this.toggleModal();
         }
       } else {
         alert("errors to be added later");
       }
     } catch (err) {
-      alert("Something wrong, please try again later");
-      console.log(err.status);
+      const errormessage = "Something wrong, please try again later";
+      this.setState({ modalErrors: errormessage });
+      this.toggleModal();
     }
   }
 
