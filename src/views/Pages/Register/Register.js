@@ -20,6 +20,7 @@ import validateInput from "../../../validation/input";
 import userService from "../../../services/User";
 import { STATUS_CODES } from "http";
 import DangerModal from "../../CustomModals/DangerModal";
+import { stat } from "fs";
 
 class Register extends Component {
   constructor(props) {
@@ -63,9 +64,11 @@ class Register extends Component {
     }
 
     const stateData = Object.assign({}, this.state);
-    console.log(stateData);
+
     delete stateData.repeatPassword;
-    console.log(stateData);
+    delete stateData.isVisible;
+    delete stateData.modalErrors;
+ 
 
     const validationErrors = validateInput(stateData, [
       "email",
@@ -94,7 +97,9 @@ class Register extends Component {
           this.toggleModal();
         }
       } else {
-        alert("errors to be added later");
+        const errormessage = data.errors.join("\n");
+      this.setState({ modalErrors: errormessage });
+      this.toggleModal();
       }
     } catch (err) {
       const errormessage = "Something wrong, please try again later";

@@ -63,7 +63,9 @@ class Login extends Component {
           this.toggleModal();
         }
       } else {
-        alert("errors to be added later");
+        const errormessage = data.errors.join("\n");
+        this.setState({ modalErrors: errormessage });
+        this.toggleModal();
       }
     } catch (err) {
       const errormessage = "Something wrong, please try again later";
