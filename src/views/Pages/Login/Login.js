@@ -18,6 +18,7 @@ import {
 import { login } from "../../../ApiCalls/auth";
 import validateInput from "../../../validation/input";
 import DangerModal from "../../CustomModals/DangerModal";
+import userService from "../../../services/User";
 
 class Login extends Component {
   constructor(props) {
@@ -29,6 +30,9 @@ class Login extends Component {
       isVisible: false,
       modalErrors: ""
     };
+
+    this.userService = new userService();
+
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
@@ -45,16 +49,19 @@ class Login extends Component {
 
   async handleSubmit(e) {
     e.preventDefault();
-    const validationErros = validateInput(this.state, ["email", "password"]);
+    const validationErrors = validateInput(this.state, ["email", "password"]);
 
-    if (validationErros) {
-      alert(validationErros);
+    if (validationErrors) {
+      const errormessage = validationErrors.join("\n");
+      this.setState({ modalErrors: errormessage });
+      this.toggleModal();
       return;
     }
 
     try {
       const response = await login(this.state);
       const data = response.data;
+      console.log(data);
       if (data.status) {
         const status = this.userService.storeUser(data.data);
         if (!status) {
@@ -78,6 +85,11 @@ class Login extends Component {
   render() {
     return (
       <div className="app flex-row align-items-center">
+         <DangerModal
+          isVisible={this.state.isVisible}
+          errors={this.state.modalErrors}
+          toggleModal={this.toggleModal}
+        />
         <Container>
           <Row className="justify-content-center">
             <Col md="8">

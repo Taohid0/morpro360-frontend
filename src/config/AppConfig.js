@@ -4,7 +4,7 @@ const host =localhost;
 
 const APPCONFIG = {
     userURL : host+ "/user",
-    loginURL : host+"/login",
+    loginURL : host+"/auth/login",
  
 };
 

@@ -16,7 +16,7 @@ export default class DangerModal extends Component{
        </ModalBody>
        <ModalFooter>
          {/* <Button color="danger" onClick={this.toggleDanger}>Do Something</Button>{' '} */}
-         <Button color="secondary" onClick={this.props.toggleModal}>OK</Button>
+         <Button color="secondary" onClick={this.props.toggleModal}>CLOSE</Button>
        </ModalFooter>
      </Modal>
         )
