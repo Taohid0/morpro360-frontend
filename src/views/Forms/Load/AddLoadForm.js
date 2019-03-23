@@ -28,6 +28,37 @@ import {
 export default class AddLoadForm extends Component {
   constructor(props) {
     super(props);
+
+    this.state={
+        isErrorModalVisible:false,
+        modalErrorMessage:"",
+        isSuccessfulModalVisible:false,
+        modalSuccessMessage:"",
+        name:"",
+        pickUpTime:"",
+        dropOffTime:"",
+        weight:"",
+        budget:"",
+        productDetails:"",
+        pickUpAddress:"",
+        pickUpCity:"",
+        dropOffAddress:"",
+        dropOffCity:"",
+        dropOffZipCode:"",
+        dropOffState:"",
+        phone:"",
+
+    }
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+  handleChange(e)
+  {
+      this.setState({[e.target.name]:e.target.value});
+  }
+  handleSubmit(e)
+  {
+      e.preventDefault();
   }
 
   render() {
@@ -47,13 +78,18 @@ export default class AddLoadForm extends Component {
                   id="name"
                   placeholder="Name of Load"
                   required
+                  name="name"
+                  value={this.state.name}
+                  onChange={this.handleChange}
+                  
                 />
               </FormGroup>
             </Col>
             <Col  col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
               <FormGroup>
                 <Label htmlFor="company">Select Company</Label>
-                <Input type="select" name="company" id="company">
+                <Input type="select" name="company" id="company"> 
+                {/* name value onChange need to be updated */}
                   <option>My First Company</option>
                   <option>My Second Company</option>
                   <option>My Third Company</option>
@@ -63,7 +99,7 @@ export default class AddLoadForm extends Component {
             <Col  col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
               <FormGroup>
                 <Label htmlFor="phone">Phone</Label>
-                <Input type="text" id="phone" placeholder="Phone" required />
+                <Input type="text" id="phone" placeholder="Phone" required name="phone" value={this.state.phone} onChange={this.handleChange}/>
               </FormGroup>
             </Col>
           </Row>
@@ -78,6 +114,9 @@ export default class AddLoadForm extends Component {
                   id="productDetails"
                   placeholder="Enter product information"
                   required
+                  name="productDetails"
+                  value={this.state.productDetails}
+                  onChange={this.handleChange}
                 />
               </FormGroup>
             </Col>
@@ -89,6 +128,9 @@ export default class AddLoadForm extends Component {
                   id="weight"
                   placeholder="Weight of Load"
                   required
+                  name="weight"
+                  value={this.state.weight}
+                  onChange={this.handleChange}
                 />
               </FormGroup>
             </Col>
@@ -118,6 +160,9 @@ export default class AddLoadForm extends Component {
                   type="text"
                   id="pickUpState"
                   placeholder="Enter pick up state"
+                  name="pickUpState"
+                  value={this.state.pickUpState}
+                  onChange={this.handleChange}
                 />
               </FormGroup>
             </Col>
@@ -128,6 +173,9 @@ export default class AddLoadForm extends Component {
                   type="text"
                   id="pickUpCity"
                   placeholder="Enter pick up City"
+                  name="pickUpCity"
+                  value={this.state.pickUpCity}
+                  onChange={this.handleChange}
                 />
               </FormGroup>
             </Col>
@@ -138,6 +186,9 @@ export default class AddLoadForm extends Component {
                   type="text"
                   id="pickUpZipCode"
                   placeholder="Enter pick up Zip Code"
+                  name="pickUpZipCode"
+                  value={this.state.pickUpZipCode}
+                  onChange={this.handleChange}
                 />
               </FormGroup>
             </Col>
@@ -151,6 +202,10 @@ export default class AddLoadForm extends Component {
                   type="textarea"
                   id="pickUpAddress"
                   placeholder="Enter pick up Address"
+
+                  name="pickUpAddress"
+                  value={this.state.pickUpAddress}
+                  onChange={this.handleChange}
                 />
               </FormGroup>
             </Col>
@@ -161,6 +216,9 @@ export default class AddLoadForm extends Component {
                   type="number"
                   id="budget"
                   placeholder="Enter your budget"
+                  name="budget"
+                  value={this.state.budget}
+                  onChange={this.handleChange}
                 />
               </FormGroup>
             </Col>
@@ -171,6 +229,9 @@ export default class AddLoadForm extends Component {
                   type="date"
                   id="pickUpDate"
                   placeholder="Enter pick up Date"
+                  name="pickUpDate"
+                  value={this.state.pickUpDate}
+                  onChange={this.handleChange}
                 />
               </FormGroup>
             </Col>
@@ -188,6 +249,9 @@ export default class AddLoadForm extends Component {
                   type="text"
                   id="dropOffState"
                   placeholder="Enter drop off state"
+                  name="dropOffState"
+                  value={this.state.dropOffState}
+                  onChange={this.handleChange}
                 />
               </FormGroup>
             </Col>
@@ -198,6 +262,9 @@ export default class AddLoadForm extends Component {
                   type="text"
                   id="dropOffCity"
                   placeholder="Enter drop off City"
+                  name="dropOffCity"
+                  value={this.state.dropOffCity}
+                  onChange={this.handleChange}
                 />
               </FormGroup>
             </Col>
@@ -208,6 +275,9 @@ export default class AddLoadForm extends Component {
                   type="text"
                   id="dropOffZipCode"
                   placeholder="Enter drop off Zip Code"
+                  name="dropOffZipCode"
+                  value={this.state.dropOffZipCode}
+                  onChange={this.handleChange}
                 />
               </FormGroup>
             </Col>
@@ -221,6 +291,9 @@ export default class AddLoadForm extends Component {
                   type="textarea"
                   id="dropOffAddress"
                   placeholder="Enter Drop Off Address"
+                  name="dropOffAddress"
+                  value={this.state.dropOffAddress}
+                  onChange={this.handleChange}
                 />
               </FormGroup>
             </Col>
@@ -232,6 +305,9 @@ export default class AddLoadForm extends Component {
                   type="date"
                   id="dropOffDate"
                   placeholder="Enter Drop Off Date"
+                  name="dropOffDate"
+                  value={this.state.dropOffDate}
+                  onChange={this.handleChange}
                 />
               </FormGroup>
             </Col>
