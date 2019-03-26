@@ -41,11 +41,21 @@ class Register extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
+    this.loadUserAndRedirect = this.loadUserAndRedirect.bind(this);
   }
 
-  componentWillMount()
+  componentWillMount() {
+    this.loadUserAndRedirect();
+  }
+  async loadUserAndRedirect()
   {
-    // this.props.history.push("/dashboard");
+    const user = await this.userService.getUser();
+
+    if(user)
+    {
+      this.props.history.push("/dashboard");
+    }
+    
   }
 
   handleChange(event) {
@@ -73,7 +83,6 @@ class Register extends Component {
     delete stateData.repeatPassword;
     delete stateData.isVisible;
     delete stateData.modalErrors;
- 
 
     const validationErrors = validateInput(stateData, [
       "email",
@@ -95,16 +104,18 @@ class Register extends Component {
       console.log(response);
       const data = response.data;
       if (data.status) {
-        const status = this.userService.storeUser(data.data);
+        const status = await this.userService.storeUser(data.data);
         if (!status) {
           const errormessage = "Something wrong, please try again later";
           this.setState({ modalErrors: errormessage });
           this.toggleModal();
+          return;
         }
+        this.props.history.push("/dashboard");
       } else {
         const errormessage = data.errors.join("\n");
-      this.setState({ modalErrors: errormessage });
-      this.toggleModal();
+        this.setState({ modalErrors: errormessage });
+        this.toggleModal();
       }
     } catch (err) {
       const errormessage = "Something wrong, please try again later";
