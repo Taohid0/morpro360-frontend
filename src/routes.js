@@ -40,6 +40,7 @@ const User = React.lazy(() => import('./views/Users/User'));
 //My added components
 const AddCompany = React.lazy(()=>import("./views/Component/Company/AddCompany"));
 const AddLoad = React.lazy(()=>import("./views/Component/Load/AddLoad"));
+const AddDriver = React.lazy(()=>import("./views/Component/Driver/AddDriver"));
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -85,7 +86,8 @@ const routes = [
   { path: '/users', exact: true,  name: 'Users', component: Users },
   { path: '/users/:id', exact: true, name: 'User Details', component: User },
   { path: "/add-company/", exact:true, name:"Add Company", component:AddCompany},
-  { path: "/add-load/", exact:true, name:"Add Load", component:AddLoad}
+  { path: "/add-load/", exact:true, name:"Add Load", component:AddLoad},
+  { path: "/add-driver/", exact:true, name:"Add Driver", component:AddDriver}
 ];
 
 export default routes;

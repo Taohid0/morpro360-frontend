@@ -71,12 +71,12 @@ export default class AddCompanyForm  extends Component{
                 <Input type="email" id="email" placeholder="myawesomecompany@mymail.com" name="email" value={this.state.email} onChange={this.handleChange} />
               </FormGroup>
               <FormGroup>
-                <Label htmlFor="street">Phone</Label>
+                <Label htmlFor="phone">Phone</Label>
                 <Input type="text" id="phone" placeholder="Enter company phone number" name="phone" value={this.state.phone} onChange={this.handleChange}/>
               </FormGroup>
               <FormGroup>
                   <FormGroup>
-                    <Label htmlFor="city">Description</Label>
+                    <Label htmlFor="description">Description</Label>
                     <Input type="text" id="description" placeholder="Enter company description" name="description" value={this.state.description} onChange={this.handleChange}/>
                   </FormGroup>
               </FormGroup>
