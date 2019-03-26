@@ -6,6 +6,8 @@ const APPCONFIG = {
     userURL : host+ "/user",
     loginURL : host+"/auth/login",
     companyURL:host+"/company",
+    loadURL : host+"/load",
+    driverURL:host+"/driver",
  
 };
 

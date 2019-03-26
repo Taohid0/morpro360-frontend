@@ -23,6 +23,6 @@ export default class AddLoad extends Component {
     }
   }
   render() {
-    return <AddLoadForm />;
+    return <AddLoadForm history={this.props.history}/>;
   }
 }

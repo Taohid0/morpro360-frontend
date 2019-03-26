@@ -22,6 +22,6 @@ export default class AddDriver extends Component {
   }
 
   render() {
-    return <AddDriverForm />;
+    return <AddDriverForm history={this.props.history}/>;
   }
 }
