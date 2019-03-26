@@ -15,12 +15,12 @@ const DefaultLayout = Loadable({
 
 // Pages
 const Login = Loadable({
-  loader: () => import('./views/Pages/Login'),
+  loader: () => import('./views/Component/Login'),
   loading
 });
 
 const Register = Loadable({
-  loader: () => import('./views/Pages/Register'),
+  loader: () => import('./views/Component/Register'),
   loading
 });
 
