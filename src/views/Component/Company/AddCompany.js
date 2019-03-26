@@ -21,9 +21,9 @@ export default class AddCompany extends Component{
     {
       const user = await this.userService.getUser();
   
-      if(user)
+      if(!user)
       {
-        this.props.history.push("/dashboard");
+        this.props.history.push("/login");
       }
       
     }

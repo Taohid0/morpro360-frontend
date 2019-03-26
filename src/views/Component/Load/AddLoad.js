@@ -18,8 +18,8 @@ export default class AddLoad extends Component {
   async loadUserOrRedirect() {
     const user = await this.userService.getUser();
 
-    if (user) {
-      this.props.history.push("/dashboard");
+    if (!user) {
+      this.props.history.push("/login");
     }
   }
   render() {
