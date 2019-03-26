@@ -25,6 +25,12 @@ import {
     Row,
   } from 'reactstrap';
 
+  import UserService from "../../../services/User";
+import validateInput from "../../../validation/input";
+import { createCompany } from "../../../ApiCalls/company";
+import DangerModal from "../../CustomModals/DangerModal";
+import SuccessModal from "../../CustomModals/SuccessModal";
+
 export default class AddCompanyForm  extends Component{
     constructor(props)
     {
@@ -37,25 +43,86 @@ export default class AddCompanyForm  extends Component{
             description:"",
             isErrorModalVisible:false,
             modalErrorMessage:"",
-            isSuccessfulModalVisible:false,
+            isSuccessModalVisible:false,
+            successModalTitle:"Sucessful",
             modalSuccessMessage:""
         }
+        this.userService = new UserService();
+
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.toggleDangerModal = this.toggleDangerModal.bind(this);
+        this.toggleSuccessModal = this.toggleSuccessModal.bind(this);
     }
-
+    toggleDangerModal() {
+      this.setState((state, props) => ({
+        isErrorModalVisible: !state.isErrorModalVisible
+      }));
+    }
+    toggleSuccessModal() {
+      this.setState((state, props) => ({
+        isSuccessModalVisible: !state.isSuccessModalVisible
+      }));
+    }
     handleChange(e)
-    {
+    {    
         this.setState({[e.target.name]:e.target.value});
     }
-    handleSubmit(e)
+    async handleSubmit(e)
     {
         e.preventDefault();
+        const{isErrorModalVisible,modalErrorMessage,isSuccessModalVisible,
+        modalSuccessMessage,successModalTitle, ...stateData} = this.state;
+        const validationErrors= validateInput(stateData,["name","email","phone","description"]);
+          
+          if(validationErrors)
+          {
+            const errormessage = validationErrors.join("\n");
+            this.setState({ modalErrorMessage: errormessage });
+            this.toggleDangerModal();
+      
+            return;
+          }
+
+
+          try {
+            const response = await createCompany(stateData);
+            const data = response.data;
+            if (data.status) {
+              const modalSuccessMessage = "Successfully new company added";
+              this.setState({modalSuccessMessage});
+              this.toggleSuccessModal();
+
+            } else {
+              const errormessage = data.errors.join("\n");
+              this.setState({ modalErrorMessage: errormessage });
+              this.toggleDangerModal();
+            }
+          } catch (err) {
+            console.log(err);
+            const errormessage = "Something wrong, please try again later";
+            this.setState({ modalErrorMessage: errormessage });
+            this.toggleDangerModal();
+          }
     }
 
     render()
     {
         return(
+          <div>
+           <DangerModal
+          isVisible={this.state.isErrorModalVisible}
+          errors={this.state.modalErrorMessage}
+          toggleModal={this.toggleDangerModal}
+        />
+           <SuccessModal
+          isVisible={this.state.isSuccessModalVisible}
+          errors={this.state.modalSuccessMessage}
+          toggleModal={this.toggleSuccessModal}
+          title = {this.state.successModalTitle}
+          goToDashboard = {()=>this.props.history.push("/dashboard")}
+        />
+
             <Card>
             <CardHeader>
               <strong>Company</strong>
@@ -64,7 +131,7 @@ export default class AddCompanyForm  extends Component{
             <CardBody>
               <FormGroup>
                 <Label htmlFor="company">Company</Label>
-                <Input type="text" id="company" placeholder="Enter company name" name="company" value={this.state.company} onChange={this.handleChange} />
+                <Input type="text" id="name" placeholder="Enter company name" name="name" value={this.state.company} onChange={this.handleChange} />
               </FormGroup>
               <FormGroup>
                 <Label htmlFor="email">Email</Label>
@@ -92,6 +159,7 @@ export default class AddCompanyForm  extends Component{
             <br/>
             <br/>
           </Card>
+          </div>
 
         )
     }

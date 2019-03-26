@@ -1,6 +1,9 @@
 function validateInput(obj,arr)
 {
     const errorMessages = {
+        "name" : "Name cannot be blank",
+        "description":"Description cannot be blank",
+        "phone":"Phone number cannot be blank",
         "firstName":"Fist name cannot be blank",
         "lastName": "Last name cannot be blank",
         "userName":"Username cannot be blank",

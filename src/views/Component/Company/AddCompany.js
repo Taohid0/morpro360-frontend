@@ -31,7 +31,7 @@ export default class AddCompany extends Component{
     render()
     {
         return(
-           <AddCompanyForm/>
+           <AddCompanyForm  history={this.props.history}/>
         )
     }
 }
