@@ -29,36 +29,33 @@ export default class AddLoadForm extends Component {
   constructor(props) {
     super(props);
 
-    this.state={
-        isErrorModalVisible:false,
-        modalErrorMessage:"",
-        isSuccessfulModalVisible:false,
-        modalSuccessMessage:"",
-        name:"",
-        pickUpTime:"",
-        dropOffTime:"",
-        weight:"",
-        budget:"",
-        productDetails:"",
-        pickUpAddress:"",
-        pickUpCity:"",
-        dropOffAddress:"",
-        dropOffCity:"",
-        dropOffZipCode:"",
-        dropOffState:"",
-        phone:"",
-
-    }
+    this.state = {
+      isErrorModalVisible: false,
+      modalErrorMessage: "",
+      isSuccessfulModalVisible: false,
+      modalSuccessMessage: "",
+      name: "",
+      pickUpTime: "",
+      dropOffTime: "",
+      weight: "",
+      rate: "",
+      productDetails: "",
+      pickUpAddress: "",
+      pickUpCity: "",
+      dropOffAddress: "",
+      dropOffCity: "",
+      dropOffZipCode: "",
+      dropOffState: "",
+      distance: ""
+    };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-  handleChange(e)
-  {
-      this.setState({[e.target.name]:e.target.value});
+  handleChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
   }
-  handleSubmit(e)
-  {
-      e.preventDefault();
+  handleSubmit(e) {
+    e.preventDefault();
   }
 
   render() {
@@ -70,7 +67,7 @@ export default class AddLoadForm extends Component {
         </CardHeader>
         <CardBody>
           <Row>
-            <Col  col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
+            <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
               <FormGroup>
                 <Label htmlFor="name">Load Name</Label>
                 <Input
@@ -81,25 +78,32 @@ export default class AddLoadForm extends Component {
                   name="name"
                   value={this.state.name}
                   onChange={this.handleChange}
-                  
                 />
               </FormGroup>
             </Col>
-            <Col  col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
+            <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
               <FormGroup>
                 <Label htmlFor="company">Select Company</Label>
-                <Input type="select" name="company" id="company"> 
-                {/* name value onChange need to be updated */}
+                <Input type="select" name="company" id="company">
+                  {/* name value onChange need to be updated */}
                   <option>My First Company</option>
                   <option>My Second Company</option>
                   <option>My Third Company</option>
                 </Input>
               </FormGroup>
             </Col>
-            <Col  col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
+            <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
               <FormGroup>
-                <Label htmlFor="phone">Phone</Label>
-                <Input type="text" id="phone" placeholder="Phone" required name="phone" value={this.state.phone} onChange={this.handleChange}/>
+                <Label htmlFor="weight">weight</Label>
+                <Input
+                  type="text"
+                  id="weight"
+                  placeholder="Weight of Load"
+                  required
+                  name="weight"
+                  value={this.state.weight}
+                  onChange={this.handleChange}
+                />
               </FormGroup>
             </Col>
           </Row>
@@ -122,30 +126,29 @@ export default class AddLoadForm extends Component {
             </Col>
             <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
               <FormGroup>
-                <Label htmlFor="weight">weight</Label>
+                <Label htmlFor="distance">Distance</Label>
                 <Input
-                  type="text"
-                  id="weight"
-                  placeholder="Weight of Load"
-                  required
-                  name="weight"
-                  value={this.state.weight}
+                  type="number"
+                  id="distance"
+                  placeholder="Enter distance"
+                  name="distance"
+                  value={this.state.distance}
                   onChange={this.handleChange}
                 />
               </FormGroup>
             </Col>
             <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
-              {/* <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
               <FormGroup>
-                <Label htmlFor="loadNumber">Load Number</Label>
+                <Label htmlFor="rate">Rate</Label>
                 <Input
-                  type="text"
-                  id="loadNumber"
-                  placeholder="Enter load number"
-                  required
+                  type="number"
+                  id="rate"
+                  placeholder="Enter your rate"
+                  name="rate"
+                  value={this.state.rate}
+                  onChange={this.handleChange}
                 />
               </FormGroup>
-            </Col> */}
             </Col>
           </Row>
 
@@ -202,26 +205,13 @@ export default class AddLoadForm extends Component {
                   type="textarea"
                   id="pickUpAddress"
                   placeholder="Enter pick up Address"
-
                   name="pickUpAddress"
                   value={this.state.pickUpAddress}
                   onChange={this.handleChange}
                 />
               </FormGroup>
             </Col>
-            <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
-              <FormGroup>
-                <Label htmlFor="budget">Budget</Label>
-                <Input
-                  type="number"
-                  id="budget"
-                  placeholder="Enter your budget"
-                  name="budget"
-                  value={this.state.budget}
-                  onChange={this.handleChange}
-                />
-              </FormGroup>
-            </Col>
+
             <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
               <FormGroup>
                 <Label htmlFor="pickUpDate">Pick Up Date</Label>
@@ -235,7 +225,9 @@ export default class AddLoadForm extends Component {
                 />
               </FormGroup>
             </Col>
-            <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0" />
+            <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
+              <FormGroup />
+            </Col>
           </Row>
 
           <br />
