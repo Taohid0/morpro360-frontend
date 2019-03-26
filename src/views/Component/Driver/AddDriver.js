@@ -1,17 +1,27 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import AddDriverForm from "../../Forms/Driver/AddDriverForm";
 
-export default class AddDriver extends Component{
+import UserService from "../../../services/User";
+export default class AddDriver extends Component {
+  constructor(props) {
+    super(props);
 
-    constructor(props)
-    {
-        super(props);
+    this.userService = new UserService();
+    this.loadUserOrRedirect = this.loadUserOrRedirect.bind(this);
+  }
+
+  componentWillMount() {
+    this.loadUserOrRedirect();
+  }
+  async loadUserOrRedirect() {
+    const user = await this.userService.getUser();
+
+    if (user) {
+      this.props.history.push("/dashboard");
     }
-    
-    render()
-    {
-        return(
-           <AddDriverForm/>
-        )
-    }
+  }
+
+  render() {
+    return <AddDriverForm />;
+  }
 }

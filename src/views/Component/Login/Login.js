@@ -18,7 +18,7 @@ import {
 import { login } from "../../../ApiCalls/auth";
 import validateInput from "../../../validation/input";
 import DangerModal from "../../CustomModals/DangerModal";
-import userService from "../../../services/User";
+import UserService from "../../../services/User";
 
 class Login extends Component {
   constructor(props) {
@@ -31,11 +31,28 @@ class Login extends Component {
       modalErrors: ""
     };
 
-    this.userService = new userService();
+    this.userService = new UserService();
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
+    this.loadUserAndRedirect = this.loadUserAndRedirect.bind(this);
+  }
+
+  componentWillMount()
+  {
+    this.loadUserAndRedirect();
+  }
+
+  async loadUserAndRedirect()
+  {
+    const user = await this.userService.getUser();
+
+    if(user)
+    {
+      this.props.history.push("/dashboard");
+    }
+    
   }
 
   handleChange(event) {

@@ -17,7 +17,7 @@ import {
 import { createUser } from "../../../ApiCalls/user";
 import validateInput from "../../../validation/input";
 
-import userService from "../../../services/User";
+import UserService from "../../../services/User";
 import { STATUS_CODES } from "http";
 import DangerModal from "../../CustomModals/DangerModal";
 import { stat } from "fs";
@@ -36,7 +36,7 @@ class Register extends Component {
       modalErrors: ""
     };
 
-    this.userService = new userService();
+    this.userService = new UserService();
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);

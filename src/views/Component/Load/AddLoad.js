@@ -1,17 +1,28 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import AddLoadForm from "../../Forms/Load/AddLoadForm";
 
-export default class AddLoad extends Component{
+import UserService from "../../../services/User";
 
-    constructor(props)
-    {
-        super(props);
+export default class AddLoad extends Component {
+  constructor(props) {
+    super(props);
+
+    this.userService = new UserService();
+    this.loadUserOrRedirect = this.loadUserOrRedirect.bind(this);
+  }
+
+  componentWillMount() {
+    this.loadUserOrRedirect();
+  }
+
+  async loadUserOrRedirect() {
+    const user = await this.userService.getUser();
+
+    if (user) {
+      this.props.history.push("/dashboard");
     }
-    
-    render()
-    {
-        return(
-           <AddLoadForm/>
-        )
-    }
+  }
+  render() {
+    return <AddLoadForm />;
+  }
 }
