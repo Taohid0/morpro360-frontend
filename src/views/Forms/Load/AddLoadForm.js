@@ -25,15 +25,18 @@ import {
   Row
 } from "reactstrap";
 
+import UserService from "../../../services/User";
+import validateInput from "../../../validation/input";
+import { createDriver } from "../../../ApiCalls/driver";
+import { getOwnedCompanies } from "../../../ApiCalls/company";
+import DangerModal from "../../CustomModals/DangerModal";
+import SuccessModal from "../../CustomModals/SuccessModal";
+
 export default class AddLoadForm extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      isErrorModalVisible: false,
-      modalErrorMessage: "",
-      isSuccessfulModalVisible: false,
-      modalSuccessMessage: "",
       name: "",
       pickUpTime: "",
       dropOffTime: "",
@@ -46,16 +49,91 @@ export default class AddLoadForm extends Component {
       dropOffCity: "",
       dropOffZipCode: "",
       dropOffState: "",
-      distance: ""
+      distance: "",
+      isErrorModalVisible:false,
+      modalErrorMessage:"",
+      isSuccessModalVisible:false,
+      successModalTitle:"Sucessful",
+      modalSuccessMessage:"",
+      companyDropdown:[],
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.toggleDangerModal = this.toggleDangerModal.bind(this);
+    this.toggleSuccessModal = this.toggleSuccessModal.bind(this);
+    this.fillUpCompany = this.fillUpCompany.bind(this);
+  }
+
+  componentWillMount()
+  {
+    this.fillUpCompany();
+  }
+  async fillUpCompany()
+  {
+    const promise = await getOwnedCompanies();
+    const data = promise.data.data;
+    const tempCompany = [];
+
+    for(let company of data)
+    {
+      tempCompany.push(<option key={company.id} value={company.id}>{company.name}</option>)  
+    }
+    this.setState({companyDropdown:tempCompany}); 
+
+    if(tempCompany.length>0)
+    {
+      this.setState({companyId:data[0].id});
+    }
+
+  }
+  toggleDangerModal() {
+    this.setState((state, props) => ({
+      isErrorModalVisible: !state.isErrorModalVisible
+    }));
+  }
+  toggleSuccessModal() {
+    this.setState((state, props) => ({
+      isSuccessModalVisible: !state.isSuccessModalVisible
+    }));
   }
   handleChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
   handleSubmit(e) {
     e.preventDefault();
+    const{isErrorModalVisible,modalErrorMessage,isSuccessModalVisible,
+    modalSuccessMessage,successModalTitle,companyDropdown, ...stateData} = this.state;
+    const validationErrors= validateInput(stateData,["name","email","phone","state","city","address","license","companyId"]);
+      
+      if(validationErrors)
+      {
+        const errormessage = validationErrors.join("\n");
+        this.setState({ modalErrorMessage: errormessage });
+        this.toggleDangerModal();
+  
+        return;
+      }
+
+
+      try {
+        const response = await createDriver(stateData);
+        const data = response.data;
+        if (data.status) {
+          const modalSuccessMessage = "Successfully new driver added";
+          this.setState({modalSuccessMessage});
+          this.toggleSuccessModal();
+
+        } else {
+          const errormessage = data.errors.join("\n");
+          this.setState({ modalErrorMessage: errormessage });
+          this.toggleDangerModal();
+        }
+      } catch (err) {
+        console.log(err);
+        const errormessage = "Something wrong, please try again later";
+        this.setState({ modalErrorMessage: errormessage });
+        this.toggleDangerModal();
+      }
   }
 
   render() {
