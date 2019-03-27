@@ -53,7 +53,10 @@ export default class AddCompanyForm  extends Component{
         this.handleSubmit = this.handleSubmit.bind(this);
         this.toggleDangerModal = this.toggleDangerModal.bind(this);
         this.toggleSuccessModal = this.toggleSuccessModal.bind(this);
+
     }
+
+
     toggleDangerModal() {
       this.setState((state, props) => ({
         isErrorModalVisible: !state.isErrorModalVisible

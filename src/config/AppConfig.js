@@ -8,6 +8,7 @@ const APPCONFIG = {
     companyURL:host+"/company",
     loadURL : host+"/load",
     driverURL:host+"/driver",
+    ownedCompanyURL : host+"/company/owned-companies",
  
 };
 

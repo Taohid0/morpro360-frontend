@@ -27,6 +27,7 @@ import {
 import UserService from "../../../services/User";
 import validateInput from "../../../validation/input";
 import { createDriver } from "../../../ApiCalls/driver";
+import { getOwnedCompanies } from "../../../ApiCalls/company";
 import DangerModal from "../../CustomModals/DangerModal";
 import SuccessModal from "../../CustomModals/SuccessModal";
 
@@ -56,7 +57,19 @@ export default class AddDriverForm  extends Component{
         this.handleSubmit = this.handleSubmit.bind(this);
         this.toggleDangerModal = this.toggleDangerModal.bind(this);
         this.toggleSuccessModal = this.toggleSuccessModal.bind(this);
+        this.fillUpCompany = this.fillUpCompany.bind(this);
     }
+
+    componentWillMount()
+    {
+      this.fillUpCompany();
+    }
+    async fillUpCompany()
+    {
+      const promise = await getOwnedCompanies();
+      console.log(promise);
+    }
+
     toggleDangerModal() {
       this.setState((state, props) => ({
         isErrorModalVisible: !state.isErrorModalVisible
