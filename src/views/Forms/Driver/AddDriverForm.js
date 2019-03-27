@@ -49,7 +49,8 @@ export default class AddDriverForm  extends Component{
             modalErrorMessage:"",
             isSuccessModalVisible:false,
             successModalTitle:"Sucessful",
-            modalSuccessMessage:""
+            modalSuccessMessage:"",
+            companyDropdown:[],
         }
         this.userService = new UserService();
 
@@ -67,7 +68,20 @@ export default class AddDriverForm  extends Component{
     async fillUpCompany()
     {
       const promise = await getOwnedCompanies();
-      console.log(promise);
+      const data = promise.data.data;
+      const tempCompany = [];
+
+      for(let company of data)
+      {
+        tempCompany.push(<option key={company.id} value={company.id}>{company.name}</option>)  
+      }
+      this.setState({companyDropdown:tempCompany}); 
+
+      if(tempCompany.length>0)
+      {
+        this.setState({companyId:data[0].id});
+      }
+
     }
 
     toggleDangerModal() {
@@ -88,8 +102,8 @@ export default class AddDriverForm  extends Component{
     {
         e.preventDefault();
         const{isErrorModalVisible,modalErrorMessage,isSuccessModalVisible,
-        modalSuccessMessage,successModalTitle, ...stateData} = this.state;
-        const validationErrors= validateInput(stateData,["name","email","phone","state","city","address","license"]);
+        modalSuccessMessage,successModalTitle,companyDropdown, ...stateData} = this.state;
+        const validationErrors= validateInput(stateData,["name","email","phone","state","city","address","license","companyId"]);
           
           if(validationErrors)
           {
@@ -173,12 +187,9 @@ export default class AddDriverForm  extends Component{
               </FormGroup>
              
               <FormGroup>
-                <Label htmlFor="company">Select Company</Label>
-                <Input type="select" name="company" id="company">
-                  {/* name value onChange need to be updated */}
-                  <option>My First Company</option>
-                  <option>My Second Company</option>
-                  <option>My Third Company</option>
+                <Label htmlFor="companyId">Select Company</Label>
+                <Input type="select" name="companyId" id="companyId" value={this.state.companyId} onChange={this.handleChange}>
+                   {this.state.companyDropdown}
                 </Input>
               </FormGroup>
             </CardBody>

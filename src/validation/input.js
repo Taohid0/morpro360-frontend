@@ -34,6 +34,7 @@ function validateInput(obj,arr)
         "city":"City cannot be blank",
         "license":"License cannot be blank",
         "address":"Address cannot be blank",
+        "companyId":"Company cannnot be blank",
 
     }
     let errors = [];
