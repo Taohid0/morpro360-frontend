@@ -27,7 +27,7 @@ import {
 
 import UserService from "../../../services/User";
 import validateInput from "../../../validation/input";
-import { createDriver } from "../../../ApiCalls/driver";
+import { createLoad } from "../../../ApiCalls/load";
 import { getOwnedCompanies } from "../../../ApiCalls/company";
 import DangerModal from "../../CustomModals/DangerModal";
 import SuccessModal from "../../CustomModals/SuccessModal";
@@ -38,24 +38,30 @@ export default class AddLoadForm extends Component {
 
     this.state = {
       name: "",
-      pickUpTime: "",
-      dropOffTime: "",
+      offererCompanyId:"",
+      distance: "",
       weight: "",
       rate: "",
       productDetails: "",
+
       pickUpAddress: "",
+      pickUpState:"",
       pickUpCity: "",
-      dropOffAddress: "",
+      pickUpZipCode:"",
+      pickUpDate:"",
+
       dropOffCity: "",
       dropOffZipCode: "",
       dropOffState: "",
-      distance: "",
-      isErrorModalVisible:false,
-      modalErrorMessage:"",
-      isSuccessModalVisible:false,
-      successModalTitle:"Sucessful",
-      modalSuccessMessage:"",
-      companyDropdown:[],
+      dropOffAddress: "",
+      dropOffDate: "",
+  
+      isErrorModalVisible: false,
+      modalErrorMessage: "",
+      isSuccessModalVisible: false,
+      successModalTitle: "Sucessful",
+      modalSuccessMessage: "",
+      companyDropdown: []
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -64,27 +70,26 @@ export default class AddLoadForm extends Component {
     this.fillUpCompany = this.fillUpCompany.bind(this);
   }
 
-  componentWillMount()
-  {
+  componentWillMount() {
     this.fillUpCompany();
   }
-  async fillUpCompany()
-  {
+  async fillUpCompany() {
     const promise = await getOwnedCompanies();
     const data = promise.data.data;
     const tempCompany = [];
 
-    for(let company of data)
-    {
-      tempCompany.push(<option key={company.id} value={company.id}>{company.name}</option>)  
+    for (let company of data) {
+      tempCompany.push(
+        <option key={company.id} value={company.id}>
+          {company.name}
+        </option>
+      );
     }
-    this.setState({companyDropdown:tempCompany}); 
+    this.setState({ companyDropdown: tempCompany });
 
-    if(tempCompany.length>0)
-    {
-      this.setState({companyId:data[0].id});
+    if (tempCompany.length > 0) {
+      this.setState({ offererCompanyId: data[0].id });
     }
-
   }
   toggleDangerModal() {
     this.setState((state, props) => ({
@@ -99,298 +104,334 @@ export default class AddLoadForm extends Component {
   handleChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
-  handleSubmit(e) {
+  async handleSubmit(e) {
     e.preventDefault();
-    const{isErrorModalVisible,modalErrorMessage,isSuccessModalVisible,
-    modalSuccessMessage,successModalTitle,companyDropdown, ...stateData} = this.state;
-    const validationErrors= validateInput(stateData,["name","email","phone","state","city","address","license","companyId"]);
-      
-      if(validationErrors)
-      {
-        const errormessage = validationErrors.join("\n");
+    const {
+      isErrorModalVisible,
+      modalErrorMessage,
+      isSuccessModalVisible,
+      modalSuccessMessage,
+      successModalTitle,
+      companyDropdown,
+      ...stateData
+    } = this.state;
+    const validationErrors = validateInput(stateData, [
+      "name",
+      "offererCompanyId",
+      "pickUpDate",
+      "distance",
+      "weight",
+      "rate",
+      "productDetails",
+      "pickUpAddress",
+      "pickUpState",
+      "pickUpCity",
+      "pickUpZipCode",
+      "pickUpDate",
+      "dropOffCity",
+      "dropOffZipCode",
+      "dropOffState",
+      "dropOffAddress",
+      "dropOffDate",
+    ]);
+
+    if (validationErrors) {
+      const errormessage = validationErrors.join("\n");
+      this.setState({ modalErrorMessage: errormessage });
+      this.toggleDangerModal();
+
+      return;
+    }
+
+    try {
+      const response = await createLoad(stateData);
+      const data = response.data;
+      if (data.status) {
+        const modalSuccessMessage = "Successfully new load added";
+        this.setState({ modalSuccessMessage });
+        this.toggleSuccessModal();
+      } else {
+        const errormessage = data.errors.join("\n");
         this.setState({ modalErrorMessage: errormessage });
         this.toggleDangerModal();
-  
-        return;
       }
-
-
-      try {
-        const response = await createDriver(stateData);
-        const data = response.data;
-        if (data.status) {
-          const modalSuccessMessage = "Successfully new driver added";
-          this.setState({modalSuccessMessage});
-          this.toggleSuccessModal();
-
-        } else {
-          const errormessage = data.errors.join("\n");
-          this.setState({ modalErrorMessage: errormessage });
-          this.toggleDangerModal();
-        }
-      } catch (err) {
-        console.log(err);
-        const errormessage = "Something wrong, please try again later";
-        this.setState({ modalErrorMessage: errormessage });
-        this.toggleDangerModal();
-      }
+    } catch (err) {
+      console.log(err);
+      const errormessage = "Something wrong, please try again later";
+      this.setState({ modalErrorMessage: errormessage });
+      this.toggleDangerModal();
+    }
   }
 
   render() {
     return (
-      <Card>
-        <CardHeader>
-          <strong>Load</strong>
-          <small> Form</small>
-        </CardHeader>
-        <CardBody>
-          <Row>
-            <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
-              <FormGroup>
-                <Label htmlFor="name">Load Name</Label>
-                <Input
-                  type="text"
-                  id="name"
-                  placeholder="Name of Load"
-                  required
-                  name="name"
-                  value={this.state.name}
-                  onChange={this.handleChange}
-                />
-              </FormGroup>
-            </Col>
-            <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
-              <FormGroup>
-                <Label htmlFor="company">Select Company</Label>
-                <Input type="select" name="company" id="company">
-                  {/* name value onChange need to be updated */}
-                  <option>My First Company</option>
-                  <option>My Second Company</option>
-                  <option>My Third Company</option>
-                </Input>
-              </FormGroup>
-            </Col>
-            <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
-              <FormGroup>
-                <Label htmlFor="weight">weight</Label>
-                <Input
-                  type="text"
-                  id="weight"
-                  placeholder="Weight of Load"
-                  required
-                  name="weight"
-                  value={this.state.weight}
-                  onChange={this.handleChange}
-                />
-              </FormGroup>
-            </Col>
-          </Row>
+      <div>
+        <DangerModal
+          isVisible={this.state.isErrorModalVisible}
+          errors={this.state.modalErrorMessage}
+          toggleModal={this.toggleDangerModal}
+        />
+        <SuccessModal
+          isVisible={this.state.isSuccessModalVisible}
+          errors={this.state.modalSuccessMessage}
+          toggleModal={this.toggleSuccessModal}
+          title={this.state.successModalTitle}
+          goToDashboard={() => this.props.history.push("/dashboard")}
+        />
+        <Card>
+          <CardHeader>
+            <strong>Load</strong>
+            <small> Form</small>
+          </CardHeader>
+          <CardBody>
+            <Row>
+              <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
+                <FormGroup>
+                  <Label htmlFor="name">Load Name</Label>
+                  <Input
+                    type="text"
+                    id="name"
+                    placeholder="Name of Load"
+                    required
+                    name="name"
+                    value={this.state.name}
+                    onChange={this.handleChange}
+                  />
+                </FormGroup>
+              </Col>
+              <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
+                <FormGroup>
+                  <Label htmlFor="company">Select Company</Label>
+                  <Input type="select" name="offererCompanyId" id="offererCompanyId" value={this.state.offererCompanyId} onChange={this.handleChange}>
+                  {this.state.companyDropdown}
+                  </Input>
+                </FormGroup>
+              </Col>
+              <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
+                <FormGroup>
+                  <Label htmlFor="weight">weight</Label>
+                  <Input
+                    type="text"
+                    id="weight"
+                    placeholder="Enter weight of load (in lb)"
+                    required
+                    name="weight"
+                    value={this.state.weight}
+                    onChange={this.handleChange}
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
 
-          <Row>
-            {" "}
-            <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
-              <FormGroup>
-                <Label htmlFor="productDetails">Product Details</Label>
-                <Input
-                  type="textarea"
-                  id="productDetails"
-                  placeholder="Enter product information"
-                  required
-                  name="productDetails"
-                  value={this.state.productDetails}
-                  onChange={this.handleChange}
-                />
-              </FormGroup>
-            </Col>
-            <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
-              <FormGroup>
-                <Label htmlFor="distance">Distance</Label>
-                <Input
-                  type="number"
-                  id="distance"
-                  placeholder="Enter distance"
-                  name="distance"
-                  value={this.state.distance}
-                  onChange={this.handleChange}
-                />
-              </FormGroup>
-            </Col>
-            <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
-              <FormGroup>
-                <Label htmlFor="rate">Rate</Label>
-                <Input
-                  type="number"
-                  id="rate"
-                  placeholder="Enter your rate"
-                  name="rate"
-                  value={this.state.rate}
-                  onChange={this.handleChange}
-                />
-              </FormGroup>
-            </Col>
-          </Row>
+            <Row>
+              {" "}
+              <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
+                <FormGroup>
+                  <Label htmlFor="productDetails">Product Details</Label>
+                  <Input
+                    type="textarea"
+                    id="productDetails"
+                    placeholder="Enter product information"
+                    required
+                    name="productDetails"
+                    value={this.state.productDetails}
+                    onChange={this.handleChange}
+                  />
+                </FormGroup>
+              </Col>
+              <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
+                <FormGroup>
+                  <Label htmlFor="distance">Distance</Label>
+                  <Input
+                    type="number"
+                    id="distance"
+                    placeholder="Enter distance (in Miles)"
+                    name="distance"
+                    value={this.state.distance}
+                    onChange={this.handleChange}
+                  />
+                </FormGroup>
+              </Col>
+              <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
+                <FormGroup>
+                  <Label htmlFor="rate">Rate</Label>
+                  <Input
+                    type="number"
+                    id="rate"
+                    placeholder="Enter your rate"
+                    name="rate"
+                    value={this.state.rate}
+                    onChange={this.handleChange}
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
 
+            <br />
+            <br />
+
+            <Row>
+              <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
+                <FormGroup>
+                  <Label htmlFor="pickUpState">Pick Up State</Label>
+                  <Input
+                    type="text"
+                    id="pickUpState"
+                    placeholder="Enter pick up state"
+                    name="pickUpState"
+                    value={this.state.pickUpState}
+                    onChange={this.handleChange}
+                  />
+                </FormGroup>
+              </Col>
+              <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
+                <FormGroup>
+                  <Label htmlFor="pickUpCity">Pick Up City</Label>
+                  <Input
+                    type="text"
+                    id="pickUpCity"
+                    placeholder="Enter pick up City"
+                    name="pickUpCity"
+                    value={this.state.pickUpCity}
+                    onChange={this.handleChange}
+                  />
+                </FormGroup>
+              </Col>
+              <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
+                <FormGroup>
+                  <Label htmlFor="pickUpZipCode">Pick Up Zip Code</Label>
+                  <Input
+                    type="text"
+                    id="pickUpZipCode"
+                    placeholder="Enter pick up Zip Code"
+                    name="pickUpZipCode"
+                    value={this.state.pickUpZipCode}
+                    onChange={this.handleChange}
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
+                <FormGroup>
+                  <Label htmlFor="pickUpAddress">Pick Up Address</Label>
+                  <Input
+                    type="textarea"
+                    id="pickUpAddress"
+                    placeholder="Enter pick up Address"
+                    name="pickUpAddress"
+                    value={this.state.pickUpAddress}
+                    onChange={this.handleChange}
+                  />
+                </FormGroup>
+              </Col>
+
+              <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
+                <FormGroup>
+                  <Label htmlFor="pickUpDate">Pick Up Date</Label>
+                  <Input
+                    type="date"
+                    id="pickUpDate"
+                    placeholder="Enter pick up Date"
+                    name="pickUpDate"
+                    value={this.state.pickUpDate}
+                    onChange={this.handleChange}
+                  />
+                </FormGroup>
+              </Col>
+              <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
+                <FormGroup />
+              </Col>
+            </Row>
+
+            <br />
+            <br />
+
+            <Row>
+              <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
+                <FormGroup>
+                  <Label htmlFor="dropOffState">Drop Off State</Label>
+                  <Input
+                    type="text"
+                    id="dropOffState"
+                    placeholder="Enter drop off state"
+                    name="dropOffState"
+                    value={this.state.dropOffState}
+                    onChange={this.handleChange}
+                  />
+                </FormGroup>
+              </Col>
+              <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
+                <FormGroup>
+                  <Label htmlFor="dropOffCity">Drop Off City</Label>
+                  <Input
+                    type="text"
+                    id="dropOffCity"
+                    placeholder="Enter drop off City"
+                    name="dropOffCity"
+                    value={this.state.dropOffCity}
+                    onChange={this.handleChange}
+                  />
+                </FormGroup>
+              </Col>
+              <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
+                <FormGroup>
+                  <Label htmlFor="dropOffZipCode">dropOff Zip Code</Label>
+                  <Input
+                    type="text"
+                    id="dropOffZipCode"
+                    placeholder="Enter drop off Zip Code"
+                    name="dropOffZipCode"
+                    value={this.state.dropOffZipCode}
+                    onChange={this.handleChange}
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
+                <FormGroup>
+                  <Label htmlFor="dropOffAddress">Drop Off Address</Label>
+                  <Input
+                    type="textarea"
+                    id="dropOffAddress"
+                    placeholder="Enter Drop Off Address"
+                    name="dropOffAddress"
+                    value={this.state.dropOffAddress}
+                    onChange={this.handleChange}
+                  />
+                </FormGroup>
+              </Col>
+
+              <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
+                <FormGroup>
+                  <Label htmlFor="dropOffDate">Drop Off Date</Label>
+                  <Input
+                    type="date"
+                    id="dropOffDate"
+                    placeholder="Enter Drop Off Date"
+                    name="dropOffDate"
+                    value={this.state.dropOffDate}
+                    onChange={this.handleChange}
+                  />
+                </FormGroup>
+              </Col>
+              <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0" />
+            </Row>
+          </CardBody>
+
+          <Button
+            className="btn btn-success col-6 align-self-center"
+            onClick={this.handleSubmit}
+          >
+            <i className="fa fa-dot-circle-o" /> Create Load
+          </Button>
           <br />
           <br />
-
-          <Row>
-            <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
-              <FormGroup>
-                <Label htmlFor="pickUpState">Pick Up State</Label>
-                <Input
-                  type="text"
-                  id="pickUpState"
-                  placeholder="Enter pick up state"
-                  name="pickUpState"
-                  value={this.state.pickUpState}
-                  onChange={this.handleChange}
-                />
-              </FormGroup>
-            </Col>
-            <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
-              <FormGroup>
-                <Label htmlFor="pickUpCity">Pick Up City</Label>
-                <Input
-                  type="text"
-                  id="pickUpCity"
-                  placeholder="Enter pick up City"
-                  name="pickUpCity"
-                  value={this.state.pickUpCity}
-                  onChange={this.handleChange}
-                />
-              </FormGroup>
-            </Col>
-            <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
-              <FormGroup>
-                <Label htmlFor="pickUpZipCode">Pick Up Zip Code</Label>
-                <Input
-                  type="text"
-                  id="pickUpZipCode"
-                  placeholder="Enter pick up Zip Code"
-                  name="pickUpZipCode"
-                  value={this.state.pickUpZipCode}
-                  onChange={this.handleChange}
-                />
-              </FormGroup>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
-              <FormGroup>
-                <Label htmlFor="pickUpAddress">Pick Up Address</Label>
-                <Input
-                  type="textarea"
-                  id="pickUpAddress"
-                  placeholder="Enter pick up Address"
-                  name="pickUpAddress"
-                  value={this.state.pickUpAddress}
-                  onChange={this.handleChange}
-                />
-              </FormGroup>
-            </Col>
-
-            <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
-              <FormGroup>
-                <Label htmlFor="pickUpDate">Pick Up Date</Label>
-                <Input
-                  type="date"
-                  id="pickUpDate"
-                  placeholder="Enter pick up Date"
-                  name="pickUpDate"
-                  value={this.state.pickUpDate}
-                  onChange={this.handleChange}
-                />
-              </FormGroup>
-            </Col>
-            <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
-              <FormGroup />
-            </Col>
-          </Row>
-
-          <br />
-          <br />
-
-          <Row>
-            <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
-              <FormGroup>
-                <Label htmlFor="dropOffState">Drop Off State</Label>
-                <Input
-                  type="text"
-                  id="dropOffState"
-                  placeholder="Enter drop off state"
-                  name="dropOffState"
-                  value={this.state.dropOffState}
-                  onChange={this.handleChange}
-                />
-              </FormGroup>
-            </Col>
-            <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
-              <FormGroup>
-                <Label htmlFor="dropOffCity">Drop Off City</Label>
-                <Input
-                  type="text"
-                  id="dropOffCity"
-                  placeholder="Enter drop off City"
-                  name="dropOffCity"
-                  value={this.state.dropOffCity}
-                  onChange={this.handleChange}
-                />
-              </FormGroup>
-            </Col>
-            <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
-              <FormGroup>
-                <Label htmlFor="dropOffZipCode">dropOff Zip Code</Label>
-                <Input
-                  type="text"
-                  id="dropOffZipCode"
-                  placeholder="Enter drop off Zip Code"
-                  name="dropOffZipCode"
-                  value={this.state.dropOffZipCode}
-                  onChange={this.handleChange}
-                />
-              </FormGroup>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
-              <FormGroup>
-                <Label htmlFor="dropOffAddress">Drop Off Address</Label>
-                <Input
-                  type="textarea"
-                  id="dropOffAddress"
-                  placeholder="Enter Drop Off Address"
-                  name="dropOffAddress"
-                  value={this.state.dropOffAddress}
-                  onChange={this.handleChange}
-                />
-              </FormGroup>
-            </Col>
-
-            <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
-              <FormGroup>
-                <Label htmlFor="dropOffDate">Drop Off Date</Label>
-                <Input
-                  type="date"
-                  id="dropOffDate"
-                  placeholder="Enter Drop Off Date"
-                  name="dropOffDate"
-                  value={this.state.dropOffDate}
-                  onChange={this.handleChange}
-                />
-              </FormGroup>
-            </Col>
-            <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0" />
-          </Row>
-        </CardBody>
-
-        <Button className="btn btn-success col-6 align-self-center">
-          <i className="fa fa-dot-circle-o" /> Create Load
-        </Button>
-        <br />
-        <br />
-      </Card>
+        </Card>
+      </div>
     );
   }
 }

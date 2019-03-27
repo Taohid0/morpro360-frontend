@@ -9,9 +9,11 @@ export async function createDriver(data)
     const user = await userService.getUser()
 
     const {driverURL} = AppConfig;
- 
-    data.token=  user.token;
+
     const promise = await axios({
+        headers:{
+            "Authorization":user.token,
+        },
         method: "POST",
         url:driverURL,
         data

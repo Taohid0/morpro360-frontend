@@ -10,8 +10,10 @@ export async function createLoad(data)
 
     const {loadURL} = AppConfig;
  
-    data.token=  user.token;
     const promise = await axios({
+        headers:{
+            "Authorization":user.token,
+        },
         method: "POST",
         url:loadURL,
         data
