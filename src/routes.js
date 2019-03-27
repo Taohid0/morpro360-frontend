@@ -42,6 +42,7 @@ const AddCompany = React.lazy(()=>import("./views/Component/Company/AddCompany")
 const AddLoad = React.lazy(()=>import("./views/Component/Load/AddLoad"));
 const AddDriver = React.lazy(()=>import("./views/Component/Driver/AddDriver"));
 const Dashboard = React.lazy(() => import('./views/Component/Dashboard'));
+const ActiveLoadBoardListing = React.lazy(()=>import("./views/Component/ListGroup/AvailableLoadBoardListing"));
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -88,7 +89,8 @@ const routes = [
   { path: '/users/:id', exact: true, name: 'User Details', component: User },
   { path: "/add-company/", exact:true, name:"Add Company", component:AddCompany},
   { path: "/add-load/", exact:true, name:"Add Load", component:AddLoad},
-  { path: "/add-driver/", exact:true, name:"Add Driver", component:AddDriver}
+  { path: "/add-driver/", exact:true, name:"Add Driver", component:AddDriver},
+  { path:"/active-loads", exact:true, name:"Active Loads", component:ActiveLoadBoardListing},
 ];
 
 export default routes;
