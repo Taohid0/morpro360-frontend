@@ -211,7 +211,7 @@ export default class AddLoadForm extends Component {
                 <FormGroup>
                   <Label htmlFor="weight">weight</Label>
                   <Input
-                    type="text"
+                    type="number"
                     id="weight"
                     placeholder="Enter weight of load (in lb)"
                     required
@@ -301,7 +301,7 @@ export default class AddLoadForm extends Component {
                 <FormGroup>
                   <Label htmlFor="pickUpZipCode">Pick Up Zip Code</Label>
                   <Input
-                    type="text"
+                    type="number"
                     id="pickUpZipCode"
                     placeholder="Enter pick up Zip Code"
                     name="pickUpZipCode"
@@ -379,7 +379,7 @@ export default class AddLoadForm extends Component {
                 <FormGroup>
                   <Label htmlFor="dropOffZipCode">dropOff Zip Code</Label>
                   <Input
-                    type="text"
+                    type="number"
                     id="dropOffZipCode"
                     placeholder="Enter drop off Zip Code"
                     name="dropOffZipCode"

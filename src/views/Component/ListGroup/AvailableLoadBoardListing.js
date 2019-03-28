@@ -15,16 +15,104 @@ import {
   TabPane
 } from "reactstrap";
 
+import { availableLoad ,loadDetails} from "../../../ApiCalls/load";
+import UserService from "../../../services/User";
+import validateInput from "../../../validation/input";
+
+import { getOwnedCompanies } from "../../../ApiCalls/company";
+import DangerModal from "../../CustomModals/DangerModal";
+import SuccessModal from "../../CustomModals/SuccessModal";
+import LoadDetailsModal from "../../CustomModals/LoadDetailsModal";
+
 export default class AvailableLoadBoardListing extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      loads :[],
+      isErrorModalVisible:false,
+      modalErrorMessage:"",
+      isSuccessModalVisible:false,
+      successModalTitle:"Sucessful",
+      modalSuccessMessage:"",
+      isLoadDetailsModalVisible:false,
+      loadDetails:{},
+      companyDropdown:[],
+    };
+    this.getAvailableLoad = this.getAvailableLoad.bind(this);
+    this.userService = new UserService();
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.toggleDangerModal = this.toggleDangerModal.bind(this);
+    this.toggleSuccessModal = this.toggleSuccessModal.bind(this);
+    this.toggleLoadDetaildModal = this.toggleLoadDetaildModal.bind(this);
+    this.getLoadDetails = this.getLoadDetails.bind(this);
+    this.getLoadDetails = this.getLoadDetails.bind(this);
   }
 
+  async getLoadDetails(id)
+  {
+    const promise = await loadDetails(id);
+    console.log(promise);
+  }
+
+
+  componentWillMount()
+  {
+    this.getAvailableLoad();
+  }
+
+  async getAvailableLoad()
+  {
+    const promise = await availableLoad();
+    const data = promise.data.data;
+    const tempLoads=[];
+    for (let load of data)
+    {
+      tempLoads.push(load);
+    }
+    this.setState({loads:tempLoads});
+  }
+
+  toggleDangerModal() {
+    this.setState((state, props) => ({
+      isErrorModalVisible: !state.isErrorModalVisible
+    }));
+  }
+  toggleLoadDetaildModal()
+  {
+    this.setState((state, props) => ({
+      isLoadDetailsModalVisible: !state.isLoadDetailsModalVisible
+    }));
+  }
+  toggleSuccessModal() {
+    this.setState((state, props) => ({
+      isSuccessModalVisible: !state.isSuccessModalVisible
+    }));
+  }
+  assignLoadId(id)
+  {}
+
+  handleChange(e)
+  {
+      this.setState({[e.target.name]:e.target.value});
+  }
+  async handleSubmit(e)
+  {
+      e.preventDefault();
+  }
   render() {
     return (
       <div className="animated fadeIn">
+       <LoadDetailsModal
+          isVisible={this.state.isLoadDetailsModalVisible}
+          errors={this.state.loadDetailsInfo}
+          toggleModal={this.toggleLoadDetaildModal}
+          //title = {this.state.successModalTitle}
+          loadDetails={this.state.loadDetails}
+          goToDashboard = {()=>this.props.history.push("/dashboard")}
+        />
         <Row>
           <Col>
             <Card>
@@ -35,24 +123,28 @@ export default class AvailableLoadBoardListing extends Component {
               </CardHeader>
               <CardBody>
                 <ListGroup>
-                  <ListGroupItem action>
+                {this.state.loads.map(load=>{
+                  return (
+                     <ListGroupItem action key={load.id}>
                     <ListGroupItemHeading>
-                      Load Board name 1 (Broker: Mr. XYZ)
+                      {load.name}
                     </ListGroupItemHeading>
-                    <ListGroupItemText>
-                      <div class="">
-                        <div class="row">
-                          <div class="col-sm"><span><b>From : Miami</b></span></div>
-                          <div class="col-sm"><span><b>To : California</b></span></div>
-                          <div class="col-sm"><span><b>Distance : 500 Miles</b></span></div>
-                          <div class="col-sm"><span><b>Weight : 100 lb</b></span></div>
-                          <div class="col-sm"><span><b>Lowest bidding rate : $1000</b></span></div>
-                          <div className="col-sm"><Button className="btn btn-info">See Details</Button></div>
-                        </div>
-                      </div>
+                    <ListGroupItemText className="row">
+                      {/* <div class="">
+                        <div class="row"> */}
+                        <b  className="col-sm">From : {load.pickUpCity}, {load.pickUpState}</b>
+                        <b  className="col-sm">To: {load.dropOffCity}, {load.dropOffState}</b>
+                        <b  className="col-sm">Distance : {load.distance}</b>
+                        <b  className="col-sm">Weight : {load.weight}</b>
+                        <b  className="col-sm">Lowest Rate : {load.rate}</b>
+                        <Button className="col-sm btn btn-info" onClick={()=>{
+                        this.toggleLoadDetaildModal();this.getLoadDetails(load.id)}}>See Details</Button>
                     </ListGroupItemText>
                   </ListGroupItem>
-                  <ListGroupItem action>
+                  )
+                })}
+                 
+                  {/* <ListGroupItem action>
                     <ListGroupItemHeading>
                       Load Board name 2 (Broker: Mr. XYZ)
                     </ListGroupItemHeading>
@@ -85,7 +177,7 @@ export default class AvailableLoadBoardListing extends Component {
                         </div>
                       </div>
                     </ListGroupItemText>
-                  </ListGroupItem>
+                  </ListGroupItem> */}
                 </ListGroup>
               </CardBody>
             </Card>

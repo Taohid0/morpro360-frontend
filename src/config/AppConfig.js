@@ -9,6 +9,7 @@ const APPCONFIG = {
     loadURL : host+"/load",
     driverURL:host+"/driver",
     ownedCompanyURL : host+"/company/owned-companies",
+    availableLoadURL : host+"/load/available-load",
  
 };
 

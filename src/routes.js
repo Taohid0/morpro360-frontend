@@ -90,7 +90,7 @@ const routes = [
   { path: "/add-company/", exact:true, name:"Add Company", component:AddCompany},
   { path: "/add-load/", exact:true, name:"Add Load", component:AddLoad},
   { path: "/add-driver/", exact:true, name:"Add Driver", component:AddDriver},
-  { path:"/active-loads", exact:true, name:"Active Loads", component:ActiveLoadBoardListing},
+  { path:"/Available-load", exact:true, name:"Available Loads", component:ActiveLoadBoardListing},
 ];
 
 export default routes;

@@ -25,7 +25,7 @@ import {
     Row,
   } from 'reactstrap';
 
-  import UserService from "../../../services/User";
+import UserService from "../../../services/User";
 import validateInput from "../../../validation/input";
 import { createCompany } from "../../../ApiCalls/company";
 import DangerModal from "../../CustomModals/DangerModal";
