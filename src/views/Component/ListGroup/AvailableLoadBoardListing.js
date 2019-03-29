@@ -54,7 +54,8 @@ export default class AvailableLoadBoardListing extends Component {
   async getLoadDetails(id)
   {
     const promise = await loadDetails(id);
-    console.log(promise);
+    const data = promise.data.data;
+    this.setState({loadDetails:data});
   }
 
 

@@ -67,30 +67,30 @@ export default class AddLoadForm extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.toggleDangerModal = this.toggleDangerModal.bind(this);
     this.toggleSuccessModal = this.toggleSuccessModal.bind(this);
-    this.fillUpCompany = this.fillUpCompany.bind(this);
+    // this.fillUpCompany = this.fillUpCompany.bind(this);
   }
 
   componentWillMount() {
-    this.fillUpCompany();
+    // this.fillUpCompany();
   }
-  async fillUpCompany() {
-    const promise = await getOwnedCompanies();
-    const data = promise.data.data;
-    const tempCompany = [];
+  // async fillUpCompany() {
+  //   const promise = await getOwnedCompanies();
+  //   const data = promise.data.data;
+  //   const tempCompany = [];
 
-    for (let company of data) {
-      tempCompany.push(
-        <option key={company.id} value={company.id}>
-          {company.name}
-        </option>
-      );
-    }
-    this.setState({ companyDropdown: tempCompany });
+  //   for (let company of data) {
+  //     tempCompany.push(
+  //       <option key={company.id} value={company.id}>
+  //         {company.name}
+  //       </option>
+  //     );
+  //   }
+  //   this.setState({ companyDropdown: tempCompany });
 
-    if (tempCompany.length > 0) {
-      this.setState({ offererCompanyId: data[0].id });
-    }
-  }
+  //   if (tempCompany.length > 0) {
+  //     this.setState({ offererCompanyId: data[0].id });
+  //   }
+  // }
   toggleDangerModal() {
     this.setState((state, props) => ({
       isErrorModalVisible: !state.isErrorModalVisible
@@ -117,7 +117,7 @@ export default class AddLoadForm extends Component {
     } = this.state;
     const validationErrors = validateInput(stateData, [
       "name",
-      "offererCompanyId",
+      // "offererCompanyId",
       "pickUpDate",
       "distance",
       "weight",
@@ -201,12 +201,25 @@ export default class AddLoadForm extends Component {
               </Col>
               <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
                 <FormGroup>
+                  <Label htmlFor="distance">Distance</Label>
+                  <Input
+                    type="number"
+                    id="distance"
+                    placeholder="Enter distance (in Miles)"
+                    name="distance"
+                    value={this.state.distance}
+                    onChange={this.handleChange}
+                  />
+                </FormGroup>
+              </Col>
+              {/* <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
+                <FormGroup>
                   <Label htmlFor="company">Select Company</Label>
                   <Input type="select" name="offererCompanyId" id="offererCompanyId" value={this.state.offererCompanyId} onChange={this.handleChange}>
                   {this.state.companyDropdown}
                   </Input>
                 </FormGroup>
-              </Col>
+              </Col> */}
               <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
                 <FormGroup>
                   <Label htmlFor="weight">weight</Label>
@@ -253,7 +266,7 @@ export default class AddLoadForm extends Component {
                 </FormGroup>
               </Col>
               <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
-                <FormGroup>
+                {/* <FormGroup>
                   <Label htmlFor="rate">Rate</Label>
                   <Input
                     type="number"
@@ -263,7 +276,7 @@ export default class AddLoadForm extends Component {
                     value={this.state.rate}
                     onChange={this.handleChange}
                   />
-                </FormGroup>
+                </FormGroup> */}
               </Col>
             </Row>
 

@@ -15,6 +15,7 @@ export default class LoadDetailsModal extends Component{
     //this will be added later
     render()
     {
+      const load = this.props.loadDetails;
         return(
      <Modal
                   isOpen={this.props.isVisible}
@@ -22,10 +23,23 @@ export default class LoadDetailsModal extends Component{
                   className={"modal-info " + this.props.className}
                 >
                   <ModalHeader toggle={this.toggleSuccess}>
-                    {/* {this.props.title} */}
+                    {load.name}
                   </ModalHeader>
                   <ModalBody>
-                  {/* <pre>{this.props.errors}</pre> */}
+                  <pre>
+                  Product : {load.productDetails}<br/>
+                  Weight : {load.weight} lb<br/>
+                  Distance :{load.distance} Miles<br/>
+                  Minimunm bid Rate : ${load.rate}<br/>
+                  <br/>
+                  Pick Up State : {load.pickUpState}<br/>
+                  Pick Up City : {load.pickUpCity}<br/>
+                  Pick Up Date : {load.pickUpDate}<br/>
+                  <br/>
+                  Drop Off State : {load.dropOffState}<br/>
+                  Drop Off City : {load.dropOffCity}<br/>
+                  Drop Off Date : {load.dropOffDate}<br/>
+                  </pre>
                   </ModalBody>
                   <ModalFooter>
                     <Button color="info" onClick={()=>{this.props.toggleModal();}}>
