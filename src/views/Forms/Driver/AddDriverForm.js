@@ -162,7 +162,7 @@ export default class AddDriverForm  extends Component{
                 <Input type="text" id="name" placeholder="Enter driver name" name="name" value={this.state.name} onChange={this.handleChange} />
               </FormGroup>
               <FormGroup>
-                <Label htmlFor="email">Phone</Label>
+                <Label htmlFor="phone">Phone</Label>
                 <Input type="phone" id="phone" placeholder="xxxxxxxxx" name="phone" value={this.state.phone} onChange={this.handleChange} />
               </FormGroup>
               <FormGroup>
@@ -186,12 +186,12 @@ export default class AddDriverForm  extends Component{
                     <Input type="text" id="license" placeholder="Enter driver's license" name="license" value={this.state.license} onChange={this.handleChange}/>
               </FormGroup>
              
-              <FormGroup>
+              {/* <FormGroup>
                 <Label htmlFor="companyId">Select Company</Label>
                 <Input type="select" name="companyId" id="companyId" value={this.state.companyId} onChange={this.handleChange}>
                    {this.state.companyDropdown}
                 </Input>
-              </FormGroup>
+              </FormGroup> */}
             </CardBody>
             
             {/* <Row className="align-items-right">

@@ -38,7 +38,7 @@ export default class AddLoadForm extends Component {
 
     this.state = {
       name: "",
-      offererCompanyId:"",
+      // offererCompanyId:"",
       distance: "",
       weight: "",
       rate: "",
@@ -254,13 +254,13 @@ export default class AddLoadForm extends Component {
               </Col>
               <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
                 <FormGroup>
-                  <Label htmlFor="distance">Distance</Label>
+                  <Label htmlFor="rate">Rate</Label>
                   <Input
                     type="number"
-                    id="distance"
-                    placeholder="Enter distance (in Miles)"
-                    name="distance"
-                    value={this.state.distance}
+                    id="rate"
+                    placeholder="Enter Rate (in USD)"
+                    name="rate"
+                    value={this.state.rate}
                     onChange={this.handleChange}
                   />
                 </FormGroup>
@@ -390,7 +390,7 @@ export default class AddLoadForm extends Component {
               </Col>
               <Col col="6" sm="4" md="4" xl className="mb-3 mb-xl-0">
                 <FormGroup>
-                  <Label htmlFor="dropOffZipCode">dropOff Zip Code</Label>
+                  <Label htmlFor="dropOffZipCode">Drop Off Zip Code</Label>
                   <Input
                     type="number"
                     id="dropOffZipCode"

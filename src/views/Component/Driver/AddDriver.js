@@ -11,7 +11,7 @@ export default class AddDriver extends Component {
   }
 
   componentWillMount() {
-    this.loadUserOrRedirect();
+    // this.loadUserOrRedirect();
   }
   async loadUserOrRedirect() {
     const user = await this.userService.getUser();

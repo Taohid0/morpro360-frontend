@@ -26,10 +26,12 @@ class Register extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      "name":"",
       email: "",
-      userName: "",
-      firstName: "",
-      lastName: "",
+      phone: "",
+      MC:"",
+      DOT:"",
+      description:"",
       password: "",
       repeatPassword: "",
       isVisible: false,
@@ -85,8 +87,12 @@ class Register extends Component {
     delete stateData.modalErrors;
 
     const validationErrors = validateInput(stateData, [
+      "name",
       "email",
-      "userName",
+      "phone",
+      "MC",
+      "DOT",
+      "description",
       "password"
     ]);
 
@@ -144,47 +150,15 @@ class Register extends Component {
                     <InputGroup className="mb-3">
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText>
-                          <i className="icon-user" />
+                          <i className="fa fa-institution" />
                         </InputGroupText>
                       </InputGroupAddon>
                       <Input
                         type="text"
-                        placeholder="First Name"
-                        autoComplete="firstName"
-                        name="firstName"
-                        value={this.state.firstName}
-                        onChange={this.handleChange}
-                      />
-                    </InputGroup>
-
-                    <InputGroup className="mb-3">
-                      <InputGroupAddon addonType="prepend">
-                        <InputGroupText>
-                          <i className="icon-user" />
-                        </InputGroupText>
-                      </InputGroupAddon>
-                      <Input
-                        type="text"
-                        placeholder="Last Name"
-                        autoComplete="lastName"
-                        name="lastName"
-                        value={this.state.lastName}
-                        onChange={this.handleChange}
-                      />
-                    </InputGroup>
-
-                    <InputGroup className="mb-3">
-                      <InputGroupAddon addonType="prepend">
-                        <InputGroupText>
-                          <i className="icon-user" />
-                        </InputGroupText>
-                      </InputGroupAddon>
-                      <Input
-                        type="text"
-                        placeholder="Username"
-                        autoComplete="username"
-                        name="userName"
-                        value={this.state.userName}
+                        placeholder="Enter Company Name"
+                        autoComplete="name"
+                        name="name"
+                        value={this.state.name}
                         onChange={this.handleChange}
                       />
                     </InputGroup>
@@ -194,7 +168,7 @@ class Register extends Component {
                         <InputGroupText>@</InputGroupText>
                       </InputGroupAddon>
                       <Input
-                        type="text"
+                        type="email"
                         placeholder="Email"
                         autoComplete="email"
                         name="email"
@@ -202,6 +176,72 @@ class Register extends Component {
                         onChange={this.handleChange}
                       />
                     </InputGroup>
+
+                    <InputGroup className="mb-3">
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>
+                          <i className="fa fa-mobile-phone" />
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input
+                        type="text"
+                        placeholder="Enter Phone Number"
+                        autoComplete="phone"
+                        name="phone"
+                        value={this.state.phone}
+                        onChange={this.handleChange}
+                      />
+                    </InputGroup>
+
+                    <InputGroup className="mb-3">
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>
+                          <i className="fa fa-drivers-license-o" />
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input
+                        type="number"
+                        placeholder="Enter MC Number"
+                        autoComplete="MC"
+                        name="MC"
+                        value={this.state.MC}
+                        onChange={this.handleChange}
+                      />
+                    </InputGroup>
+
+                    <InputGroup className="mb-3">
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>
+                          <i className="fa fa-drivers-license" />
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input
+                        type="number"
+                        placeholder="Enter DOT Number"
+                        autoComplete="DOT"
+                        name="DOT"
+                        value={this.state.DOT}
+                        onChange={this.handleChange}
+                      />
+                    </InputGroup>
+
+                    <InputGroup className="mb-3">
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>
+                          <i className="fa fa-file-text" />
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input
+                        type="textarea"
+                        placeholder="Company Description (optional)"
+                        autoComplete="description"
+                        name="description"
+                        value={this.state.description}
+                        onChange={this.handleChange}
+                      />
+                    </InputGroup>
+
+
 
                     <InputGroup className="mb-3">
                       <InputGroupAddon addonType="prepend">
@@ -242,12 +282,12 @@ class Register extends Component {
                 </CardBody>
                 <CardFooter className="p-4">
                   <Row>
-                    <Col xs="12" sm="12">
+                    {/* <Col xs="12" sm="12">
                       <Button className="btn-google-plus mb-1" block>
                         <i className="fa fa-google-plus" />
                         <span> Login With gmail</span>
                       </Button>
-                    </Col>
+                    </Col> */}
                     {/* <Col xs="12" sm="6">
                       <Button className="btn-twitter mb-1" block>
                         <span>twitter</span>
