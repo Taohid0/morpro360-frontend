@@ -18,17 +18,37 @@ import {
 import navigation from '../../_nav';
 // routes config
 import routes from '../../routes';
+import { logout } from "../../ApiCalls/auth";
+import UserService from "../../services/User";
 
 const DefaultAside = React.lazy(() => import('./DefaultAside'));
 const DefaultFooter = React.lazy(() => import('./DefaultFooter'));
 const DefaultHeader = React.lazy(() => import('./DefaultHeader'));
 
+
+
 class DefaultLayout extends Component {
+  constructor(props)
+  {
+    super(props);
+    this.userService = new UserService();
+  }
+
 
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 
-  signOut(e) {
+  async signOut(e) {
     e.preventDefault()
+ 
+    const promise = await logout();
+    const data = promise.data;
+    console.log(data);
+    if (data.status) {
+      this.userService.clearData();
+      this.props.history.push("/login");
+    } else {
+      alert("Something went wrong, please try again later");
+    }
     this.props.history.push('/login')
   }
 
@@ -37,7 +57,7 @@ class DefaultLayout extends Component {
       <div className="app">
         <AppHeader fixed>
           <Suspense  fallback={this.loading()}>
-            <DefaultHeader onLogout={e=>this.signOut(e)}/>
+            <DefaultHeader props = {this.props} onLogout={e=>this.signOut(e)}/>
           </Suspense>
         </AppHeader>
         <div className="app-body">

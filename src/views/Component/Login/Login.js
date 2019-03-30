@@ -39,20 +39,16 @@ class Login extends Component {
     this.loadUserAndRedirect = this.loadUserAndRedirect.bind(this);
   }
 
-  componentWillMount()
-  {
+  componentWillMount() {
     this.loadUserAndRedirect();
   }
 
-  async loadUserAndRedirect()
-  {
+  async loadUserAndRedirect() {
     const user = await this.userService.getUser();
 
-    if(user)
-    {
+    if (user) {
       this.props.history.push("/dashboard");
     }
-    
   }
 
   handleChange(event) {
@@ -86,6 +82,7 @@ class Login extends Component {
           this.setState({ modalErrors: errormessage });
           this.toggleModal();
         }
+        this.props.history.push("/dashboard");
       } else {
         const errormessage = data.errors.join("\n");
         this.setState({ modalErrors: errormessage });
@@ -102,7 +99,7 @@ class Login extends Component {
   render() {
     return (
       <div className="app flex-row align-items-center">
-         <DangerModal
+        <DangerModal
           isVisible={this.state.isVisible}
           errors={this.state.modalErrors}
           toggleModal={this.toggleModal}
@@ -124,7 +121,7 @@ class Login extends Component {
                           </InputGroupText>
                         </InputGroupAddon>
                         <Input
-                          type="text"
+                          type="email"
                           placeholder="Email"
                           autoComplete="email"
                           name="email"

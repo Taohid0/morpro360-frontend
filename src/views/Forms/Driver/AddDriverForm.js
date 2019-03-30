@@ -43,7 +43,7 @@ export default class AddDriverForm  extends Component{
             "city":"",
             address:"",
             email:"",
-            "companyId":"",
+            // "companyId":"",
             "license":"",
             isErrorModalVisible:false,
             modalErrorMessage:"",
@@ -103,7 +103,7 @@ export default class AddDriverForm  extends Component{
         e.preventDefault();
         const{isErrorModalVisible,modalErrorMessage,isSuccessModalVisible,
         modalSuccessMessage,successModalTitle,companyDropdown, ...stateData} = this.state;
-        const validationErrors= validateInput(stateData,["name","email","phone","state","city","address","license","companyId"]);
+        const validationErrors= validateInput(stateData,["name","email","phone","state","city","address","license",]);
           
           if(validationErrors)
           {

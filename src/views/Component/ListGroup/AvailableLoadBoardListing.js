@@ -54,6 +54,7 @@ export default class AvailableLoadBoardListing extends Component {
   }
   componentWillMount() {
     this.getAvailableLoad();
+    this.loadUserOrRedirect();
   }
   async getLoadDetails(id) {
     const promise = await loadDetails(id);
@@ -120,7 +121,7 @@ export default class AvailableLoadBoardListing extends Component {
             <Card>
               <CardHeader>
                 <i className="fa fa-align-justify" />
-                <strong>Available Load Boards</strong>
+                <strong>Load Boards</strong>
                 {/* <small> custom content</small> */}
               </CardHeader>
               <CardBody>

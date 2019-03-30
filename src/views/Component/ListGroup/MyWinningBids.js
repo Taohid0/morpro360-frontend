@@ -54,6 +54,7 @@ export default class MyWinnningBids extends Component {
   componentWillMount()
   {
     this.getAvailableLoad();
+    this.loadUserOrRedirect();
   }
 
   async loadUserOrRedirect() {
@@ -119,7 +120,7 @@ export default class MyWinnningBids extends Component {
             <Card>
               <CardHeader>
                 <i className="fa fa-align-justify" />
-                <strong>Available Load Boards</strong>
+                <strong>Load Boards</strong>
                 {/* <small> custom content</small> */}
               </CardHeader>
               <CardBody>
