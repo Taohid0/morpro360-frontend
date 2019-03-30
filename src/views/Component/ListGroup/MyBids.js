@@ -15,21 +15,23 @@ import {
   TabPane
 } from "reactstrap";
 
-import { availableLoad ,loadDetails} from "../../../ApiCalls/load";
+import { getMyBids } from "../../../ApiCalls/bid";
+import {loadDetails} from "../../../ApiCalls/load";
 import UserService from "../../../services/User";
 import validateInput from "../../../validation/input";
 
 import { getOwnedCompanies } from "../../../ApiCalls/company";
 import DangerModal from "../../CustomModals/DangerModal";
 import SuccessModal from "../../CustomModals/SuccessModal";
-import LoadDetailsModal from "../../CustomModals/LoadDetailsModal";
+import MyBidDetails from "../../CustomModals/MyBidDetails";
 
-export default class AvailableLoadBoardListing extends Component {
+export default class MyBids extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      loads :[],
+      bids :[],
+      bidDetails:{},
       isErrorModalVisible:false,
       modalErrorMessage:"",
       isSuccessModalVisible:false,
@@ -43,58 +45,43 @@ export default class AvailableLoadBoardListing extends Component {
     this.getAvailableLoad = this.getAvailableLoad.bind(this);
     this.userService = new UserService();
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.toggleDangerModal = this.toggleDangerModal.bind(this);
-    this.toggleSuccessModal = this.toggleSuccessModal.bind(this);
+  
     this.toggleLoadDetaildModal = this.toggleLoadDetaildModal.bind(this);
     this.getLoadDetails = this.getLoadDetails.bind(this);
-    this.getLoadDetails = this.getLoadDetails.bind(this);
+
   }
-
-  async getLoadDetails(id)
-  {
-    const promise = await loadDetails(id);
-    const data = promise.data.data;
-    this.setState({loadDetails:data});
-  }
-
-
   componentWillMount()
   {
     this.getAvailableLoad();
   }
+  async getLoadDetails(id)
+  {
+    const promise = await loadDetails(id);
+    const data = promise.data.data;
+    console.log(data);
+    this.setState({loadDetails:data});
+  }
 
   async getAvailableLoad()
   {
-    const promise = await availableLoad();
+    const promise = await getMyBids();
     const data = promise.data.data;
-    const tempLoads=[];
+    console.log(data);
+    const tempbids=[];
     for (let load of data)
     {
-      tempLoads.push(load);
+      tempbids.push(load);
     }
-    this.setState({loads:tempLoads});
+    this.setState({bids:tempbids});
   }
 
-  toggleDangerModal() {
-    this.setState((state, props) => ({
-      isErrorModalVisible: !state.isErrorModalVisible
-    }));
-  }
   toggleLoadDetaildModal()
   {
     this.setState((state, props) => ({
       isLoadDetailsModalVisible: !state.isLoadDetailsModalVisible
     }));
   }
-  toggleSuccessModal() {
-    this.setState((state, props) => ({
-      isSuccessModalVisible: !state.isSuccessModalVisible
-    }));
-  }
-  assignLoadId(id)
-  {}
+ 
 
   handleChange(e)
   {
@@ -107,15 +94,12 @@ export default class AvailableLoadBoardListing extends Component {
   render() {
     return (
       <div className="animated fadeIn">
-       <LoadDetailsModal
-          loadId = {this.state.loadId}
+       <MyBidDetails
           isVisible={this.state.isLoadDetailsModalVisible}
           errors={this.state.loadDetailsInfo}
           toggleModal={this.toggleLoadDetaildModal}
           //title = {this.state.successModalTitle}
-          loadDetails={this.state.loadDetails}
-          reloadAvailableLoads = {this.getAvailableLoad}
-          goToDashboard = {()=>this.props.history.push("/dashboard")}
+          bidDetails={this.state.bidDetails}
         />
         <Row>
           <Col>
@@ -127,23 +111,24 @@ export default class AvailableLoadBoardListing extends Component {
               </CardHeader>
               <CardBody>
                 <ListGroup>
-                {this.state.loads.map(load=>{
+                {this.state.bids.map(bid=>{
                   return (
-                     <ListGroupItem action key={load.id}>
+                     <ListGroupItem action key={bid.load.id}>
                     <ListGroupItemHeading>
-                      {load.name}
+                      {bid.load.name}
                     </ListGroupItemHeading>
                     <ListGroupItemText className="row">
                       {/* <div class="">
                         <div class="row"> */}
-                        <b  className="col-sm">From : {load.pickUpCity}, {load.pickUpState}</b>
-                        <b  className="col-sm">To: {load.dropOffCity}, {load.dropOffState}</b>
-                        <b  className="col-sm">Distance : {load.distance}</b>
-                        <b  className="col-sm">Weight : {load.weight}</b>
-                        <b  className="col-sm">Minimum Rate : {load.rate}</b>
+                        <b  className="col-sm">From : {bid.load.pickUpCity}, {bid.load.pickUpState}</b>
+                        <b  className="col-sm">To: {bid.load.dropOffCity}, {bid.load.dropOffState}</b>
+                        <b  className="col-sm">Distance : {bid.load.distance}</b>
+                        <b  className="col-sm">Weight : {bid.load.weight}</b>
+                        <b  className="col-sm">Driver : {bid.driver.name}</b>
+
                         <Button className="col-sm btn btn-info" onClick={()=>{
-                        this.toggleLoadDetaildModal();this.getLoadDetails(load.id);
-                        this.setState({loadId:load.id})}}>See Details</Button>
+                        this.toggleLoadDetaildModal();
+                        this.setState({bidDetails:bid})}}>See Details</Button>
                     </ListGroupItemText>
                   </ListGroupItem>
                   )

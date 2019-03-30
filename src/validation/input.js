@@ -35,6 +35,9 @@ function validateInput(obj,arr)
         "license":"License cannot be blank",
         "address":"Address cannot be blank",
         "companyId":"Company cannnot be blank",
+        "driverId":"Driver cannot blank",
+        "note":"Note cannot be blank",
+        "loadId":"Load cannot be blank",
         
 
     }

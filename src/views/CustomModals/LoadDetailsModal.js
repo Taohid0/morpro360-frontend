@@ -35,18 +35,23 @@ import validateInput from "../../validation/input";
 import {createBid} from "../../ApiCalls/bid";
 import { getCompanyDrivers } from "../../ApiCalls/driver";
 import { timingSafeEqual } from "crypto";
+
+import SuccessModal from "./SuccessModal";
+
 export default class LoadDetailsModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isBidPressed: false,
-      okButtonTitle: "Bid on this load",
       rate: "",
-      offererCompanyId: "",
       companyDropdown: [],
       driverDropdown: [],
       note: "",
-      driverId: ""
+      driverId: "",
+      errors :"",
+      isSuccessModalVisible: false,
+      successModalTitle: "Sucessful",
+      modalSuccessMessage: "",
     };
     this.allCompanies = [];
     this.allDrivers = [];
@@ -55,6 +60,8 @@ export default class LoadDetailsModal extends Component {
     this.fillUpCompany = this.fillUpCompany.bind(this);
     this.showBiddingFields = this.showBiddingFields.bind(this);
     this.fillUpDrivers = this.fillUpDrivers.bind(this);
+    this.toggleSuccessModal = this.toggleSuccessModal.bind(this);
+
   }
   //this.props.goToDashboard();
   //this will be added later
@@ -63,47 +70,53 @@ export default class LoadDetailsModal extends Component {
     // this.fillUpCompany();
       this.fillUpDrivers();
   }
-
+  toggleSuccessModal() {
+    this.setState((state, props) => ({
+      isSuccessModalVisible: !state.isSuccessModalVisible
+    }));
+  }
   handleChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
   async handleSubmit(e) {
     e.preventDefault();
-    const{isErrorModalVisible,modalErrorMessage,isSuccessModalVisible,
-      modalSuccessMessage,successModalTitle,companyDropdown,
-      isBidPressed,okButtonTitle,driverDropdown, ...stateData} = this.state;
-      const validationErrors= validateInput(stateData,["rate","offererCompanyId","driverId","note"]);
-        
+    const{isSuccessModalVisible,modalSuccessMessage,successModalTitle,
+      isBidPressed,driverDropdown,companyDropdown,
+      errors, ...stateData} = this.state;
+      stateData.loadId= this.props.loadId;
+      const validationErrors= validateInput(stateData,["rate","driverId","loadId"]);
+        console.log(stateData);
         if(validationErrors)
         {
-          // const errormessage = validationErrors.join("\n");
-          // this.setState({ modalErrorMessage: errormessage });
+          const errormessage = validationErrors.join("\n");
+          this.setState({ errors: errormessage });
           // this.toggleDangerModal();
-    
           return;
         }
-
-
+          
         try {
           const response = await createBid(stateData);
           console.log(response);
           const data = response.data;
           console.log(data);
           if (data.status) {
-            // const modalSuccessMessage = "Successfully new driver added";
-            // this.setState({modalSuccessMessage});
+            this.props.toggleModal();
+            const modalSuccessMessage = "Successfully your bid placed";
+            this.setState({modalSuccessMessage,rate:"",isBidPressed:false});
             // this.toggleSuccessModal();
+            alert(this.state.modalSuccessMessage);
+            this.props.reloadAvailableLoads();
 
           } else {
-            // const errormessage = data.errors.join("\n");
-            // this.setState({ modalErrorMessage: errormessage });
-            // this.toggleDangerModal();
+            const errormessage = data.errors.join("\n");
+            this.setState({ errors: errormessage });
+            
           }
         } catch (err) {
-          // console.log(err);
-          // const errormessage = "Something wrong, please try again later";
-          // this.setState({ modalErrorMessage: errormessage });
-          // this.toggleDangerModal();
+          console.log(err);
+          const errormessage = "Something wrong, please try again later";
+          this.setState({ errors: errormessage });
+          this.toggleDangerModal();
         }
   }
 
@@ -144,7 +157,6 @@ export default class LoadDetailsModal extends Component {
     const tempDrivers = [];
 
     for (let driver of data) {
-      console.log(driver.companyId);
         tempDrivers.push(
           <option key={driver.id} value={driver.id}>
             {driver.name} ({driver.license})
@@ -154,7 +166,8 @@ export default class LoadDetailsModal extends Component {
     }
     if (tempDrivers.length > 0) {
       this.setState({ driverDropdown: tempDrivers,
-      driverId:tempDrivers[0].id});
+      driverId:data[0].id});
+  
     }
    
 
@@ -171,6 +184,7 @@ export default class LoadDetailsModal extends Component {
             <small> Form</small>
           </CardHeader>
           <CardBody>
+          <h4 className="text-danger">{this.state.errors}</h4>
             <Row>
               <Col>
                 <FormGroup>
@@ -211,7 +225,7 @@ export default class LoadDetailsModal extends Component {
                     type="select"
                     name="driverId"
                     id="driverId"
-                    value={this.state.offererCompanyId}
+                    value={this.state.driverId}
                     onChange={this.handleChange}
                   >
                     {this.state.driverDropdown}
@@ -252,6 +266,13 @@ export default class LoadDetailsModal extends Component {
         toggle={this.toggleSuccess}
         className={"modal-lg " + this.props.className}
       >
+        {/* <SuccessModal
+          isVisible={this.state.isSuccessModalVisible}
+          errors={this.state.modalSuccessMessage}
+          toggleModal={this.toggleSuccessModal}
+          title={this.state.successModalTitle}
+          goToDashboard={() => this.props.history.push("/dashboard")}
+        /> */}
         <ModalHeader toggle={this.toggleSuccess}>{load.name}</ModalHeader>
         <ModalBody>
           <pre>
@@ -294,22 +315,25 @@ export default class LoadDetailsModal extends Component {
           >
             Close
           </Button>
-          <Button
+          {
+            !this.state.isBidPressed? <Button
             color="success"
             onClick={(e) => {
-              //this.props.toggleModal();
-              if(this.state.isBidPressed)
-              {
-                this.handleSubmit(e);
-              }
               this.setState({
                 isBidPressed: true,
-                okButtonTitle: "Confirm Bid"
               });
             }}
-          >
-            {this.state.okButtonTitle}
+          > Bid on this load
+          </Button>:
+          <Button
+            color="success"
+            onClick={(e)=>{this.handleSubmit(e);
+            }}> 
+              Confirm Bid
           </Button>
+          }
+         
+           
         </ModalFooter>
       </Modal>
     );

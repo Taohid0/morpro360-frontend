@@ -12,6 +12,7 @@ const APPCONFIG = {
     ownedCompanyURL : host+"/company/owned-companies",
     availableLoadURL : host+"/load/available-load",
     getCompanyDriversURL : host+"/driver/company-drivers",
+    myBidsURL : host+"/bid/my-bids",
  
 };
 
