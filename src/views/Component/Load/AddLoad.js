@@ -12,7 +12,7 @@ export default class AddLoad extends Component {
   }
 
   componentWillMount() {
-    // this.loadUserOrRedirect();
+    this.loadUserOrRedirect();
   }
 
   async loadUserOrRedirect() {

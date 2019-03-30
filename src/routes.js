@@ -44,7 +44,7 @@ const AddDriver = React.lazy(()=>import("./views/Component/Driver/AddDriver"));
 const Dashboard = React.lazy(() => import('./views/Component/Dashboard'));
 const ActiveLoadBoardListing = React.lazy(()=>import("./views/Component/ListGroup/AvailableLoadBoardListing"));
 const MyBids = React.lazy(()=>import("./views/Component/ListGroup/MyBids"));
-
+const MyWinningBids = React.lazy(()=>import("./views/Component/ListGroup/MyWinningBids"));
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   { path: '/', exact: true, name: 'Home', component: DefaultLayout },
@@ -93,6 +93,7 @@ const routes = [
   { path: "/add-driver/", exact:true, name:"Add Driver", component:AddDriver},
   { path:"/available-load", exact:true, name:"Available Loads", component:ActiveLoadBoardListing},
   { path:"/my-bids", exact:true, name:"My Bids", component:MyBids},
+  { path:"/my-winning-bids", exact:true, name:"My Winning Bids", component:MyWinningBids},
 ];
 
 export default routes;

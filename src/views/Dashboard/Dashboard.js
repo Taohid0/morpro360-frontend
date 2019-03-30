@@ -493,7 +493,7 @@ class Dashboard extends Component {
                       <i className="icon-settings"></i>
                     </DropdownToggle>
                     <DropdownMenu right>
-                      <DropdownItem>Action</DropdownItem>
+                      <DropdownItem>See Available Loads</DropdownItem>
                       <DropdownItem>Another action</DropdownItem>
                       <DropdownItem disabled>Disabled action</DropdownItem>
                       <DropdownItem>Something else here</DropdownItem>

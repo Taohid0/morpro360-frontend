@@ -25,7 +25,7 @@ import DangerModal from "../../CustomModals/DangerModal";
 import SuccessModal from "../../CustomModals/SuccessModal";
 import MyBidDetails from "../../CustomModals/MyBidDetails";
 
-export default class MyBids extends Component {
+export default class MyWinnningBids extends Component {
   constructor(props) {
     super(props);
 
@@ -54,7 +54,6 @@ export default class MyBids extends Component {
   componentWillMount()
   {
     this.getAvailableLoad();
-    this.loadUserOrRedirect();
   }
 
   async loadUserOrRedirect() {
@@ -64,7 +63,6 @@ export default class MyBids extends Component {
       this.props.history.push("/login");
     }
   }
-
   async getLoadDetails(id)
   {
     const promise = await loadDetails(id);
@@ -81,7 +79,11 @@ export default class MyBids extends Component {
     const tempbids=[];
     for (let load of data)
     {
-      tempbids.push(load);
+        if(load.isAssigned)
+        {
+            tempbids.push(load);
+        }
+      
     }
     this.setState({bids:tempbids});
   }

@@ -15,7 +15,7 @@ import {
   TabPane
 } from "reactstrap";
 
-import { availableLoad ,loadDetails} from "../../../ApiCalls/load";
+import { availableLoad, loadDetails } from "../../../ApiCalls/load";
 import UserService from "../../../services/User";
 import validateInput from "../../../validation/input";
 
@@ -29,16 +29,16 @@ export default class AvailableLoadBoardListing extends Component {
     super(props);
 
     this.state = {
-      loads :[],
-      isErrorModalVisible:false,
-      modalErrorMessage:"",
-      isSuccessModalVisible:false,
-      successModalTitle:"Sucessful",
-      modalSuccessMessage:"",
-      isLoadDetailsModalVisible:false,
-      loadDetails:{},
-      companyDropdown:[],
-      loadId:"",
+      loads: [],
+      isErrorModalVisible: false,
+      modalErrorMessage: "",
+      isSuccessModalVisible: false,
+      successModalTitle: "Sucessful",
+      modalSuccessMessage: "",
+      isLoadDetailsModalVisible: false,
+      loadDetails: {},
+      companyDropdown: [],
+      loadId: ""
     };
     this.getAvailableLoad = this.getAvailableLoad.bind(this);
     this.userService = new UserService();
@@ -50,31 +50,33 @@ export default class AvailableLoadBoardListing extends Component {
     this.toggleLoadDetaildModal = this.toggleLoadDetaildModal.bind(this);
     this.getLoadDetails = this.getLoadDetails.bind(this);
     this.getLoadDetails = this.getLoadDetails.bind(this);
+    this.loadUserOrRedirect = this.loadUserOrRedirect.bind(this);
   }
-
-  async getLoadDetails(id)
-  {
-    const promise = await loadDetails(id);
-    const data = promise.data.data;
-    this.setState({loadDetails:data});
-  }
-
-
-  componentWillMount()
-  {
+  componentWillMount() {
     this.getAvailableLoad();
   }
+  async getLoadDetails(id) {
+    const promise = await loadDetails(id);
+    const data = promise.data.data;
+    this.setState({ loadDetails: data });
+  }
 
-  async getAvailableLoad()
-  {
+  async loadUserOrRedirect() {
+    const user = await this.userService.getUser();
+
+    if (!user) {
+      this.props.history.push("/login");
+    }
+  }
+
+  async getAvailableLoad() {
     const promise = await availableLoad();
     const data = promise.data.data;
-    const tempLoads=[];
-    for (let load of data)
-    {
+    const tempLoads = [];
+    for (let load of data) {
       tempLoads.push(load);
     }
-    this.setState({loads:tempLoads});
+    this.setState({ loads: tempLoads });
   }
 
   toggleDangerModal() {
@@ -82,8 +84,7 @@ export default class AvailableLoadBoardListing extends Component {
       isErrorModalVisible: !state.isErrorModalVisible
     }));
   }
-  toggleLoadDetaildModal()
-  {
+  toggleLoadDetaildModal() {
     this.setState((state, props) => ({
       isLoadDetailsModalVisible: !state.isLoadDetailsModalVisible
     }));
@@ -93,29 +94,26 @@ export default class AvailableLoadBoardListing extends Component {
       isSuccessModalVisible: !state.isSuccessModalVisible
     }));
   }
-  assignLoadId(id)
-  {}
+  assignLoadId(id) {}
 
-  handleChange(e)
-  {
-      this.setState({[e.target.name]:e.target.value});
+  handleChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
   }
-  async handleSubmit(e)
-  {
-      e.preventDefault();
+  async handleSubmit(e) {
+    e.preventDefault();
   }
   render() {
     return (
       <div className="animated fadeIn">
-       <LoadDetailsModal
-          loadId = {this.state.loadId}
+        <LoadDetailsModal
+          loadId={this.state.loadId}
           isVisible={this.state.isLoadDetailsModalVisible}
           errors={this.state.loadDetailsInfo}
           toggleModal={this.toggleLoadDetaildModal}
           //title = {this.state.successModalTitle}
           loadDetails={this.state.loadDetails}
-          reloadAvailableLoads = {this.getAvailableLoad}
-          goToDashboard = {()=>this.props.history.push("/dashboard")}
+          reloadAvailableLoads={this.getAvailableLoad}
+          goToDashboard={() => this.props.history.push("/dashboard")}
         />
         <Row>
           <Col>
@@ -127,27 +125,36 @@ export default class AvailableLoadBoardListing extends Component {
               </CardHeader>
               <CardBody>
                 <ListGroup>
-                {this.state.loads.map(load=>{
-                  return (
-                     <ListGroupItem action key={load.id}>
-                    <ListGroupItemHeading>
-                      {load.name}
-                    </ListGroupItemHeading>
-                    <ListGroupItemText className="row">
-                      {/* <div class="">
+                  {this.state.loads.map(load => {
+                    return (
+                      <ListGroupItem action key={load.id}>
+                        <ListGroupItemHeading>{load.name}</ListGroupItemHeading>
+                        <ListGroupItemText className="row">
+                          {/* <div class="">
                         <div class="row"> */}
-                        <b  className="col-sm">From : {load.pickUpCity}, {load.pickUpState}</b>
-                        <b  className="col-sm">To: {load.dropOffCity}, {load.dropOffState}</b>
-                        <b  className="col-sm">Distance : {load.distance}</b>
-                        <b  className="col-sm">Weight : {load.weight}</b>
-                        <b  className="col-sm">Minimum Rate : {load.rate}</b>
-                        <Button className="col-sm btn btn-info" onClick={()=>{
-                        this.toggleLoadDetaildModal();this.getLoadDetails(load.id);
-                        this.setState({loadId:load.id})}}>See Details</Button>
-                    </ListGroupItemText>
-                  </ListGroupItem>
-                  )
-                })}
+                          <b className="col-sm">
+                            From : {load.pickUpCity}, {load.pickUpState}
+                          </b>
+                          <b className="col-sm">
+                            To: {load.dropOffCity}, {load.dropOffState}
+                          </b>
+                          <b className="col-sm">Distance : {load.distance}</b>
+                          <b className="col-sm">Weight : {load.weight}</b>
+                          <b className="col-sm">Minimum Rate : {load.rate}</b>
+                          <Button
+                            className="col-sm btn btn-info"
+                            onClick={() => {
+                              this.toggleLoadDetaildModal();
+                              this.getLoadDetails(load.id);
+                              this.setState({ loadId: load.id });
+                            }}
+                          >
+                            See Details
+                          </Button>
+                        </ListGroupItemText>
+                      </ListGroupItem>
+                    );
+                  })}
                 </ListGroup>
               </CardBody>
             </Card>

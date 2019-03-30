@@ -568,10 +568,10 @@ class Dashboard extends Component {
                       <i className="icon-settings" />
                     </DropdownToggle>
                     <DropdownMenu right>
-                      <DropdownItem>Action</DropdownItem>
-                      <DropdownItem>Another action</DropdownItem>
+                      <DropdownItem onClick={()=>{this.props.history.push("/available-load");}}>See Available Loads</DropdownItem>
+                      {/* <DropdownItem>Another action</DropdownItem>
                       <DropdownItem disabled>Disabled action</DropdownItem>
-                      <DropdownItem>Something else here</DropdownItem>
+                      <DropdownItem>Something else here</DropdownItem> */}
                     </DropdownMenu>
                   </ButtonDropdown>
                 </ButtonGroup>
@@ -603,9 +603,9 @@ class Dashboard extends Component {
                       <i className="icon-location-pin" />
                     </DropdownToggle>
                     <DropdownMenu right>
-                      <DropdownItem>Action</DropdownItem>
+                      {/* <DropdownItem>Action</DropdownItem>
                       <DropdownItem>Another action</DropdownItem>
-                      <DropdownItem>Something else here</DropdownItem>
+                      <DropdownItem>Something else here</DropdownItem> */}
                     </DropdownMenu>
                   </Dropdown>
                 </ButtonGroup>
@@ -637,9 +637,9 @@ class Dashboard extends Component {
                       <i className="icon-settings" />
                     </DropdownToggle>
                     <DropdownMenu right>
-                      <DropdownItem>Action</DropdownItem>
-                      <DropdownItem>Another action</DropdownItem>
-                      <DropdownItem>Something else here</DropdownItem>
+                      <DropdownItem onClick={()=>{this.props.history.push("/my-bids");}}>My Bids</DropdownItem>
+                      <DropdownItem  onClick={()=>{this.props.history.push("/my-winning-bids");}}>My Winning Bids</DropdownItem>
+                      {/* <DropdownItem>Something else here</DropdownItem> */}
                     </DropdownMenu>
                   </Dropdown>
                 </ButtonGroup>
@@ -671,9 +671,9 @@ class Dashboard extends Component {
                       <i className="icon-settings" />
                     </DropdownToggle>
                     <DropdownMenu right>
-                      <DropdownItem>Action</DropdownItem>
+                      {/* <DropdownItem>Action</DropdownItem>
                       <DropdownItem>Another action</DropdownItem>
-                      <DropdownItem>Something else here</DropdownItem>
+                      <DropdownItem>Something else here</DropdownItem> */}
                     </DropdownMenu>
                   </ButtonDropdown>
                 </ButtonGroup>
