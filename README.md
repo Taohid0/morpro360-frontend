@@ -8,10 +8,9 @@ $ cd morpro360-frontend
 $ npm install
 
 
-### dev server  with hot reload at http://localhost:3000
+### run dev server with hot reload at http://localhost:3000
 $ npm start
 
 
-### This is not needed at this moment
-### build for production with minification
+### build for production with minification (This is not needed at this moment)
 $ npm run build
