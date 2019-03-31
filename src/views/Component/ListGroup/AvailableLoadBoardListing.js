@@ -72,11 +72,18 @@ export default class AvailableLoadBoardListing extends Component {
 
   async getAvailableLoad() {
     const promise = await availableLoad();
+    console.log(promise);
+    if(!promise.data.status)
+    {
+      alert(promise.data.errors);
+      return;;
+    }
     const data = promise.data.data;
     const tempLoads = [];
     for (let load of data) {
       tempLoads.push(load);
     }
+    console.log(tempLoads);
     this.setState({ loads: tempLoads });
   }
 
