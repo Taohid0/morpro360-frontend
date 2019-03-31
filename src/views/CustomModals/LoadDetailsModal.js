@@ -32,7 +32,7 @@ import {
 
 import { getOwnedCompanies } from "../../ApiCalls/company";
 import validateInput from "../../validation/input";
-import {createBid} from "../../ApiCalls/bid";
+import { createBid } from "../../ApiCalls/bid";
 import { getCompanyDrivers } from "../../ApiCalls/driver";
 import { timingSafeEqual } from "crypto";
 
@@ -48,10 +48,10 @@ export default class LoadDetailsModal extends Component {
       driverDropdown: [],
       note: "",
       driverId: "",
-      errors :"",
+      errors: "",
       isSuccessModalVisible: false,
       successModalTitle: "Sucessful",
-      modalSuccessMessage: "",
+      modalSuccessMessage: ""
     };
     this.allCompanies = [];
     this.allDrivers = [];
@@ -61,14 +61,13 @@ export default class LoadDetailsModal extends Component {
     this.showBiddingFields = this.showBiddingFields.bind(this);
     this.fillUpDrivers = this.fillUpDrivers.bind(this);
     this.toggleSuccessModal = this.toggleSuccessModal.bind(this);
-
   }
   //this.props.goToDashboard();
   //this will be added later
 
   componentWillMount() {
     // this.fillUpCompany();
-      this.fillUpDrivers();
+    this.fillUpDrivers();
   }
   toggleSuccessModal() {
     this.setState((state, props) => ({
@@ -80,44 +79,52 @@ export default class LoadDetailsModal extends Component {
   }
   async handleSubmit(e) {
     e.preventDefault();
-    const{isSuccessModalVisible,modalSuccessMessage,successModalTitle,
-      isBidPressed,driverDropdown,companyDropdown,
-      errors, ...stateData} = this.state;
-      stateData.loadId= this.props.loadId;
-      const validationErrors= validateInput(stateData,["rate","driverId","loadId"]);
-        console.log(stateData);
-        if(validationErrors)
-        {
-          const errormessage = validationErrors.join("\n");
-          this.setState({ errors: errormessage });
-          // this.toggleDangerModal();
-          return;
-        }
-          
-        try {
-          const response = await createBid(stateData);
-          console.log(response);
-          const data = response.data;
-          console.log(data);
-          if (data.status) {
-            this.props.toggleModal();
-            const modalSuccessMessage = "Successfully your bid placed";
-            this.setState({modalSuccessMessage,rate:"",isBidPressed:false});
-            // this.toggleSuccessModal();
-            alert(this.state.modalSuccessMessage);
-            this.props.reloadAvailableLoads();
+    const {
+      isSuccessModalVisible,
+      modalSuccessMessage,
+      successModalTitle,
+      isBidPressed,
+      driverDropdown,
+      companyDropdown,
+      errors,
+      ...stateData
+    } = this.state;
+    stateData.loadId = this.props.loadId;
+    const validationErrors = validateInput(stateData, [
+      "rate",
+      "driverId",
+      "loadId"
+    ]);
+    console.log(stateData);
+    if (validationErrors) {
+      const errormessage = validationErrors.join("\n");
+      this.setState({ errors: errormessage });
+      // this.toggleDangerModal();
+      return;
+    }
 
-          } else {
-            const errormessage = data.errors.join("\n");
-            this.setState({ errors: errormessage });
-            
-          }
-        } catch (err) {
-          console.log(err);
-          const errormessage = "Something wrong, please try again later";
-          this.setState({ errors: errormessage });
-          this.toggleDangerModal();
-        }
+    try {
+      const response = await createBid(stateData);
+      console.log(response);
+      const data = response.data;
+      console.log(data);
+      if (data.status) {
+        this.props.toggleModal();
+        const modalSuccessMessage = "Successfully your bid placed";
+        this.setState({ modalSuccessMessage, rate: "", isBidPressed: false });
+        // this.toggleSuccessModal();
+        alert(this.state.modalSuccessMessage);
+        this.props.reloadAvailableLoads();
+      } else {
+        const errormessage = data.errors.join("\n");
+        this.setState({ errors: errormessage });
+      }
+    } catch (err) {
+      console.log(err);
+      const errormessage = "Something wrong, please try again later";
+      this.setState({ errors: errormessage });
+      this.toggleDangerModal();
+    }
   }
 
   async fillUpCompany() {
@@ -157,19 +164,15 @@ export default class LoadDetailsModal extends Component {
     const tempDrivers = [];
 
     for (let driver of data) {
-        tempDrivers.push(
-          <option key={driver.id} value={driver.id}>
-            {driver.name} ({driver.license})
-          </option>
-        );
-      
+      tempDrivers.push(
+        <option key={driver.id} value={driver.id}>
+          {driver.name} ({driver.license})
+        </option>
+      );
     }
     if (tempDrivers.length > 0) {
-      this.setState({ driverDropdown: tempDrivers,
-      driverId:data[0].id});
-  
+      this.setState({ driverDropdown: tempDrivers, driverId: data[0].id });
     }
-   
 
     // const driverPromise = await getCompanyDrivers(data[0].id);
     // console.log(driverPromise);
@@ -184,7 +187,9 @@ export default class LoadDetailsModal extends Component {
             <small> Form</small>
           </CardHeader>
           <CardBody>
-          <h4 className="text-danger">{this.state.errors}</h4>
+            <pre>
+              <h4 className="text-danger">{this.state.errors}</h4>
+            </pre>
             <Row>
               <Col>
                 <FormGroup>
@@ -236,9 +241,7 @@ export default class LoadDetailsModal extends Component {
             <Row>
               <Col>
                 <FormGroup>
-                  <Label htmlFor="note">
-                    Enter additional note (optional)
-                  </Label>
+                  <Label htmlFor="note">Enter additional note (optional)</Label>
                   <Input
                     type="textarea"
                     id="note"
@@ -315,25 +318,28 @@ export default class LoadDetailsModal extends Component {
           >
             Close
           </Button>
-          {
-            !this.state.isBidPressed? <Button
-            color="success"
-            onClick={(e) => {
-              this.setState({
-                isBidPressed: true,
-              });
-            }}
-          > Bid on this load
-          </Button>:
-          <Button
-            color="success"
-            onClick={(e)=>{this.handleSubmit(e);
-            }}> 
+          {!this.state.isBidPressed ? (
+            <Button
+              color="success"
+              onClick={e => {
+                this.setState({
+                  isBidPressed: true
+                });
+              }}
+            >
+              {" "}
+              Bid on this load
+            </Button>
+          ) : (
+            <Button
+              color="success"
+              onClick={e => {
+                this.handleSubmit(e);
+              }}
+            >
               Confirm Bid
-          </Button>
-          }
-         
-           
+            </Button>
+          )}
         </ModalFooter>
       </Modal>
     );
