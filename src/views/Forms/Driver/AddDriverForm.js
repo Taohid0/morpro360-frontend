@@ -45,6 +45,8 @@ export default class AddDriverForm  extends Component{
             email:"",
             // "companyId":"",
             "license":"",
+            "password":"",
+            repeatPassword:"",
             isErrorModalVisible:false,
             modalErrorMessage:"",
             isSuccessModalVisible:false,
@@ -58,31 +60,31 @@ export default class AddDriverForm  extends Component{
         this.handleSubmit = this.handleSubmit.bind(this);
         this.toggleDangerModal = this.toggleDangerModal.bind(this);
         this.toggleSuccessModal = this.toggleSuccessModal.bind(this);
-        this.fillUpCompany = this.fillUpCompany.bind(this);
+        // this.fillUpCompany = this.fillUpCompany.bind(this);
     }
 
     componentWillMount()
     {
-      this.fillUpCompany();
+      // this.fillUpCompany();
     }
-    async fillUpCompany()
-    {
-      const promise = await getOwnedCompanies();
-      const data = promise.data.data;
-      const tempCompany = [];
+    // async fillUpCompany()
+    // {
+    //   const promise = await getOwnedCompanies();
+    //   const data = promise.data.data;
+    //   const tempCompany = [];
 
-      for(let company of data)
-      {
-        tempCompany.push(<option key={company.id} value={company.id}>{company.name}</option>)  
-      }
-      this.setState({companyDropdown:tempCompany}); 
+    //   for(let company of data)
+    //   {
+    //     tempCompany.push(<option key={company.id} value={company.id}>{company.name}</option>)  
+    //   }
+    //   this.setState({companyDropdown:tempCompany}); 
 
-      if(tempCompany.length>0)
-      {
-        this.setState({companyId:data[0].id});
-      }
+    //   if(tempCompany.length>0)
+    //   {
+    //     this.setState({companyId:data[0].id});
+    //   }
 
-    }
+    // }
 
     toggleDangerModal() {
       this.setState((state, props) => ({
@@ -101,9 +103,10 @@ export default class AddDriverForm  extends Component{
     async handleSubmit(e)
     {
         e.preventDefault();
+
         const{isErrorModalVisible,modalErrorMessage,isSuccessModalVisible,
-        modalSuccessMessage,successModalTitle,companyDropdown, ...stateData} = this.state;
-        const validationErrors= validateInput(stateData,["name","email","phone","state","city","address","license",]);
+        modalSuccessMessage,successModalTitle,companyDropdown,repeatPassword, ...stateData} = this.state;
+        const validationErrors= validateInput(stateData,["name","email","phone","state","city","address","license","password"]);
           
           if(validationErrors)
           {
@@ -111,6 +114,13 @@ export default class AddDriverForm  extends Component{
             this.setState({ modalErrorMessage: errormessage });
             this.toggleDangerModal();
       
+            return;
+          }
+          if(this.state.password !== this.state.repeatPassword)
+          {
+            const errormessage = "Password and reapeated password mismatched";
+            this.setState({ modalErrorMessage: errormessage });
+            this.toggleDangerModal();
             return;
           }
 
@@ -161,22 +171,37 @@ export default class AddDriverForm  extends Component{
                 <Label htmlFor="driver">Name</Label>
                 <Input type="text" id="name" placeholder="Enter driver name" name="name" value={this.state.name} onChange={this.handleChange} />
               </FormGroup>
-              <FormGroup>
+              <Row>
+                <Col md="6">
+                  <FormGroup>
                 <Label htmlFor="phone">Phone</Label>
                 <Input type="phone" id="phone" placeholder="xxxxxxxxx" name="phone" value={this.state.phone} onChange={this.handleChange} />
               </FormGroup>
-              <FormGroup>
+                </Col>
+                <Col md="6">
+                       <FormGroup>
                 <Label htmlFor="email">Email</Label>
                 <Input type="email" id="email" placeholder="myawesomemail@mymail.com" name="email" value={this.state.email} onChange={this.handleChange} />
               </FormGroup>
+                </Col>
+              </Row>
+              
+              <Row>
+                <Col md="6">
               <FormGroup>
                 <Label htmlFor="state">State</Label>
                 <Input type="text" id="state" placeholder="Enter driver's state" name="state" value={this.state.state} onChange={this.handleChange}/>
               </FormGroup>
-              <FormGroup>
+                </Col>
+                <Col md="6">
+<FormGroup>
                     <Label htmlFor="city">City</Label>
                     <Input type="text" id="city" placeholder="Enter driver's city" name="city" value={this.state.city} onChange={this.handleChange}/>
               </FormGroup>
+                </Col>
+              </Row>
+            
+              
                <FormGroup>
                     <Label htmlFor="address">Address</Label>
                     <Input type="text" id="address" placeholder="Enter driver's address" name="address" value={this.state.address} onChange={this.handleChange}/>
@@ -184,6 +209,14 @@ export default class AddDriverForm  extends Component{
               <FormGroup>
                     <Label htmlFor="license">License Number</Label>
                     <Input type="text" id="license" placeholder="Enter driver's license" name="license" value={this.state.license} onChange={this.handleChange}/>
+              </FormGroup>
+              <FormGroup>
+                    <Label htmlFor="password">Driver's Password</Label>
+                    <Input type="password" id="password" placeholder="This driver will use this password for logging in to his account" name="password" value={this.state.password} onChange={this.handleChange}/>
+              </FormGroup>
+              <FormGroup>
+                    <Label htmlFor="license">Repeat Password</Label>
+                    <Input type="password" id="repeatPassword" placeholder="Repeat driver's password" name="repeatPassword" value={this.state.repeatPassword} onChange={this.handleChange}/>
               </FormGroup>
              
               {/* <FormGroup>
