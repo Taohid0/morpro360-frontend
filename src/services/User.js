@@ -17,6 +17,10 @@ export default class User {
     }
   }
 
+  async getRole()
+  {
+  const 
+
   async storeUser(user) {
     try {
         console.log(user);

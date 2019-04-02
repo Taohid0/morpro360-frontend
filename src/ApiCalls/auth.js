@@ -16,6 +16,24 @@ export async function login(data) {
     return err.response;
   }
 }
+
+
+export async function adminLogin(data) {
+  const { adminLoginURL } = AppConfig;
+
+  try {
+    const promise = await axios({
+      method: "POST",
+      url: adminLoginURL,
+      data
+    });
+    return promise;
+  } catch (err) {
+    return err.response;
+  }
+}
+
+
 export async function logout()
 {
     const userService= new UserService();

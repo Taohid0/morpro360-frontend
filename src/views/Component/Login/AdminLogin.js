@@ -15,7 +15,7 @@ import {
   Row
 } from "reactstrap";
 
-import { login } from "../../../ApiCalls/auth";
+import { adminLogin } from "../../../ApiCalls/auth";
 import validateInput from "../../../validation/input";
 import DangerModal from "../../CustomModals/DangerModal";
 import UserService from "../../../services/User";
@@ -72,7 +72,7 @@ class AdminLogin extends Component {
     }
 
     try {
-      const response = await login(this.state);
+      const response = await adminLogin(this.state);
       const data = response.data;
       console.log(data);
       if (data.status) {
