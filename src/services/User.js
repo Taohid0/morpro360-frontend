@@ -17,14 +17,17 @@ export default class User {
     }
   }
 
-  async getRole()
-  {
-  const 
-
+  async adminRole() {
+    const user = await this.getUser();
+    if (user.Role) {
+      return user.Role.name;
+    }
+    return false;
+  }
   async storeUser(user) {
     try {
-        console.log(user);
-        console.log(this.KEY);
+      console.log(user);
+      console.log(this.KEY);
       const userData = JSON.stringify(user);
       window.localStorage.setItem(this.KEY, userData);
       return true;
