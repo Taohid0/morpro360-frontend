@@ -19,6 +19,11 @@ const Login = Loadable({
   loading
 });
 
+const AdminLogin = Loadable({
+  loader:()=>import("./views/Component/Login/AdminLogin"),
+  loading
+});
+
 const Register = Loadable({
   loader: () => import('./views/Component/Register'),
   loading
@@ -41,6 +46,7 @@ class App extends Component {
       <HashRouter>
           <Switch>
             <Route exact path="/login" name="Login Page" component={Login} />
+            <Route exact path="/admin-login" name="Admin Login" component={AdminLogin}/>
             <Route exact path="/register" name="Register Page" component={Register} />
             <Route exact path="/404" name="Page 404" component={Page404} />
             <Route exact path="/500" name="Page 500" component={Page500} />

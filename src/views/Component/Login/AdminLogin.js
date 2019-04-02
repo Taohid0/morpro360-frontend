@@ -20,7 +20,7 @@ import validateInput from "../../../validation/input";
 import DangerModal from "../../CustomModals/DangerModal";
 import UserService from "../../../services/User";
 
-class Login extends Component {
+class AdminLogin extends Component {
   constructor(props) {
     super(props);
 
@@ -40,7 +40,7 @@ class Login extends Component {
   }
 
   componentWillMount() {
-    this.loadUserAndRedirect();
+    // this.loadUserAndRedirect();
   }
 
   async loadUserAndRedirect() {
@@ -112,7 +112,7 @@ class Login extends Component {
                   <CardBody>
                     <Form>
                       <h1>Login</h1>
-                      <p className="text-muted">Sign In to your account</p>
+                      <p className="text-muted">Sign In to your admin account</p>
 
                       <InputGroup className="mb-3">
                         <InputGroupAddon addonType="prepend">
@@ -165,7 +165,7 @@ class Login extends Component {
                     </Form>
                   </CardBody>
                 </Card>
-                <Card
+                {/* <Card
                   className="text-white bg-primary py-5 d-md-down-none"
                   style={{ width: "44%" }}
                 >
@@ -173,7 +173,9 @@ class Login extends Component {
                     <div>
                       <h2>Sign up</h2>
                       <p>
-                        Don't have an account? Create one now!
+                        Lorem ipsum dolor sit amet, consectetur adipisicing
+                        elit, sed do eiusmod tempor incididunt ut labore et
+                        dolore magna aliqua.
                       </p>
                       <Link to="/register">
                         <Button
@@ -187,7 +189,7 @@ class Login extends Component {
                       </Link>
                     </div>
                   </CardBody>
-                </Card>
+                </Card> */}
               </CardGroup>
             </Col>
           </Row>
@@ -197,4 +199,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default AdminLogin;

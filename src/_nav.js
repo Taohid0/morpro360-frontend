@@ -51,7 +51,23 @@ export default {
         },
       ]
     },
-   
+    {
+      name: "Admin",
+      // url: "/base",
+      icon: "fa fa-hand-paper-o ",
+      children: [
+        {
+          name: "Add Admin",
+          url: "/add-admin",
+          icon: ""
+        },
+        {
+          name: "All Admins",
+          url: "/to-be-added-son",
+          icon: ""
+        },
+      ]
+    },
     // {
     //   title: true,
     //   name: "Theme",
