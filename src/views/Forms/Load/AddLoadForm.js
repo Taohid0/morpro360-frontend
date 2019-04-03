@@ -118,7 +118,6 @@ export default class AddLoadForm extends Component {
     const validationErrors = validateInput(stateData, [
       "name",
       // "offererCompanyId",
-      "pickUpDate",
       "distance",
       "weight",
       "rate",

@@ -21,6 +21,7 @@ const APPCONFIG = {
   pendingUsersURL : host+"/user/pending-users",
   activateUserURL : host+"/user/activate",
   deactivateUserURL : host+"/user/deactivate",
+  availableLoadAdminURL: host + "/load/available-load-admin",
 };
 
 export default APPCONFIG;

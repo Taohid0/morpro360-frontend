@@ -18,6 +18,11 @@ let adminItems = [
         url: "/add-load",
         icon: ""
       },
+      {
+        name:"Active Loads",
+        url: "/available-loads-admin",
+        
+      }
       
     ]
   },

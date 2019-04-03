@@ -56,3 +56,20 @@ export async function availableLoad()
     });
     return promise;
 }
+
+export async function availableLoadAdmin()
+{
+    const userService= new UserService();
+    const user = await userService.getUser()
+
+    const {availableLoadAdminURL} = AppConfig;
+ 
+    const promise = await axios({
+        headers:{
+            "Authorization":user.token,
+        },
+        method: "GET",
+        url:availableLoadAdminURL,
+    });
+    return promise;
+}
