@@ -7,6 +7,8 @@ const APPCONFIG = {
   loginURL: host + "/auth/login",
   logoutURL: host + "/auth/logout",
   companyURL: host + "/company",
+  adminURL: host + "/admin",
+  roleURL : host+ "/role",
   loadURL: host + "/load",
   driverURL: host + "/driver",
   bidURL: host + "/bid",
@@ -14,8 +16,11 @@ const APPCONFIG = {
   availableLoadURL: host + "/load/available-load",
   getCompanyDriversURL: host + "/driver/company-drivers",
   myBidsURL: host + "/bid/my-bids",
-  adminURL: host + "/admin",
-  adminLoginURL: host + "/admin/login"
+  
+  adminLoginURL: host + "/admin/login",
+  pendingUsersURL : host+"/user/pending-users",
+  activateUserURL : host+"/user/activate",
+  deactivateUserURL : host+"/user/deactivate",
 };
 
 export default APPCONFIG;

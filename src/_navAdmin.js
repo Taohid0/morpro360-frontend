@@ -12,15 +12,30 @@ let adminItems = [
     name: "Load",
     // url: "/base",
     icon: "fa fa-suitcase",
-    // children: [
-    //   {
-    //     name: "Available Loads",
-    //     url: "/available-load",
-    //     icon: ""
-    //   },
+    children: [
+      {
+        name: "Add New Load",
+        url: "/add-load",
+        icon: ""
+      },
       
-    // ]
+    ]
   },
+
+  {
+    name: "Company",
+    // url: "/base",
+    icon: "fa fa-suitcase",
+    children: [
+      {
+        name: "Pending Companies",
+        url: "/pending-users",
+        icon: ""
+      },
+      
+    ]
+  },
+
   {
     name: "Bid",
     // url: "/base",

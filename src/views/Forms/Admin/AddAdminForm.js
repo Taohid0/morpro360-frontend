@@ -26,7 +26,8 @@ import {
   } from 'reactstrap';
 import UserService from "../../../services/User";
 import validateInput from "../../../validation/input";
-import { createDriver } from "../../../ApiCalls/driver";
+import { createAdmin } from "../../../ApiCalls/admin";
+import {getRoles} from "../../../Apicall/role";
 import { getOwnedCompanies } from "../../../ApiCalls/company";
 import DangerModal from "../../CustomModals/DangerModal";
 import SuccessModal from "../../CustomModals/SuccessModal";
@@ -106,7 +107,7 @@ export default class AddAdminForm  extends Component{
 
 
           try {
-            const response = await createDriver(stateData);
+            const response = await createAdmin(stateData);
             const data = response.data;
             if (data.status) {
               const modalSuccessMessage = "Successfully new admin added";
