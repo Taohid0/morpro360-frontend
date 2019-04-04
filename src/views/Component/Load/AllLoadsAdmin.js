@@ -12,10 +12,12 @@ import {
   ListGroupItemText,
   Row,
   TabContent,
-  TabPane
+  TabPane,
+  Input,
+  
 } from "reactstrap";
 
-import { availableLoadAdmin, loadDetails } from "../../../ApiCalls/load";
+import { allLoadAdmin, loadDetails } from "../../../ApiCalls/load";
 import UserService from "../../../services/User";
 import validateInput from "../../../validation/input";
 
@@ -30,6 +32,7 @@ export default class AvailableLoadBoardListing extends Component {
 
     this.state = {
       loads: [],
+      status:"A",
       isErrorModalVisible: false,
       modalErrorMessage: "",
       isSuccessModalVisible: false,
@@ -40,7 +43,7 @@ export default class AvailableLoadBoardListing extends Component {
       companyDropdown: [],
       loadId: ""
     };
-    this.getAvailableLoad = this.getAvailableLoad.bind(this);
+    this.getLoads = this.getLoads.bind(this);
     this.userService = new UserService();
 
     this.handleChange = this.handleChange.bind(this);
@@ -53,7 +56,7 @@ export default class AvailableLoadBoardListing extends Component {
     this.loadUserOrRedirect = this.loadUserOrRedirect.bind(this);
   }
   componentWillMount() {
-    this.getAvailableLoad();
+    this.getLoads();
     this.loadUserOrRedirect();
   }
   async getLoadDetails(id) {
@@ -70,13 +73,12 @@ export default class AvailableLoadBoardListing extends Component {
     }
   }
 
-  async getAvailableLoad() {
-    const promise = await availableLoadAdmin();
+  async getLoads() {
+    const promise = await allLoadAdmin(this.state.status);
     console.log(promise);
-    if(!promise.data.status)
-    {
+    if (!promise.data.status) {
       alert(promise.data.errors);
-      return;;
+      return;
     }
     const data = promise.data.data;
     console.log(data);
@@ -121,9 +123,34 @@ export default class AvailableLoadBoardListing extends Component {
           toggleModal={this.toggleLoadDetaildModal}
           //title = {this.state.successModalTitle}
           loadDetails={this.state.loadDetails}
-          reloadAvailableLoads={this.getAvailableLoad}
+          reloadAvailableLoads={this.getLoads}
           goToDashboard={() => this.props.history.push("/dashboard")}
         /> */}
+      
+        <div className="row">
+          <div className="col-2">
+            <h3>Search by status : </h3>
+          </div>
+          <div className="col-2">
+          <Input
+                type="select"
+                name="status"
+                id="status"
+                value={this.state.status}
+                onChange={this.handleChange}
+              >
+              <option key="A" value="A">Available</option>
+              <option key="P" value="P">Picked Up</option>
+              <option key="I" value="I">Inroute</option>
+              <option key="D" value="D">Delivered</option>
+            </Input>
+          </div>
+          <div className="col-2">
+            <button className="btn btn-info" onClick={this.getLoads}>Search</button>
+          </div>
+        </div>
+        <br/>
+
         <Row>
           <Col>
             <Card>

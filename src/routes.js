@@ -61,7 +61,7 @@ const MyWinningBids = React.lazy(() =>
 const PendingUsers = React.lazy(()=>import("./views/Component/User/PendingUsers"));
 
 const AddAdmin = React.lazy(() => import("./views/Component/Admin/AddAdmin"));
-const AvailableLoadsAdmin = React.lazy(()=>import("./views/Component/Load/AvailableLoadsAdmin"));
+const AllLoadsAdmin = React.lazy(()=>import("./views/Component/Load/AllLoadsAdmin"));
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   { path: "/", exact: true, name: "Home", component: DefaultLayout },
@@ -154,7 +154,7 @@ const routes = [
   },
   { path: "/add-admin/", exact: true, name: "Add Admin", component: AddAdmin },
   { path:"/pending-users",exact:true, name:"Pending Companies", component:PendingUsers },
-  { path:"/available-loads-admin", exact:true, name:"Available Loads Admin", component:AvailableLoadsAdmin},
+  { path:"/all-loads-admin", exact:true, name:"All Loads Admin", component:AllLoadsAdmin},
 ];
 
 export default routes;
