@@ -58,10 +58,18 @@ const MyWinningBids = React.lazy(() =>
   import("./views/Component/ListGroup/MyWinningBids")
 );
 
-const PendingUsers = React.lazy(()=>import("./views/Component/User/PendingUsers"));
+const PendingUsers = React.lazy(() =>
+  import("./views/Component/User/PendingUsers")
+);
 
 const AddAdmin = React.lazy(() => import("./views/Component/Admin/AddAdmin"));
-const AllLoadsAdmin = React.lazy(()=>import("./views/Component/Load/AllLoadsAdmin"));
+const AllLoadsAdmin = React.lazy(() =>
+  import("./views/Component/Load/AllLoadsAdmin")
+);
+const LoadDetailsAdmin = React.lazy(() =>
+  import("./views/Component/Load/LoadDetailsAdmin")
+);
+
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   { path: "/", exact: true, name: "Home", component: DefaultLayout },
@@ -153,8 +161,24 @@ const routes = [
     component: MyWinningBids
   },
   { path: "/add-admin/", exact: true, name: "Add Admin", component: AddAdmin },
-  { path:"/pending-users",exact:true, name:"Pending Companies", component:PendingUsers },
-  { path:"/all-loads-admin", exact:true, name:"All Loads Admin", component:AllLoadsAdmin},
+  {
+    path: "/pending-users",
+    exact: true,
+    name: "Pending Companies",
+    component: PendingUsers
+  },
+  {
+    path: "/all-loads-admin",
+    exact: true,
+    name: "All Loads Admin",
+    component: AllLoadsAdmin
+  },
+  {
+    path: "/load-details-admin",
+    exact: true,
+    name: "Load Details Admin",
+    component: LoadDetailsAdmin
+  }
 ];
 
 export default routes;

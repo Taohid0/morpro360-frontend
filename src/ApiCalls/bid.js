@@ -33,8 +33,27 @@ export async function getMyBids()
         headers:{
             "Authorization":user.token,
         },
-        method: "GEt",
+        method: "GET",
         url:myBidsURL,
+
+    });
+    return promise;
+}
+
+export async function assignBid(bidId,loadId)
+{
+    const userService= new UserService();
+    const user = await userService.getUser();
+
+    const {assignBidURL} = AppConfig;
+ 
+    const promise = await axios({
+        headers:{
+            "Authorization":user.token,
+        },
+        method: "POST",
+        url:assignBidURL,
+        data:{bidId,loadId}
 
     });
     return promise;

@@ -26,7 +26,7 @@ import DangerModal from "../../CustomModals/DangerModal";
 import SuccessModal from "../../CustomModals/SuccessModal";
 import LoadDetailsModal from "../../CustomModals/LoadDetailsModal";
 
-export default class AvailableLoadBoardListing extends Component {
+export default class AllLoadsAdmin extends Component {
   constructor(props) {
     super(props);
 
@@ -55,7 +55,7 @@ export default class AvailableLoadBoardListing extends Component {
     this.getLoadDetails = this.getLoadDetails.bind(this);
     this.loadUserOrRedirect = this.loadUserOrRedirect.bind(this);
   }
-  componentWillMount() {
+  componentDidMount() {
     this.getLoads();
     this.loadUserOrRedirect();
   }
@@ -128,10 +128,10 @@ export default class AvailableLoadBoardListing extends Component {
         /> */}
       
         <div className="row">
-          <div className="col-2">
-            <h3>Search by status : </h3>
+          <div className="col-md-2">
+            <h3>Select status  </h3>
           </div>
-          <div className="col-2">
+          <div className="col-md-2">
           <Input
                 type="select"
                 name="status"
@@ -145,8 +145,8 @@ export default class AvailableLoadBoardListing extends Component {
               <option key="D" value="D">Delivered</option>
             </Input>
           </div>
-          <div className="col-2">
-            <button className="btn btn-info" onClick={this.getLoads}>Search</button>
+          <div className="col-md-2">
+            <button className="btn btn-info" onClick={this.getLoads}>Search Load Boards</button>
           </div>
         </div>
         <br/>
@@ -180,9 +180,13 @@ export default class AvailableLoadBoardListing extends Component {
                           <Button
                             className="col-sm btn btn-info"
                             onClick={() => {
-                              this.toggleLoadDetaildModal();
-                              this.getLoadDetails(load.id);
-                              this.setState({ loadId: load.id });
+                              // this.toggleLoadDetaildModal();
+                              // this.getLoadDetails(load.id);
+                              // this.setState({ loadId: load.id });
+                              this.props.history.push({
+                                pathname:"load-details-admin",
+                                state:{load:load}
+                              });
                             }}
                           >
                             See Details

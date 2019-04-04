@@ -78,3 +78,21 @@ export async function allLoadAdmin(status)
     });
     return promise;
 }
+export async function relatedBids(loadId)
+{
+    const userService= new UserService();
+    const user = await userService.getUser()
+
+    let {relatedBidsURL} = AppConfig;
+
+    relatedBidsURL += "?loadId="+loadId;
+ 
+    const promise = await axios({
+        headers:{
+            "Authorization":user.token,
+        },
+        method: "GET",
+        url:relatedBidsURL,
+    });
+    return promise;
+}

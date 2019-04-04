@@ -22,6 +22,9 @@ const APPCONFIG = {
   activateUserURL : host+"/user/activate",
   deactivateUserURL : host+"/user/deactivate",
   allLoadsAdminURL: host + "/load/all-loads-admin",
+  relatedBidsURL :  host+"/load/bids",
+  assignBidURL : host+"/bid/assign",
+
 };
 
 export default APPCONFIG;
