@@ -17,6 +17,7 @@ import {
 // sidebar nav config
 import navigation from "../../_nav";
 import adminNavigation from "../../_navAdmin";
+import brokerNavigation from "../../_navBroker";
 // routes config
 import routes from "../../routes";
 import { logout } from "../../ApiCalls/auth";
@@ -41,9 +42,7 @@ class DefaultLayout extends Component {
     const rolePromise = await this.userService.adminRole();
     if (rolePromise) {
       const role = rolePromise.toLowerCase();
-      if (role === "admin") {
-        this.setState({ role: "admin" });
-      }
+      this.setState({role});
     }
   }
 
@@ -81,6 +80,8 @@ class DefaultLayout extends Component {
             <Suspense>
               {this.state.role === "admin" ? (
                 <AppSidebarNav navConfig={adminNavigation} {...this.props} />
+              ) : this.state.role === "broker" ? (
+                <AppSidebarNav navConfig={brokerNavigation} {...this.props} />
               ) : (
                 <AppSidebarNav navConfig={navigation} {...this.props} />
               )}
