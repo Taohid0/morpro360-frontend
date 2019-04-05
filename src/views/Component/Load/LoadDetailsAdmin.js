@@ -16,8 +16,13 @@ import {
   Input
 } from "reactstrap";
 
-import { allLoadAdmin, loadDetails, relatedBids } from "../../../ApiCalls/load";
-import {assignBid} from "../../../ApiCalls/bid";
+import {
+  allLoadAdmin,
+  loadDetails,
+  relatedBids,
+  changeLoadStatus
+} from "../../../ApiCalls/load";
+import { assignBid } from "../../../ApiCalls/bid";
 import UserService from "../../../services/User";
 import validateInput from "../../../validation/input";
 
@@ -32,7 +37,7 @@ export default class LoadDetailsAdmin extends Component {
 
     this.state = {
       loads: [],
-      status: "A",
+      status: "",
       isErrorModalVisible: false,
       modalErrorMessage: "",
       isSuccessModalVisible: false,
@@ -58,12 +63,16 @@ export default class LoadDetailsAdmin extends Component {
     this.renderLoadDetails = this.renderLoadDetails.bind(this);
     this.renderBids = this.renderBids.bind(this);
     this.loadRelatedBids = this.loadRelatedBids.bind(this);
-
+    this.renderChangeStatusForm = this.renderChangeStatusForm.bind(this);
+    this.makeStatusChange = this.makeStatusChange.bind(this);
   }
   componentDidMount() {
     const locationState = this.props.location.state;
     if (locationState && locationState.load) {
-      this.setState({ loadDetails: locationState.load });
+      this.setState({
+        loadDetails: locationState.load,
+        status: locationState.load.status
+      });
       console.log("load", locationState.load);
 
       this.loadRelatedBids(locationState.load.id);
@@ -90,28 +99,48 @@ export default class LoadDetailsAdmin extends Component {
       this.props.history.push("/login");
     }
   }
+  async makeStatusChange() {
+    console.log(this.state.loadDetails.id,this.state.status);
+    const promise = await changeLoadStatus(
+      this.state.loadDetails.id,
+      this.state.status
+    );
+    if (promise.data.status) {
+      const modalSuccessMessage = "Successfully load board status updated";
+      this.setState({ modalSuccessMessage });
+      this.toggleSuccessModal();
+    } else {
+      const modalErrorMessage = promise.data.errors.join("\n");
+      this.setState({ modalErrorMessage });
+      this.toggleDangerModal();
+    }
+  }
 
- async handleSubmit(bidId,loadId,rate,name)
-  {
-    const isConfirm = window.confirm("Do you really want to assign this load to "+name+" for $"+rate+" ?");
-    if(!isConfirm)
-    {
-        return;
+  async handleSubmit(bidId, loadId, rate, name) {
+    const isConfirm = window.confirm(
+      "Do you really want to assign this load to " +
+        name +
+        " for $" +
+        rate +
+        " ?"
+    );
+    if (!isConfirm) {
+      return;
     }
 
-    const promise = await assignBid(bidId,loadId);
+    const promise = await assignBid(bidId, loadId);
     console.log(promise);
     const status = promise.data.status;
-    if(!status)
-    {   const modalErrorMessage = promise.data.errors.join("\n");
-        this.setState({modalErrorMessage});
-        this.toggleDangerModal();
-    }
-    else{
-        const modalSuccessMessage = "Successfully "+this.state.loadDetails.name+" load boad assigned";
-        this.setState({modalSuccessMessage});
-        this.toggleSuccessModal();
-        // this.props.history.push("/all-loads-admin");
+    if (!status) {
+      const modalErrorMessage = promise.data.errors.join("\n");
+      this.setState({ modalErrorMessage });
+      this.toggleDangerModal();
+    } else {
+      const modalSuccessMessage =
+        "Successfully " + this.state.loadDetails.name + " load boad assigned";
+      this.setState({ modalSuccessMessage });
+      this.toggleSuccessModal();
+      // this.props.history.push("/all-loads-admin");
     }
   }
 
@@ -153,6 +182,46 @@ export default class LoadDetailsAdmin extends Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
+  renderChangeStatusForm() {
+    const view = (
+      <div className="row" style={{ paddingTop: "10px" }}>
+        <div className="col-md-2">
+          <h3>Change status </h3>
+        </div>
+        <div className="col-md-2">
+          <Input
+            type="select"
+            name="status"
+            id="status"
+            value={this.state.status}
+            onChange={this.handleChange}
+          >
+            <option key="A" value="A">
+              Available
+            </option>
+            <option key="P" value="P">
+              Picked Up
+            </option>
+            <option key="I" value="I">
+              Inroute
+            </option>
+            <option key="D" value="D">
+              Delivered
+            </option>
+          </Input>
+        </div>
+        <div className="col-md-2">
+          <button className="btn btn-info" onClick={this.makeStatusChange}>
+            Submit
+          </button>
+        </div>
+      </div>
+    );
+    if (this.state.loadDetails.status !== "A") {
+      return view;
+    }
+    return "";
+  }
 
   renderLoadDetails() {
     if (!this.state.loadDetails) {
@@ -160,7 +229,6 @@ export default class LoadDetailsAdmin extends Component {
     }
     const load = this.state.loadDetails;
     const admin = load.admin;
-    console.log(admin);
     const role = admin.Role;
 
     const view = (
@@ -200,6 +268,8 @@ export default class LoadDetailsAdmin extends Component {
         </div>
         <div>Email : {admin.email} </div>
         <div>Phone : {admin.phone}</div>
+
+        {this.renderChangeStatusForm()}
       </div>
     );
 
@@ -213,30 +283,59 @@ export default class LoadDetailsAdmin extends Component {
     const bids = this.state.relatedBids.map(bid => {
       const view = (
         <Card key={bid.id}>
-        <CardHeader>
-          <i className="fa fa-align-justify" />
-          <strong>Bidder : {bid.bidder.name} (MC# : {bid.bidder.MC}, DOT#:
-          {bid.bidder.DOT})</strong>
-        </CardHeader>
-        <CardBody>
-        <div key={bid.id}>
-          <div className="row">
-            <div className="col-md-3">Proposed rate : ${bid.rate}</div>
-            <div className="col-md-3">Email : {bid.bidder.email}</div>
-            <div className="col-md-3">Phone : {bid.bidder.phone}</div>
-          </div>
-          <div>{bid.note ? "Additional Note :" + bid.note : ""}</div>
-          <h5>Driver Information</h5>
-          <div className="row">
-            <div className="col-md-3">Name : {bid.driver.name}</div>
-            <div className="col-md-3">Phone : {bid.driver.phone}</div>
-            <div className="col-md-3">Email : {bid.driver.email}</div>
-            <div className="col-md-3">License : {bid.driver.license}</div>
-          </div>
-          <br/>
-          <button className="btn btn-success" onClick={()=>this.handleSubmit(bid.id,bid.loadId,bid.rate,bid.bidder.name)}>Assign this load this bidder</button>
-        </div>
-        </CardBody>
+          {bid.isAssigned ? (
+            <CardHeader style={{ backgroundColor: "#3a8e40" }}>
+              <i className="fa fa-align-justify" />
+              <strong>
+                Bidder : {bid.bidder.name} (MC# : {bid.bidder.MC}, DOT#:
+                {bid.bidder.DOT}) (WINNER)
+              </strong>
+            </CardHeader>
+          ) : (
+            <CardHeader>
+              <i className="fa fa-align-justify" />
+              <strong>
+                Bidder : {bid.bidder.name} (MC# : {bid.bidder.MC}, DOT#:
+                {bid.bidder.DOT})
+              </strong>
+            </CardHeader>
+          )}
+
+          <CardBody>
+            <div key={bid.id}>
+              <div className="row">
+                <div className="col-md-3">Proposed rate : ${bid.rate}</div>
+                <div className="col-md-3">Email : {bid.bidder.email}</div>
+                <div className="col-md-3">Phone : {bid.bidder.phone}</div>
+              </div>
+              <div>{bid.note ? "Additional Note :" + bid.note : ""}</div>
+              <h5>Driver Information</h5>
+              <div className="row">
+                <div className="col-md-3">Name : {bid.driver.name}</div>
+                <div className="col-md-3">Phone : {bid.driver.phone}</div>
+                <div className="col-md-3">Email : {bid.driver.email}</div>
+                <div className="col-md-3">License : {bid.driver.license}</div>
+              </div>
+              <br />
+              {this.state.loadDetails.status === "A" ? (
+                <button
+                  className="btn btn-success"
+                  onClick={() =>
+                    this.handleSubmit(
+                      bid.id,
+                      bid.loadId,
+                      bid.rate,
+                      bid.bidder.name
+                    )
+                  }
+                >
+                  Assign this load this bidder
+                </button>
+              ) : (
+                ""
+              )}
+            </div>
+          </CardBody>
         </Card>
       );
       return view;
@@ -246,7 +345,7 @@ export default class LoadDetailsAdmin extends Component {
   render() {
     return (
       <div className="animated fadeIn">
-         <DangerModal
+        <DangerModal
           isVisible={this.state.isErrorModalVisible}
           errors={this.state.modalErrorMessage}
           toggleModal={this.toggleDangerModal}

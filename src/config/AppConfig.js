@@ -24,6 +24,7 @@ const APPCONFIG = {
   allLoadsAdminURL: host + "/load/all-loads-admin",
   relatedBidsURL :  host+"/load/bids",
   assignBidURL : host+"/bid/assign",
+  changeLoadStatusURL : host+"/load/change-status",
 
 };
 
