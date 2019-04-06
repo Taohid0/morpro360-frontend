@@ -19,6 +19,7 @@ import {
 import {
   allLoadAdmin,
   loadDetails,
+  loadDetailsAllFields,
   relatedBids,
   changeLoadStatus
 } from "../../../ApiCalls/load";
@@ -67,30 +68,24 @@ export default class LoadDetailsAdmin extends Component {
     this.makeStatusChange = this.makeStatusChange.bind(this);
   }
   componentDidMount() {
-    const locationState = this.props.location.state;
-    if (locationState && locationState.load) {
-      this.setState({
-        loadDetails: locationState.load,
-        status: locationState.load.status
-      });
-      console.log("load", locationState.load);
-
-      this.loadRelatedBids(locationState.load.id);
-    }
-
-    this.getLoads();
+    const loadId = this.props.match.params.loadId;
     this.loadUserOrRedirect();
+    this.getLoads();
+    this.getLoadDetails(loadId);
   }
   async getLoadDetails(id) {
     try {
-      const promise = await loadDetails(id);
-      const data = promise.data.data;
-      this.setState({ loadDetails: data });
-    } catch (err) {
+      const promise = await loadDetailsAllFields(id);
+      const data = promise.data;
+      console.log(data);
+      this.setState({ loadDetails: data.data, status: data.status });
+      if (data.data) {
+        this.loadRelatedBids(data.data.id);
+      }
+    } catch (err) { 
+      console.log(err);
       const response = err.response;
-      console.log(err.response);
-      const status = response.status;
-      if (status === 401) {
+      if (response && response.status === 401) {
         const errorMessage = "Session expired, please login to continue";
         alert(errorMessage);
         this.userService.clearData();
@@ -98,16 +93,15 @@ export default class LoadDetailsAdmin extends Component {
       }
     }
   }
+
   async loadRelatedBids(id) {
     try {
       const promise = await relatedBids(id);
       this.setState({ relatedBids: promise.data.data });
-      console.log(promise.data.data);
     } catch (err) {
+      console.log(err);
       const response = err.response;
-      console.log(err.response);
-      const status = response.status;
-      if (status === 401) {
+      if (response && response.status === 401) {
         const errorMessage = "Session expired, please login to continue";
         alert(errorMessage);
         this.userService.clearData();
@@ -170,8 +164,7 @@ export default class LoadDetailsAdmin extends Component {
     } catch (err) {
       const response = err.response;
       console.log(err.response);
-      const status = response.status;
-      if (status === 401) {
+      if (response && response.status === 401) {
         const errorMessage = "Session expired, please login to continue";
         alert(errorMessage);
         this.userService.clearData();

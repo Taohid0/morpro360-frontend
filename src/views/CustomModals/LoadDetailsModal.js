@@ -118,8 +118,7 @@ export default class LoadDetailsModal extends Component {
     } catch (err) {
       console.log(err);
       const response = err.response;
-      const status = response.status;
-      if (status === 401) {
+      if (response && response.status === 401) {
         const errorMessage = "Session expired, please login to continue";
         alert(errorMessage);
         this.userService.clearData();
@@ -182,22 +181,7 @@ export default class LoadDetailsModal extends Component {
                 </FormGroup>
               </Col>
             </Row>
-            {/* <Row>
-              <Col>
-                <FormGroup>
-                  <Label htmlFor="offererCompanyId">Select Company</Label>
-                  <Input
-                    type="select"
-                    name="offererCompanyId"
-                    id="offererCompanyId"
-                    value={this.state.offererCompanyId}
-                    onChange={()=>{this.handleChange();}}
-                  >
-                    {this.state.companyDropdown}
-                  </Input>
-                </FormGroup>
-              </Col>
-            </Row> */}
+        
             <Row>
               <Col>
                 <FormGroup>

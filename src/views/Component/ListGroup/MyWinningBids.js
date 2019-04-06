@@ -76,8 +76,8 @@ export default class MyWinnningBids extends Component {
   {
     const response = err.response;
     console.log(err.response);
-    const status = response.status;
-    if(status===401)
+ 
+    if(response && response.status===401)
     {
       const errorMessage = "Session expired, please login to continue";
       alert(errorMessage);
@@ -110,8 +110,7 @@ export default class MyWinnningBids extends Component {
   {
     const response = err.response;
     console.log(err.response);
-    const status = response.status;
-    if(status===401)
+    if(response && response.status===401)
     {
       const errorMessage = "Session expired, please login to continue";
       alert(errorMessage);

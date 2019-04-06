@@ -24,20 +24,36 @@ export async function loadDetails(id) {
   const userService = new UserService();
   const user = await userService.getUser();
 
-  let { loadURL } = AppConfig;
-  loadURL += "/details/" + id;
+  let { loadDetailsURL } = AppConfig;
+  loadDetailsURL += "/" + id;
 
   const promise = await axios({
     headers: {
       Authorization: user.token
     },
     method: "GET",
-    url: loadURL
+    url: loadDetailsURL
   });
   console.log(promise);
   return promise;
 }
+export async function loadDetailsAllFields(id) {
+  const userService = new UserService();
+  const user = await userService.getUser();
 
+  let { loadDetailsAllFieldsURL } = AppConfig;
+  loadDetailsAllFieldsURL += "/" + id;
+  console.log(loadDetailsAllFieldsURL);
+  const promise = await axios({
+    headers: {
+      Authorization: user.token
+    },
+    method: "GET",
+    url: loadDetailsAllFieldsURL
+  });
+  console.log(promise);
+  return promise;
+}
 export async function availableLoad() {
   const userService = new UserService();
   const user = await userService.getUser();

@@ -165,7 +165,7 @@ const routes = [
     component: AllLoadsAdmin
   },
   {
-    path: "/load-details-admin",
+    path: "/load-details-admin/:loadId",
     exact: true,
     name: "Load Details Admin",
     component: LoadDetailsAdmin

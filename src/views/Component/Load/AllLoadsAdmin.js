@@ -87,8 +87,7 @@ export default class AllLoadsAdmin extends Component {
   {
     const response = err.response;
     console.log(err.response);
-    const status = response.status;
-    if(status===401)
+    if(response && response.status===401)
     {
       const errorMessage = "Session expired, please login to continue";
       alert(errorMessage);
@@ -191,7 +190,7 @@ export default class AllLoadsAdmin extends Component {
                             className="col-sm btn btn-info"
                             onClick={() => {
                               this.props.history.push({
-                                pathname:"load-details-admin",
+                                pathname:"load-details-admin/"+load.id,
                                 state:{load:load}
                               });
                             }}

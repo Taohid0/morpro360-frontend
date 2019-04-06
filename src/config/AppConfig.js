@@ -26,6 +26,8 @@ const APPCONFIG = {
   relatedBidsURL :  host+"/load/bids",
   assignBidURL : host+"/bid/assign",
   changeLoadStatusURL : host+"/load/change-status",
+  loadDetailsURL : host+"/load/details",
+  loadDetailsAllFieldsURL : host+"/load/details/all-fields",
 
 };
 
