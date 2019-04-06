@@ -32,6 +32,7 @@ import { getOwnedCompanies } from "../../../ApiCalls/company";
 import DangerModal from "../../CustomModals/DangerModal";
 import SuccessModal from "../../CustomModals/SuccessModal";
 import LoadDetailsModal from "../../CustomModals/LoadDetailsModal";
+import { truncate } from "fs";
 
 export default class LoadDetailsAdmin extends Component {
   constructor(props) {
@@ -51,6 +52,7 @@ export default class LoadDetailsAdmin extends Component {
       loadId: "",
       relatedBids: []
     };
+    this.previousStatus = "";
     this.getLoads = this.getLoads.bind(this);
     this.userService = new UserService();
 
@@ -75,16 +77,17 @@ export default class LoadDetailsAdmin extends Component {
     this.getLoadDetails(loadId);
   }
   async getLoadDetails(id) {
-    this.setState({loading:true});
+    this.setState({ loading: true });
     try {
       const promise = await loadDetailsAllFields(id);
       const data = promise.data;
       console.log(data);
-      this.setState({ loadDetails: data.data, status: data.status });
+      this.setState({ loadDetails: data.data, status: data.data.status });
+      this.previousStatus = data.data.status;
       if (data.data) {
         this.loadRelatedBids(data.data.id);
       }
-    } catch (err) { 
+    } catch (err) {
       console.log(err);
       const response = err.response;
       if (response && response.status === 401) {
@@ -94,11 +97,11 @@ export default class LoadDetailsAdmin extends Component {
         this.props.history.push("/login");
       }
     }
-    this.setState({loading:false});
+    this.setState({ loading: false });
   }
 
   async loadRelatedBids(id) {
-    this.setState({loading:true});
+    this.setState({ loading: true });
     try {
       const promise = await relatedBids(id);
       this.setState({ relatedBids: promise.data.data });
@@ -112,7 +115,7 @@ export default class LoadDetailsAdmin extends Component {
         this.props.history.push("/login");
       }
     }
-    this.setState({loading:false});
+    this.setState({ loading: false });
   }
 
   async loadUserOrRedirect() {
@@ -123,33 +126,56 @@ export default class LoadDetailsAdmin extends Component {
     }
   }
   async makeStatusChange() {
-    this.setState({loading:true});
-    try{
-    const promise = await changeLoadStatus(
-      this.state.loadDetails.id,
-      this.state.status
-    );
-    if (promise.data.status) {
-      const modalSuccessMessage = "Successfully load board status updated";
-      this.setState({ modalSuccessMessage });
-      this.toggleSuccessModal();
-    } else {
-      const modalErrorMessage = promise.data.errors.join("\n");
-      this.setState({ modalErrorMessage });
-      this.toggleDangerModal();
+    const statusPriorityObject = {
+      A: 1,
+      P: 2,
+      I: 3,
+      D: 4
+    };
+    const statusDetailsObject = {
+      "A":"Available",
+      "P":"Picked Up",
+      "I":"Inroute",
+      "D":"Delivered"
     }
-  }
-  catch (err) {
-    console.log(err);
-    const response = err.response;
-    if (response && response.status === 401) {
-      const errorMessage = "Session expired, please login to continue";
-      alert(errorMessage);
-      this.userService.clearData();
-      this.props.history.push("/login");
+    if (
+      statusPriorityObject[this.state.status] <
+      statusPriorityObject[this.previousStatus]
+    ) {
+      alert("Load board status shouldn't go in backward");
+      return;
     }
-  }
-  this.setState({loading:false});
+    else if(this.state.status===this.previousStatus)
+    {
+      alert("This load board is aleady in "+statusDetailsObject[this.state.status]+" status");
+      return;
+    }
+    this.setState({ loading: true });
+    try {
+      const promise = await changeLoadStatus(
+        this.state.loadDetails.id,
+        this.state.status
+      );
+      if (promise.data.status) {
+        const modalSuccessMessage = "Successfully load board status updated";
+        this.setState({ modalSuccessMessage });
+        this.toggleSuccessModal();
+      } else {
+        const modalErrorMessage = promise.data.errors.join("\n");
+        this.setState({ modalErrorMessage });
+        this.toggleDangerModal();
+      }
+    } catch (err) {
+      console.log(err);
+      const response = err.response;
+      if (response && response.status === 401) {
+        const errorMessage = "Session expired, please login to continue";
+        alert(errorMessage);
+        this.userService.clearData();
+        this.props.history.push("/login");
+      }
+    }
+    this.setState({ loading: false });
   }
 
   async handleSubmit(bidId, loadId, rate, name) {
@@ -163,7 +189,7 @@ export default class LoadDetailsAdmin extends Component {
     if (!isConfirm) {
       return;
     }
-    this.setState({loading:true});
+    this.setState({ loading: true });
     try {
       const promise = await assignBid(bidId, loadId);
       console.log(promise);
@@ -189,37 +215,37 @@ export default class LoadDetailsAdmin extends Component {
         this.props.history.push("/login");
       }
     }
-    this.setState({loading:false});
+    this.setState({ loading: false });
   }
 
   async getLoads() {
-    this.setState({loading:true});
-    try{
-    const promise = await allLoadAdmin(this.state.status);
-    console.log(promise);
-    if (!promise.data.status) {
-      alert(promise.data.errors);
-      return;
+    this.setState({ loading: true });
+    try {
+      const promise = await allLoadAdmin(this.state.status);
+      console.log(promise);
+      if (!promise.data.status) {
+        alert(promise.data.errors);
+        return;
+      }
+      const data = promise.data.data;
+      console.log(data);
+      const tempLoads = [];
+      for (let load of data) {
+        tempLoads.push(load);
+      }
+      console.log(tempLoads);
+      this.setState({ loads: tempLoads });
+    } catch (err) {
+      console.log(err);
+      const response = err.response;
+      if (response && response.status === 401) {
+        const errorMessage = "Session expired, please login to continue";
+        alert(errorMessage);
+        this.userService.clearData();
+        this.props.history.push("/login");
+      }
     }
-    const data = promise.data.data;
-    console.log(data);
-    const tempLoads = [];
-    for (let load of data) {
-      tempLoads.push(load);
-    }
-    console.log(tempLoads);
-    this.setState({ loads: tempLoads });
-  }catch (err) {
-    console.log(err);
-    const response = err.response;
-    if (response && response.status === 401) {
-      const errorMessage = "Session expired, please login to continue";
-      alert(errorMessage);
-      this.userService.clearData();
-      this.props.history.push("/login");
-    }
-  }
-  this.setState({loading:false});
+    this.setState({ loading: false });
   }
 
   toggleDangerModal() {
@@ -406,7 +432,7 @@ export default class LoadDetailsAdmin extends Component {
   render() {
     return (
       <div className="animated fadeIn">
-      <LoadingOverlay
+        <LoadingOverlay
           active={this.state.loading}
           styles={{
             spinner: base => ({
