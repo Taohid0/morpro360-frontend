@@ -65,16 +65,19 @@ export default class AddAdminForm extends Component {
   async loadRoles() {
     const promise = await getRoles();
     const data = promise.data.data;
-    const roles = data.map(role=>{
-      return <option key={role.id} value={role.id}>{role.name}</option>
+    const roles = data.map(role => {
+      return (
+        <option key={role.id} value={role.id}>
+          {role.name}
+        </option>
+      );
     });
 
-    if(data.length>0)
-    {
-      this.setState({RoleId:data[0].id});
+    if (data.length > 0) {
+      this.setState({ RoleId: data[0].id });
     }
 
-    this.setState({roleDropdown:roles});
+    this.setState({ roleDropdown: roles });
   }
 
   toggleDangerModal() {
@@ -139,9 +142,18 @@ export default class AddAdminForm extends Component {
       }
     } catch (err) {
       console.log(err);
-      const errormessage = "Something wrong, please try again later";
-      this.setState({ modalErrorMessage: errormessage });
-      this.toggleDangerModal();
+      const response = err.response;
+      const status = response.status;
+      if (status === 401) {
+        const errorMessage = "Session expired, please login to continue";
+        alert(errorMessage);
+        this.userService.clearData();
+        this.props.history.push("/login");
+      } else {
+        const errormessage = "Something wrong, please try again later";
+        this.setState({ modalErrorMessage: errormessage });
+        this.toggleDangerModal();
+      }
     }
   }
   render() {
@@ -232,7 +244,6 @@ export default class AddAdminForm extends Component {
                 onChange={this.handleChange}
               >
                 {this.state.roleDropdown}
-  
               </Input>
             </FormGroup>
 

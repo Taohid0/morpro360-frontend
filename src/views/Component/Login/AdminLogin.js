@@ -40,7 +40,7 @@ class AdminLogin extends Component {
   }
 
   componentWillMount() {
-    // this.loadUserAndRedirect();
+    this.loadUserAndRedirect();
   }
 
   async loadUserAndRedirect() {

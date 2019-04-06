@@ -18,6 +18,7 @@ const APPCONFIG = {
   myBidsURL: host + "/bid/my-bids",
   
   adminLoginURL: host + "/admin/login",
+  adminLogoutURL: host + "/admin/logout",
   pendingUsersURL : host+"/user/pending-users",
   activateUserURL : host+"/user/activate",
   deactivateUserURL : host+"/user/deactivate",

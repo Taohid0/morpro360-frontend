@@ -22,6 +22,6 @@ export default class AddAdmin extends Component {
   }
 
   render() {
-    return <AddAdminForm history={this.props.history}/>;
+    return <AddAdminForm history={this.props.history} />;
   }
 }

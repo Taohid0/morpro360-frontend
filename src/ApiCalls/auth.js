@@ -38,8 +38,14 @@ export async function logout()
 {
     const userService= new UserService();
     const user = await userService.getUser()
+    let {logoutURL} = AppConfig;
 
-    const {logoutURL} = AppConfig;
+    const rolePromise = await userService.adminRole();
+    if (rolePromise) {
+      const {adminLogoutURL} = AppConfig;
+      logoutURL = adminLogoutURL;
+    }
+    
 
     const promise = await axios({
         headers:{

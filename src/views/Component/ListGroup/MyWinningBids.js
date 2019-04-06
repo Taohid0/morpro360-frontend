@@ -66,14 +66,32 @@ export default class MyWinnningBids extends Component {
   }
   async getLoadDetails(id)
   {
+    try{
     const promise = await loadDetails(id);
     const data = promise.data.data;
     console.log(data);
     this.setState({loadDetails:data});
+    }
+    catch(err)
+  {
+    const response = err.response;
+    console.log(err.response);
+    const status = response.status;
+    if(status===401)
+    {
+      const errorMessage = "Session expired, please login to continue";
+      alert(errorMessage);
+      this.userService.clearData();
+      this.props.history.push("/login");
+   
+    }
+   
+  }
   }
 
   async getAvailableLoad()
   {
+    try{
     const promise = await getMyBids();
     const data = promise.data.data;
     console.log(data);
@@ -87,6 +105,22 @@ export default class MyWinnningBids extends Component {
       
     }
     this.setState({bids:tempbids});
+  }
+  catch(err)
+  {
+    const response = err.response;
+    console.log(err.response);
+    const status = response.status;
+    if(status===401)
+    {
+      const errorMessage = "Session expired, please login to continue";
+      alert(errorMessage);
+      this.userService.clearData();
+      this.props.history.push("/login");
+   
+    }
+   
+  }
   }
 
   toggleLoadDetaildModal()

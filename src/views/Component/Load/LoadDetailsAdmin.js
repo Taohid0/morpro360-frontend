@@ -82,14 +82,38 @@ export default class LoadDetailsAdmin extends Component {
     this.loadUserOrRedirect();
   }
   async getLoadDetails(id) {
-    const promise = await loadDetails(id);
-    const data = promise.data.data;
-    this.setState({ loadDetails: data });
+    try {
+      const promise = await loadDetails(id);
+      const data = promise.data.data;
+      this.setState({ loadDetails: data });
+    } catch (err) {
+      const response = err.response;
+      console.log(err.response);
+      const status = response.status;
+      if (status === 401) {
+        const errorMessage = "Session expired, please login to continue";
+        alert(errorMessage);
+        this.userService.clearData();
+        this.props.history.push("/login");
+      }
+    }
   }
   async loadRelatedBids(id) {
-    const promise = await relatedBids(id);
-    this.setState({ relatedBids: promise.data.data });
-    console.log(promise.data.data);
+    try {
+      const promise = await relatedBids(id);
+      this.setState({ relatedBids: promise.data.data });
+      console.log(promise.data.data);
+    } catch (err) {
+      const response = err.response;
+      console.log(err.response);
+      const status = response.status;
+      if (status === 401) {
+        const errorMessage = "Session expired, please login to continue";
+        alert(errorMessage);
+        this.userService.clearData();
+        this.props.history.push("/login");
+      }
+    }
   }
 
   async loadUserOrRedirect() {
@@ -100,7 +124,7 @@ export default class LoadDetailsAdmin extends Component {
     }
   }
   async makeStatusChange() {
-    console.log(this.state.loadDetails.id,this.state.status);
+    console.log(this.state.loadDetails.id, this.state.status);
     const promise = await changeLoadStatus(
       this.state.loadDetails.id,
       this.state.status
@@ -128,19 +152,31 @@ export default class LoadDetailsAdmin extends Component {
       return;
     }
 
-    const promise = await assignBid(bidId, loadId);
-    console.log(promise);
-    const status = promise.data.status;
-    if (!status) {
-      const modalErrorMessage = promise.data.errors.join("\n");
-      this.setState({ modalErrorMessage });
-      this.toggleDangerModal();
-    } else {
-      const modalSuccessMessage =
-        "Successfully " + this.state.loadDetails.name + " load boad assigned";
-      this.setState({ modalSuccessMessage });
-      this.toggleSuccessModal();
-      // this.props.history.push("/all-loads-admin");
+    try {
+      const promise = await assignBid(bidId, loadId);
+      console.log(promise);
+      const status = promise.data.status;
+      if (!status) {
+        const modalErrorMessage = promise.data.errors.join("\n");
+        this.setState({ modalErrorMessage });
+        this.toggleDangerModal();
+      } else {
+        const modalSuccessMessage =
+          "Successfully " + this.state.loadDetails.name + " load boad assigned";
+        this.setState({ modalSuccessMessage });
+        this.toggleSuccessModal();
+        // this.props.history.push("/all-loads-admin");
+      }
+    } catch (err) {
+      const response = err.response;
+      console.log(err.response);
+      const status = response.status;
+      if (status === 401) {
+        const errorMessage = "Session expired, please login to continue";
+        alert(errorMessage);
+        this.userService.clearData();
+        this.props.history.push("/login");
+      }
     }
   }
 
@@ -288,7 +324,7 @@ export default class LoadDetailsAdmin extends Component {
               <i className="fa fa-align-justify" />
               <strong>
                 Bidder : {bid.bidder.name} (MC# : {bid.bidder.MC}, DOT#:
-                {bid.bidder.DOT}) (WINNER)
+                {bid.bidder.DOT}) (ASSIGNED)
               </strong>
             </CardHeader>
           ) : (

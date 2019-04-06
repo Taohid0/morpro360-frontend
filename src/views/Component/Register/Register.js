@@ -31,6 +31,9 @@ class Register extends Component {
       phone: "",
       MC:"",
       DOT:"",
+      state:"",
+      city:"",
+      address:"",
       description:"",
       password: "",
       repeatPassword: "",
@@ -92,6 +95,9 @@ class Register extends Component {
       "phone",
       "MC",
       "DOT",
+      "state",
+      "city",
+      "address",
       "description",
       "password"
     ]);
@@ -221,6 +227,51 @@ class Register extends Component {
                         autoComplete="DOT"
                         name="DOT"
                         value={this.state.DOT}
+                        onChange={this.handleChange}
+                      />
+                    </InputGroup>
+                    <InputGroup className="mb-3">
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>
+                          <i className="fa fa-home" />
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input
+                        type="text"
+                        placeholder="Enter state name"
+                        autoComplete="state"
+                        name="state"
+                        value={this.state.state}
+                        onChange={this.handleChange}
+                      />
+                    </InputGroup>
+                    <InputGroup className="mb-3">
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>
+                          <i className="fa fa-home" />
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input
+                        type="text"
+                        placeholder="Enter city name"
+                        autoComplete="city"
+                        name="city"
+                        value={this.state.city}
+                        onChange={this.handleChange}
+                      />
+                    </InputGroup>
+                    <InputGroup className="mb-3">
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>
+                          <i className="fa fa-home" />
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input
+                        type="textarea"
+                        placeholder="Enter company address"
+                        autoComplete="address"
+                        name="address"
+                        value={this.state.address}
                         onChange={this.handleChange}
                       />
                     </InputGroup>

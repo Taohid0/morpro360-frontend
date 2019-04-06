@@ -25,7 +25,7 @@ export async function loadDetails(id) {
   const user = await userService.getUser();
 
   let { loadURL } = AppConfig;
-  loadURL += "/" + id;
+  loadURL += "/details/" + id;
 
   const promise = await axios({
     headers: {

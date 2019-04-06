@@ -45,17 +45,17 @@ export default class AddLoadForm extends Component {
       productDetails: "",
 
       pickUpAddress: "",
-      pickUpState:"",
+      pickUpState: "",
       pickUpCity: "",
-      pickUpZipCode:"",
-      pickUpDate:"",
+      pickUpZipCode: "",
+      pickUpDate: "",
 
       dropOffCity: "",
       dropOffZipCode: "",
       dropOffState: "",
       dropOffAddress: "",
       dropOffDate: "",
-  
+
       isErrorModalVisible: false,
       modalErrorMessage: "",
       isSuccessModalVisible: false,
@@ -131,7 +131,7 @@ export default class AddLoadForm extends Component {
       "dropOffZipCode",
       "dropOffState",
       "dropOffAddress",
-      "dropOffDate",
+      "dropOffDate"
     ]);
 
     if (validationErrors) {
@@ -155,10 +155,19 @@ export default class AddLoadForm extends Component {
         this.toggleDangerModal();
       }
     } catch (err) {
+      const response = err.response;
       console.log(err);
-      const errormessage = "Something wrong, please try again later";
-      this.setState({ modalErrorMessage: errormessage });
-      this.toggleDangerModal();
+      const status = response.status;
+      if (status === 401) {
+        const errorMessage = "Session expired, please login to continue";
+        alert(errorMessage);
+        this.userService.clearData();
+        this.props.history.push("/login");
+      } else {
+        const errormessage = "Something wrong, please try again later";
+        this.setState({ modalErrorMessage: errormessage });
+        this.toggleDangerModal();
+      }
     }
   }
 

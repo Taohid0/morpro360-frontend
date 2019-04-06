@@ -54,16 +54,14 @@ export default class UserDetailsModal extends Component {
   //this.props.goToDashboard();
   //this will be added later
 
-  componentWillMount() {
-
-  }
+  componentWillMount() {}
   toggleSuccessModal() {
     this.setState((state, props) => ({
       isSuccessModalVisible: !state.isSuccessModalVisible
     }));
   }
 
-  async handleSubmit(e,id) {
+  async handleSubmit(e, id) {
     e.preventDefault();
 
     try {
@@ -84,9 +82,18 @@ export default class UserDetailsModal extends Component {
       }
     } catch (err) {
       console.log(err);
-      const errormessage = "Something wrong, please try again later";
-      this.setState({ errors: errormessage });
-      this.toggleDangerModal();
+      const response = err.response;
+      const status = response.status;
+      if (status === 401) {
+        const errorMessage = "Session expired, please login to continue";
+        alert(errorMessage);
+        this.userService.clearData();
+        this.props.history.push("/login");
+      } else {
+        const errormessage = "Something wrong, please try again later";
+        this.setState({ errors: errormessage });
+        this.toggleDangerModal();
+      }
     }
   }
 
@@ -105,7 +112,9 @@ export default class UserDetailsModal extends Component {
           title={this.state.successModalTitle}
           goToDashboard={() => this.props.history.push("/dashboard")}
         /> */}
-        <ModalHeader toggle={this.toggleSuccess}>Name : {user.name}</ModalHeader>
+        <ModalHeader toggle={this.toggleSuccess}>
+          Name : {user.name}
+        </ModalHeader>
         <ModalBody>
           <pre>
             Phone : {user.phone}
@@ -118,10 +127,8 @@ export default class UserDetailsModal extends Component {
             <br />
             Description : {user.description}
             <br />
-            
           </pre>
           <br />
-
         </ModalBody>
         <ModalFooter>
           <Button
@@ -132,14 +139,14 @@ export default class UserDetailsModal extends Component {
           >
             Close
           </Button>
-            <Button
-              color="success"
-              onClick={e => {
-                this.handleSubmit(e,user.id);
-              }}
-            >
-              Activate this company
-            </Button>
+          <Button
+            color="success"
+            onClick={e => {
+              this.handleSubmit(e, user.id);
+            }}
+          >
+            Activate this company
+          </Button>
         </ModalFooter>
       </Modal>
     );

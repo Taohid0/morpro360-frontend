@@ -44,7 +44,6 @@ export default class LoadDetailsModal extends Component {
     this.state = {
       isBidPressed: false,
       rate: "",
-      companyDropdown: [],
       driverDropdown: [],
       note: "",
       driverId: "",
@@ -57,7 +56,6 @@ export default class LoadDetailsModal extends Component {
     this.allDrivers = [];
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.fillUpCompany = this.fillUpCompany.bind(this);
     this.showBiddingFields = this.showBiddingFields.bind(this);
     this.fillUpDrivers = this.fillUpDrivers.bind(this);
     this.toggleSuccessModal = this.toggleSuccessModal.bind(this);
@@ -66,7 +64,6 @@ export default class LoadDetailsModal extends Component {
   //this will be added later
 
   componentWillMount() {
-    // this.fillUpCompany();
     this.fillUpDrivers();
   }
   toggleSuccessModal() {
@@ -85,7 +82,6 @@ export default class LoadDetailsModal extends Component {
       successModalTitle,
       isBidPressed,
       driverDropdown,
-      companyDropdown,
       errors,
       ...stateData
     } = this.state;
@@ -121,41 +117,21 @@ export default class LoadDetailsModal extends Component {
       }
     } catch (err) {
       console.log(err);
-      const errormessage = "Something wrong, please try again later";
-      this.setState({ errors: errormessage });
-      this.toggleDangerModal();
+      const response = err.response;
+      const status = response.status;
+      if (status === 401) {
+        const errorMessage = "Session expired, please login to continue";
+        alert(errorMessage);
+        this.userService.clearData();
+        this.props.history.push("/login");
+      } else {
+        const errormessage = "Something wrong, please try again later";
+        this.setState({ errors: errormessage });
+        this.toggleDangerModal();
+      }
     }
   }
 
-  async fillUpCompany() {
-    const promise = await getOwnedCompanies();
-    const data = promise.data.data;
-    const companies = data.companies;
-    const drivers = data.drivers;
-
-    this.allCompanies = companies;
-    this.allDrivers = drivers;
-
-    console.log("company", data);
-    const tempCompany = [];
-
-    for (let company of companies) {
-      tempCompany.push(
-        <option key={company.id} value={company.id}>
-          {company.name}
-        </option>
-      );
-    }
-
-    this.setState({ companyDropdown: tempCompany });
-
-    if (tempCompany.length > 0) {
-      this.setState({ offererCompanyId: companies[0].id }, this.filterDriver);
-
-      // const driverPromise = await getCompanyDrivers(data[0].id);
-      // console.log(driverPromise);
-    }
-  }
 
   async fillUpDrivers() {
     const promise = await getCompanyDrivers();

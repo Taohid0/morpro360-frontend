@@ -51,18 +51,11 @@ export default class AllLoadsAdmin extends Component {
     this.toggleDangerModal = this.toggleDangerModal.bind(this);
     this.toggleSuccessModal = this.toggleSuccessModal.bind(this);
     this.toggleLoadDetaildModal = this.toggleLoadDetaildModal.bind(this);
-    this.getLoadDetails = this.getLoadDetails.bind(this);
-    this.getLoadDetails = this.getLoadDetails.bind(this);
     this.loadUserOrRedirect = this.loadUserOrRedirect.bind(this);
   }
   componentDidMount() {
     this.getLoads();
     this.loadUserOrRedirect();
-  }
-  async getLoadDetails(id) {
-    const promise = await loadDetails(id);
-    const data = promise.data.data;
-    this.setState({ loadDetails: data });
   }
 
   async loadUserOrRedirect() {
@@ -74,6 +67,7 @@ export default class AllLoadsAdmin extends Component {
   }
 
   async getLoads() {
+    try{
     const promise = await allLoadAdmin(this.state.status);
     console.log(promise);
     if (!promise.data.status) {
@@ -88,6 +82,22 @@ export default class AllLoadsAdmin extends Component {
     }
     console.log(tempLoads);
     this.setState({ loads: tempLoads });
+  }
+  catch(err)
+  {
+    const response = err.response;
+    console.log(err.response);
+    const status = response.status;
+    if(status===401)
+    {
+      const errorMessage = "Session expired, please login to continue";
+      alert(errorMessage);
+      this.userService.clearData();
+      this.props.history.push("/login");
+   
+    }
+   
+  }
   }
 
   toggleDangerModal() {
@@ -180,9 +190,6 @@ export default class AllLoadsAdmin extends Component {
                           <Button
                             className="col-sm btn btn-info"
                             onClick={() => {
-                              // this.toggleLoadDetaildModal();
-                              // this.getLoadDetails(load.id);
-                              // this.setState({ loadId: load.id });
                               this.props.history.push({
                                 pathname:"load-details-admin",
                                 state:{load:load}
