@@ -13,9 +13,9 @@ import {
   Row,
   TabContent,
   TabPane,
-  Input,
-  
+  Input
 } from "reactstrap";
+import LoadingOverlay from "react-loading-overlay";
 
 import { allLoadAdmin, loadDetails } from "../../../ApiCalls/load";
 import UserService from "../../../services/User";
@@ -32,7 +32,7 @@ export default class AllLoadsAdmin extends Component {
 
     this.state = {
       loads: [],
-      status:"A",
+      status: "A",
       isErrorModalVisible: false,
       modalErrorMessage: "",
       isSuccessModalVisible: false,
@@ -41,7 +41,8 @@ export default class AllLoadsAdmin extends Component {
       isLoadDetailsModalVisible: false,
       loadDetails: {},
       companyDropdown: [],
-      loadId: ""
+      loadId: "",
+      loading: false
     };
     this.getLoads = this.getLoads.bind(this);
     this.userService = new UserService();
@@ -66,37 +67,34 @@ export default class AllLoadsAdmin extends Component {
     }
   }
 
-  async getLoads() {
-    try{
-    const promise = await allLoadAdmin(this.state.status);
-    console.log(promise);
-    if (!promise.data.status) {
-      alert(promise.data.errors);
-      return;
-    }
-    const data = promise.data.data;
-    console.log(data);
-    const tempLoads = [];
-    for (let load of data) {
-      tempLoads.push(load);
-    }
-    console.log(tempLoads);
-    this.setState({ loads: tempLoads });
-  }
-  catch(err)
-  {
-    const response = err.response;
-    console.log(err.response);
-    if(response && response.status===401)
-    {
-      const errorMessage = "Session expired, please login to continue";
-      alert(errorMessage);
-      this.userService.clearData();
-      this.props.history.push("/login");
-   
-    }
-   
-  }
+  async getLoads() { 
+    this.setState({ loading: true });
+    try { 
+      const promise = await allLoadAdmin(this.state.status);
+      console.log(promise);
+      if (!promise.data.status) {
+        alert(promise.data.errors);
+        return;
+      }
+      const data = promise.data.data;
+      console.log(data);
+      const tempLoads = [];
+      for (let load of data) {
+        tempLoads.push(load);
+      }
+      console.log(tempLoads);
+      this.setState({ loads: tempLoads });
+    } catch (err) {
+      const response = err.response;
+      console.log(err.response);
+      if (response && response.status === 401) {
+        const errorMessage = "Session expired, please login to continue";
+        alert(errorMessage);
+        this.userService.clearData();
+        this.props.history.push("/login");
+      }
+    } 
+    this.setState({ loading: false });
   }
 
   toggleDangerModal() {
@@ -125,40 +123,52 @@ export default class AllLoadsAdmin extends Component {
   render() {
     return (
       <div className="animated fadeIn">
-        {/* <LoadDetailsModal
-          loadId={this.state.loadId}
-          isVisible={this.state.isLoadDetailsModalVisible}
-          errors={this.state.loadDetailsInfo}
-          toggleModal={this.toggleLoadDetaildModal}
-          //title = {this.state.successModalTitle}
-          loadDetails={this.state.loadDetails}
-          reloadAvailableLoads={this.getLoads}
-          goToDashboard={() => this.props.history.push("/dashboard")}
-        /> */}
-      
+        <LoadingOverlay
+          active={this.state.loading}
+          styles={{
+            spinner: base => ({
+              ...base,
+              width: "250px",
+              background: "rgba(0, 0, 0, 0.1)"
+            })
+          }}
+          spinner
+          text=""
+        />
+
         <div className="row">
           <div className="col-md-2">
-            <h3>Select status  </h3>
+            <h3>Select status </h3>
           </div>
           <div className="col-md-2">
-          <Input
-                type="select"
-                name="status"
-                id="status"
-                value={this.state.status}
-                onChange={this.handleChange}
-              >
-              <option key="A" value="A">Available</option>
-              <option key="P" value="P">Picked Up</option>
-              <option key="I" value="I">Inroute</option>
-              <option key="D" value="D">Delivered</option>
+            <Input
+              type="select"
+              name="status"
+              id="status"
+              value={this.state.status}
+              onChange={this.handleChange}
+            >
+              <option key="A" value="A">
+                Available
+              </option>
+              <option key="P" value="P">
+                Picked Up
+              </option>
+              <option key="I" value="I">
+                Inroute
+              </option>
+              <option key="D" value="D">
+                Delivered
+              </option>
             </Input>
           </div>
           <div className="col-md-2">
-            <button className="btn btn-info" onClick={this.getLoads}>Search Load Boards</button>
+            <button className="btn btn-info" onClick={this.getLoads}>
+              Search Load Boards
+            </button>
           </div>
         </div>
-        <br/>
+        <br />
 
         <Row>
           <Col>
@@ -190,8 +200,8 @@ export default class AllLoadsAdmin extends Component {
                             className="col-sm btn btn-info"
                             onClick={() => {
                               this.props.history.push({
-                                pathname:"load-details-admin/"+load.id,
-                                state:{load:load}
+                                pathname: "load-details-admin/" + load.id,
+                                state: { load: load }
                               });
                             }}
                           >
