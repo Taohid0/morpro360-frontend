@@ -24,7 +24,7 @@ import {
   Label,
   Row
 } from "reactstrap";
-
+import LoadingOverlay from "react-loading-overlay";
 import UserService from "../../../services/User";
 import validateInput from "../../../validation/input";
 import { createLoad } from "../../../ApiCalls/load";
@@ -61,36 +61,18 @@ export default class AddLoadForm extends Component {
       isSuccessModalVisible: false,
       successModalTitle: "Sucessful",
       modalSuccessMessage: "",
-      companyDropdown: []
+      companyDropdown: [],
+      loading:false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.toggleDangerModal = this.toggleDangerModal.bind(this);
     this.toggleSuccessModal = this.toggleSuccessModal.bind(this);
-    // this.fillUpCompany = this.fillUpCompany.bind(this);
   }
 
   componentWillMount() {
-    // this.fillUpCompany();
   }
-  // async fillUpCompany() {
-  //   const promise = await getOwnedCompanies();
-  //   const data = promise.data.data;
-  //   const tempCompany = [];
 
-  //   for (let company of data) {
-  //     tempCompany.push(
-  //       <option key={company.id} value={company.id}>
-  //         {company.name}
-  //       </option>
-  //     );
-  //   }
-  //   this.setState({ companyDropdown: tempCompany });
-
-  //   if (tempCompany.length > 0) {
-  //     this.setState({ offererCompanyId: data[0].id });
-  //   }
-  // }
   toggleDangerModal() {
     this.setState((state, props) => ({
       isErrorModalVisible: !state.isErrorModalVisible
@@ -143,6 +125,7 @@ export default class AddLoadForm extends Component {
     }
 
     try {
+      this.setState({loading:true});
       const response = await createLoad(stateData);
       const data = response.data;
       if (data.status) {
@@ -169,11 +152,24 @@ export default class AddLoadForm extends Component {
         this.toggleDangerModal();
       }
     }
+    this.setState({loading:false});
   }
 
   render() {
     return (
       <div>
+       <LoadingOverlay
+          active={this.state.loading}
+          styles={{
+            spinner: base => ({
+              ...base,
+              width: "250px",
+              background: "rgba(0, 0, 0, 0.2)"
+            })
+          }}
+          spinner
+          text=""
+        />
         <DangerModal
           isVisible={this.state.isErrorModalVisible}
           errors={this.state.modalErrorMessage}

@@ -726,7 +726,7 @@ class Dashboard extends Component {
             spinner: base => ({
               ...base,
               width: "250px",
-              background: "rgba(0, 0, 0, 0.1)"
+              background: "rgba(0, 0, 0, 0.2)"
             })
           }}
           spinner

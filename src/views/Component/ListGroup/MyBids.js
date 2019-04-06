@@ -14,9 +14,10 @@ import {
   TabContent,
   TabPane
 } from "reactstrap";
+import LoadingOverlay from "react-loading-overlay";
 
 import { getMyBids } from "../../../ApiCalls/bid";
-import {loadDetails} from "../../../ApiCalls/load";
+import { loadDetails } from "../../../ApiCalls/load";
 import UserService from "../../../services/User";
 import validateInput from "../../../validation/input";
 
@@ -30,29 +31,27 @@ export default class MyBids extends Component {
     super(props);
 
     this.state = {
-      bids :[],
-      bidDetails:{},
-      isErrorModalVisible:false,
-      modalErrorMessage:"",
-      isSuccessModalVisible:false,
-      successModalTitle:"Sucessful",
-      modalSuccessMessage:"",
-      isLoadDetailsModalVisible:false,
-      loadDetails:{},
-      companyDropdown:[],
-      loadId:"",
+      bids: [],
+      bidDetails: {},
+      isErrorModalVisible: false,
+      modalErrorMessage: "",
+      isSuccessModalVisible: false,
+      successModalTitle: "Sucessful",
+      modalSuccessMessage: "",
+      isLoadDetailsModalVisible: false,
+      loadDetails: {},
+      companyDropdown: [],
+      loadId: "",
+      loading: false
     };
     this.getAvailableLoad = this.getAvailableLoad.bind(this);
     this.userService = new UserService();
 
-  
     this.toggleLoadDetaildModal = this.toggleLoadDetaildModal.bind(this);
     this.getLoadDetails = this.getLoadDetails.bind(this);
     this.loadUserOrRedirect = this.loadUserOrRedirect.bind(this);
-
   }
-  componentWillMount()
-  {
+  componentWillMount() {
     this.getAvailableLoad();
     this.loadUserOrRedirect();
   }
@@ -65,79 +64,78 @@ export default class MyBids extends Component {
     }
   }
 
-  async getLoadDetails(id)
-  {
-    try{
-    const promise = await loadDetails(id);
-    const data = promise.data.data;
-    console.log(data);
-    this.setState({loadDetails:data});
+  async getLoadDetails(id) {
+    this.setState({ loading: true });
+    try {
+      const promise = await loadDetails(id);
+      const data = promise.data.data;
+      console.log(data);
+      this.setState({ loadDetails: data });
+    } catch (err) {
+      const response = err.response;
+      console.log(err.response);
+      if (response && response.status === 401) {
+        const errorMessage = "Session expired, please login to continue";
+        alert(errorMessage);
+        this.userService.clearData();
+        this.props.history.push("/login");
+      }
     }
-    catch(err)
-  {
-    const response = err.response;
-    console.log(err.response);
-    if(response && response.status===401)
-    {
-      const errorMessage = "Session expired, please login to continue";
-      alert(errorMessage);
-      this.userService.clearData();
-      this.props.history.push("/login");
-   
-    }
-   
-  }
+    this.setState({ loading: false });
   }
 
-  async getAvailableLoad()
-  {
-    try{
-    const promise = await getMyBids();
-    const data = promise.data.data;
-    console.log(data);
-    const tempbids=[];
-    for (let load of data)
-    {
-      tempbids.push(load);
+  async getAvailableLoad() {
+    this.setState({ loading: true });
+    try {
+      const promise = await getMyBids();
+      const data = promise.data.data;
+      console.log(data);
+      const tempbids = [];
+      for (let load of data) {
+        tempbids.push(load);
+      }
+      this.setState({ bids: tempbids });
+    } catch (err) {
+      const response = err.response;
+      console.log(err.response);
+      if (response && response.status === 401) {
+        const errorMessage = "Session expired, please login to continue";
+        alert(errorMessage);
+        this.userService.clearData();
+        this.props.history.push("/login");
+      }
     }
-    this.setState({bids:tempbids});
-  }
-  catch(err)
-  {
-    const response = err.response;
-    console.log(err.response);
-    if(response && response.status===401)
-    {
-      const errorMessage = "Session expired, please login to continue";
-      alert(errorMessage);
-      this.userService.clearData();
-      this.props.history.push("/login");
-   
-    }
-   
-  }
+    this.setState({loading:false});
   }
 
-  toggleLoadDetaildModal()
-  {
+  toggleLoadDetaildModal() {
     this.setState((state, props) => ({
       isLoadDetailsModalVisible: !state.isLoadDetailsModalVisible
     }));
   }
- 
 
-  handleChange(e)
-  {
-      this.setState({[e.target.name]:e.target.value});
+  handleChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
   }
-  async handleSubmit(e)
-  {
-      e.preventDefault();
+  async handleSubmit(e) {
+    e.preventDefault();
   }
   render() {
     return (
       <div className="animated fadeIn">
-       <MyBidDetails
+       <LoadingOverlay
+          active={this.state.loading}
+          styles={{
+            spinner: base => ({
+              ...base,
+              width: "250px",
+              background: "rgba(0, 0, 0, 0.2)"
+            })
+          }}
+          spinner
+          text=""
+        />
+        <MyBidDetails
           isVisible={this.state.isLoadDetailsModalVisible}
           errors={this.state.loadDetailsInfo}
           toggleModal={this.toggleLoadDetaildModal}
@@ -154,28 +152,40 @@ export default class MyBids extends Component {
               </CardHeader>
               <CardBody>
                 <ListGroup>
-                {this.state.bids.map(bid=>{
-                  return (
-                     <ListGroupItem action key={bid.load.id}>
-                    <ListGroupItemHeading>
-                      {bid.load.name}
-                    </ListGroupItemHeading>
-                    <ListGroupItemText className="row">
-                      {/* <div class="">
+                  {this.state.bids.map(bid => {
+                    return (
+                      <ListGroupItem action key={bid.load.id}>
+                        <ListGroupItemHeading>
+                          {bid.load.name}
+                        </ListGroupItemHeading>
+                        <ListGroupItemText className="row">
+                          {/* <div class="">
                         <div class="row"> */}
-                        <b  className="col-sm">From : {bid.load.pickUpCity}, {bid.load.pickUpState}</b>
-                        <b  className="col-sm">To: {bid.load.dropOffCity}, {bid.load.dropOffState}</b>
-                        <b  className="col-sm">Distance : {bid.load.distance}</b>
-                        <b  className="col-sm">Weight : {bid.load.weight}</b>
-                        <b  className="col-sm">Driver : {bid.driver.name}</b>
+                          <b className="col-sm">
+                            From : {bid.load.pickUpCity}, {bid.load.pickUpState}
+                          </b>
+                          <b className="col-sm">
+                            To: {bid.load.dropOffCity}, {bid.load.dropOffState}
+                          </b>
+                          <b className="col-sm">
+                            Distance : {bid.load.distance}
+                          </b>
+                          <b className="col-sm">Weight : {bid.load.weight}</b>
+                          <b className="col-sm">Driver : {bid.driver.name}</b>
 
-                        <Button className="col-sm btn btn-info" onClick={()=>{
-                        this.toggleLoadDetaildModal();
-                        this.setState({bidDetails:bid})}}>See Details</Button>
-                    </ListGroupItemText>
-                  </ListGroupItem>
-                  )
-                })}
+                          <Button
+                            className="col-sm btn btn-info"
+                            onClick={() => {
+                              this.toggleLoadDetaildModal();
+                              this.setState({ bidDetails: bid });
+                            }}
+                          >
+                            See Details
+                          </Button>
+                        </ListGroupItemText>
+                      </ListGroupItem>
+                    );
+                  })}
                 </ListGroup>
               </CardBody>
             </Card>

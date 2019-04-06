@@ -67,9 +67,9 @@ export default class AllLoadsAdmin extends Component {
     }
   }
 
-  async getLoads() { 
+  async getLoads() {
     this.setState({ loading: true });
-    try { 
+    try {
       const promise = await allLoadAdmin(this.state.status);
       console.log(promise);
       if (!promise.data.status) {
@@ -93,7 +93,7 @@ export default class AllLoadsAdmin extends Component {
         this.userService.clearData();
         this.props.history.push("/login");
       }
-    } 
+    }
     this.setState({ loading: false });
   }
 
@@ -129,7 +129,7 @@ export default class AllLoadsAdmin extends Component {
             spinner: base => ({
               ...base,
               width: "250px",
-              background: "rgba(0, 0, 0, 0.1)"
+              background: "rgba(0, 0, 0, 0.2)"
             })
           }}
           spinner

@@ -14,6 +14,7 @@ import {
   InputGroupText,
   Row
 } from "reactstrap";
+import LoadingOverlay from "react-loading-overlay";
 
 import { login } from "../../../ApiCalls/auth";
 import validateInput from "../../../validation/input";
@@ -28,7 +29,8 @@ class Login extends Component {
       email: "",
       password: "",
       isVisible: false,
-      modalErrors: ""
+      modalErrors: "",
+      loading:false,
     };
 
     this.userService = new UserService();
@@ -72,6 +74,7 @@ class Login extends Component {
     }
 
     try {
+      this.setState({loading:true});
       const response = await login(this.state);
       const data = response.data;
       console.log(data);
@@ -94,11 +97,24 @@ class Login extends Component {
       this.toggleModal();
       console.log(err);
     }
+    this.setState({loading:false});
   }
 
   render() {
     return (
       <div className="app flex-row align-items-center">
+       <LoadingOverlay
+          active={this.state.loading}
+          styles={{
+            spinner: base => ({
+              ...base,
+              width: "250px",
+              background: "rgba(0, 0, 0, 0.2)"
+            })
+          }}
+          spinner
+          text=""
+        />
         <DangerModal
           isVisible={this.state.isVisible}
           errors={this.state.modalErrors}

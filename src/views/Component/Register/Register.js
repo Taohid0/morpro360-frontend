@@ -13,7 +13,7 @@ import {
   InputGroupText,
   Row
 } from "reactstrap";
-
+import LoadingOverlay from "react-loading-overlay";
 import { createUser } from "../../../ApiCalls/user";
 import validateInput from "../../../validation/input";
 
@@ -38,7 +38,8 @@ class Register extends Component {
       password: "",
       repeatPassword: "",
       isVisible: false,
-      modalErrors: ""
+      modalErrors: "",
+      loading:false,
     };
 
     this.userService = new UserService();
@@ -112,6 +113,7 @@ class Register extends Component {
 
     console.log(this.state);
     try {
+      this.setState({loading:true});
       const response = await createUser(stateData);
       console.log(response);
       const data = response.data;
@@ -134,11 +136,24 @@ class Register extends Component {
       this.setState({ modalErrors: errormessage });
       this.toggleModal();
     }
+    this.setState({loading:false});
   }
 
   render() {
     return (
       <div className="app flex-row align-items-center">
+         <LoadingOverlay
+          active={this.state.loading}
+          styles={{
+            spinner: base => ({
+              ...base,
+              width: "250px",
+              background: "rgba(0, 0, 0, 0.2)"
+            })
+          }}
+          spinner
+          text=""
+        />
         <DangerModal
           isVisible={this.state.isVisible}
           errors={this.state.modalErrors}

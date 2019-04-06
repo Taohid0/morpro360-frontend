@@ -29,7 +29,7 @@ import {
   Label,
   Row
 } from "reactstrap";
-
+import LoadingOverlay from "react-loading-overlay";
 import { activateUser } from "../../ApiCalls/user";
 import validateInput from "../../validation/input";
 import { createBid } from "../../ApiCalls/bid";
@@ -45,7 +45,8 @@ export default class UserDetailsModal extends Component {
       errors: "",
       isSuccessModalVisible: false,
       successModalTitle: "Sucessful",
-      modalSuccessMessage: ""
+      modalSuccessMessage: "",
+      loading:false,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -63,7 +64,7 @@ export default class UserDetailsModal extends Component {
 
   async handleSubmit(e, id) {
     e.preventDefault();
-
+    this.setState({loading:true});
     try {
       const response = await activateUser(id);
       console.log(response);
@@ -94,6 +95,7 @@ export default class UserDetailsModal extends Component {
         this.toggleDangerModal();
       }
     }
+    this.setState({loading:false});
   }
 
   render() {
@@ -115,6 +117,18 @@ export default class UserDetailsModal extends Component {
           Name : {user.name}
         </ModalHeader>
         <ModalBody>
+        <LoadingOverlay
+          active={this.state.loading}
+          styles={{
+            spinner: base => ({
+              ...base,
+              width: "250px",
+              background: "rgba(0, 0, 0, 0.2)"
+            })
+          }}
+          spinner
+          text=""
+        />
           <pre>
             Phone : {user.phone}
             <br />

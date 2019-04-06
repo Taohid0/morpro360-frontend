@@ -14,6 +14,7 @@ import {
   TabContent,
   TabPane
 } from "reactstrap";
+import LoadingOverlay from "react-loading-overlay";
 
 import { availableLoad, loadDetails } from "../../../ApiCalls/load";
 import UserService from "../../../services/User";
@@ -38,7 +39,8 @@ export default class AvailableLoadBoardListing extends Component {
       isLoadDetailsModalVisible: false,
       loadDetails: {},
       companyDropdown: [],
-      loadId: ""
+      loadId: "",
+      loading: false
     };
     this.getAvailableLoad = this.getAvailableLoad.bind(this);
     this.userService = new UserService();
@@ -57,9 +59,22 @@ export default class AvailableLoadBoardListing extends Component {
     this.loadUserOrRedirect();
   }
   async getLoadDetails(id) {
-    const promise = await loadDetails(id);
-    const data = promise.data.data;
-    this.setState({ loadDetails: data });
+    this.setState({ loading: true });
+    try {
+      const promise = await loadDetails(id);
+      const data = promise.data.data;
+      this.setState({ loadDetails: data });
+    } catch (err) {
+      const response = err.response;
+      console.log(err.response);
+      if (response && response.status === 401) {
+        const errorMessage = "Session expired, please login to continue";
+        alert(errorMessage);
+        this.userService.clearData();
+        this.props.history.push("/login");
+      }
+    }
+    this.setState({ loading: false });
   }
 
   async loadUserOrRedirect() {
@@ -71,20 +86,32 @@ export default class AvailableLoadBoardListing extends Component {
   }
 
   async getAvailableLoad() {
-    const promise = await availableLoad();
-    console.log(promise);
-    if(!promise.data.status)
-    {
-      alert(promise.data.errors);
-      return;;
+    this.setState({ loading: true });
+    try {
+      const promise = await availableLoad();
+      console.log(promise);
+      if (!promise.data.status) {
+        alert(promise.data.errors);
+        return;
+      }
+      const data = promise.data.data;
+      const tempLoads = [];
+      for (let load of data) {
+        tempLoads.push(load);
+      }
+      console.log(tempLoads);
+      this.setState({ loads: tempLoads });
+    } catch (err) {
+      const response = err.response;
+      console.log(err.response);
+      if (response && response.status === 401) {
+        const errorMessage = "Session expired, please login to continue";
+        alert(errorMessage);
+        this.userService.clearData();
+        this.props.history.push("/login");
+      }
     }
-    const data = promise.data.data;
-    const tempLoads = [];
-    for (let load of data) {
-      tempLoads.push(load);
-    }
-    console.log(tempLoads);
-    this.setState({ loads: tempLoads });
+    this.setState({ loading: false });
   }
 
   toggleDangerModal() {
@@ -113,6 +140,18 @@ export default class AvailableLoadBoardListing extends Component {
   render() {
     return (
       <div className="animated fadeIn">
+        <LoadingOverlay
+          active={this.state.loading}
+          styles={{
+            spinner: base => ({
+              ...base,
+              width: "250px",
+              background: "rgba(0, 0, 0, 0.2)"
+            })
+          }}
+          spinner
+          text=""
+        />
         <LoadDetailsModal
           loadId={this.state.loadId}
           isVisible={this.state.isLoadDetailsModalVisible}

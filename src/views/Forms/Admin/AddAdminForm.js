@@ -24,6 +24,7 @@ import {
   Label,
   Row
 } from "reactstrap";
+import LoadingOverlay from "react-loading-overlay";
 import UserService from "../../../services/User";
 import validateInput from "../../../validation/input";
 import { createAdmin } from "../../../ApiCalls/admin";
@@ -48,7 +49,8 @@ export default class AddAdminForm extends Component {
       isSuccessModalVisible: false,
       successModalTitle: "Sucessful",
       modalSuccessMessage: "",
-      roleDropdown: []
+      roleDropdown: [],
+      loading:false,
     };
     this.userService = new UserService();
 
@@ -129,6 +131,7 @@ export default class AddAdminForm extends Component {
     }
 
     try {
+      this.setState({loading:true});
       const response = await createAdmin(stateData);
       const data = response.data;
       if (data.status) {
@@ -154,10 +157,23 @@ export default class AddAdminForm extends Component {
         this.toggleDangerModal();
       }
     }
+    this.setState({loading:false});
   }
   render() {
     return (
       <div>
+       <LoadingOverlay
+          active={this.state.loading}
+          styles={{
+            spinner: base => ({
+              ...base,
+              width: "250px",
+              background: "rgba(0, 0, 0, 0.2)"
+            })
+          }}
+          spinner
+          text=""
+        />
         <DangerModal
           isVisible={this.state.isErrorModalVisible}
           errors={this.state.modalErrorMessage}

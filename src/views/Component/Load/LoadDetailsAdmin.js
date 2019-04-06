@@ -23,6 +23,7 @@ import {
   relatedBids,
   changeLoadStatus
 } from "../../../ApiCalls/load";
+import LoadingOverlay from "react-loading-overlay";
 import { assignBid } from "../../../ApiCalls/bid";
 import UserService from "../../../services/User";
 import validateInput from "../../../validation/input";
@@ -74,6 +75,7 @@ export default class LoadDetailsAdmin extends Component {
     this.getLoadDetails(loadId);
   }
   async getLoadDetails(id) {
+    this.setState({loading:true});
     try {
       const promise = await loadDetailsAllFields(id);
       const data = promise.data;
@@ -92,9 +94,11 @@ export default class LoadDetailsAdmin extends Component {
         this.props.history.push("/login");
       }
     }
+    this.setState({loading:false});
   }
 
   async loadRelatedBids(id) {
+    this.setState({loading:true});
     try {
       const promise = await relatedBids(id);
       this.setState({ relatedBids: promise.data.data });
@@ -108,6 +112,7 @@ export default class LoadDetailsAdmin extends Component {
         this.props.history.push("/login");
       }
     }
+    this.setState({loading:false});
   }
 
   async loadUserOrRedirect() {
@@ -118,7 +123,8 @@ export default class LoadDetailsAdmin extends Component {
     }
   }
   async makeStatusChange() {
-    console.log(this.state.loadDetails.id, this.state.status);
+    this.setState({loading:true});
+    try{
     const promise = await changeLoadStatus(
       this.state.loadDetails.id,
       this.state.status
@@ -133,6 +139,18 @@ export default class LoadDetailsAdmin extends Component {
       this.toggleDangerModal();
     }
   }
+  catch (err) {
+    console.log(err);
+    const response = err.response;
+    if (response && response.status === 401) {
+      const errorMessage = "Session expired, please login to continue";
+      alert(errorMessage);
+      this.userService.clearData();
+      this.props.history.push("/login");
+    }
+  }
+  this.setState({loading:false});
+  }
 
   async handleSubmit(bidId, loadId, rate, name) {
     const isConfirm = window.confirm(
@@ -145,7 +163,7 @@ export default class LoadDetailsAdmin extends Component {
     if (!isConfirm) {
       return;
     }
-
+    this.setState({loading:true});
     try {
       const promise = await assignBid(bidId, loadId);
       console.log(promise);
@@ -171,9 +189,12 @@ export default class LoadDetailsAdmin extends Component {
         this.props.history.push("/login");
       }
     }
+    this.setState({loading:false});
   }
 
   async getLoads() {
+    this.setState({loading:true});
+    try{
     const promise = await allLoadAdmin(this.state.status);
     console.log(promise);
     if (!promise.data.status) {
@@ -188,6 +209,17 @@ export default class LoadDetailsAdmin extends Component {
     }
     console.log(tempLoads);
     this.setState({ loads: tempLoads });
+  }catch (err) {
+    console.log(err);
+    const response = err.response;
+    if (response && response.status === 401) {
+      const errorMessage = "Session expired, please login to continue";
+      alert(errorMessage);
+      this.userService.clearData();
+      this.props.history.push("/login");
+    }
+  }
+  this.setState({loading:false});
   }
 
   toggleDangerModal() {
@@ -374,6 +406,18 @@ export default class LoadDetailsAdmin extends Component {
   render() {
     return (
       <div className="animated fadeIn">
+      <LoadingOverlay
+          active={this.state.loading}
+          styles={{
+            spinner: base => ({
+              ...base,
+              width: "250px",
+              background: "rgba(0, 0, 0, 0.2)"
+            })
+          }}
+          spinner
+          text=""
+        />
         <DangerModal
           isVisible={this.state.isErrorModalVisible}
           errors={this.state.modalErrorMessage}

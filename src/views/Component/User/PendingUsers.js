@@ -14,7 +14,7 @@ import {
   TabContent,
   TabPane
 } from "reactstrap";
-
+import LoadingOverlay from "react-loading-overlay";
 import { getPendingUsers } from "../../../ApiCalls/user";
 import UserService from "../../../services/User";
 import validateInput from "../../../validation/input";
@@ -39,6 +39,7 @@ export default class PendingUsers extends Component {
       userDetails: {},
       userId: "",
       user:{},
+      loading:false,
     };
 
     this.userService = new UserService();
@@ -56,10 +57,23 @@ export default class PendingUsers extends Component {
     this.loadPendingUsers();
   }
   async loadPendingUsers() {
+    this.setState({loading:true});
+    try{
     const promise = await getPendingUsers();
     const data = promise.data.data;
     console.log(data);
     this.setState({ users: data });
+    } catch (err) {
+      const response = err.response;
+      console.log(err.response);
+      if (response && response.status === 401) {
+        const errorMessage = "Session expired, please login to continue";
+        alert(errorMessage);
+        this.userService.clearData();
+        this.props.history.push("/login");
+      }
+    }
+    this.setState({loading:false});
   }
 
   async loadUserOrRedirect() {
@@ -98,6 +112,18 @@ export default class PendingUsers extends Component {
   render() {
     return (
       <div className="animated fadeIn">
+       <LoadingOverlay
+          active={this.state.loading}
+          styles={{
+            spinner: base => ({
+              ...base,
+              width: "250px",
+              background: "rgba(0, 0, 0, 0.2)"
+            })
+          }}
+          spinner
+          text=""
+        />
         <UserDetailsModal
           isVisible={this.state.isLoadDetailsModalVisible}
           errors={this.state.loadDetailsInfo}
