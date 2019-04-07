@@ -26,16 +26,16 @@ export async function getCompanyDrivers(id)
     const userService= new UserService();
     const user = await userService.getUser()
 
-    let {getCompanyDriversURL} = AppConfig;
+    let {companyDriversURL} = AppConfig;
 
-    //getCompanyDriversURL += "?companyId="+id;
+    companyDriversURL += "/"+id;
 
     const promise = await axios({
         headers:{
             "Authorization":user.token,
         },
         method: "GET",
-        url:getCompanyDriversURL,
+        url:companyDriversURL,
     });
     return promise;
 }

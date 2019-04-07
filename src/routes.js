@@ -55,8 +55,8 @@ const MyWinningBids = React.lazy(() =>
   import("./views/Component/ListGroup/MyWinningBids")
 );
 
-const PendingUsers = React.lazy(() =>
-  import("./views/Component/User/PendingUsers")
+const ShowUsersAdmin = React.lazy(() =>
+  import("./views/Component/User/ShowUsersAdmin")
 );
 
 const AddAdmin = React.lazy(() => import("./views/Component/Admin/AddAdmin"));
@@ -155,8 +155,8 @@ const routes = [
   {
     path: "/pending-users",
     exact: true,
-    name: "Pending Companies",
-    component: PendingUsers
+    name: "All Companies",
+    component: ShowUsersAdmin
   },
   {
     path: "/all-loads-admin",

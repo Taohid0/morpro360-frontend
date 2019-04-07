@@ -33,7 +33,7 @@ let adminItems = [
       icon: "fa fa-suitcase",
       children: [
         {
-          name: "Pending Companies",
+          name: "All Companies",
           url: "/pending-users",
           icon: ""
         },
@@ -42,9 +42,9 @@ let adminItems = [
     },
   
     {
-      name: "Bid",
+      //name: "Bid",
       // url: "/base",
-      icon: "fa fa-hand-paper-o ",
+      // icon: "fa fa-hand-paper-o ",
       // children: [
       //   {
       //     name: "My Bids",

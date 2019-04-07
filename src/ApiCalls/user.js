@@ -36,12 +36,13 @@ export async function getSingleUser(id){
 }
 
 
-export async function getPendingUsers()
+export async function getAllUsersAdmin(status)
 {
     const userService= new UserService();
     const user = await userService.getUser()
 
-    const {pendingUsersURL} = AppConfig;
+    let {allUsersURL} = AppConfig;
+    allUsersURL += "?status="+status;
    
  
     const promise = await axios({
@@ -49,7 +50,7 @@ export async function getPendingUsers()
             "Authorization":user.token,
         },
         method: "GET",
-        url:pendingUsersURL,
+        url:allUsersURL,
     });
     console.log(promise);
     return promise;

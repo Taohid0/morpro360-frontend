@@ -109,6 +109,18 @@ class Login extends Component {
           toggleModal={this.toggleModal}
         />
         <Container>
+        <LoadingOverlay
+          active={this.state.loading}
+          styles={{
+            spinner: base => ({
+              ...base,
+              width: "250px",
+              background: "rgba(0, 0, 0, 0.2)"
+            })
+          }}
+          spinner
+          text=""
+        />
           <Row className="justify-content-center">
             <Col md="8">
               <CardGroup>
@@ -196,18 +208,7 @@ class Login extends Component {
             </Col>
           </Row>
         </Container>
-        <LoadingOverlay
-          active={this.state.loading}
-          styles={{
-            spinner: base => ({
-              ...base,
-              width: "250px",
-              background: "rgba(0, 0, 0, 0.2)"
-            })
-          }}
-          spinner
-          text=""
-        />
+        
       </div>
     );
   }

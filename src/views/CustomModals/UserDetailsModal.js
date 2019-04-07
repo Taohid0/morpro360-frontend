@@ -33,7 +33,7 @@ import LoadingOverlay from "react-loading-overlay";
 import { activateUser } from "../../ApiCalls/user";
 import validateInput from "../../validation/input";
 import { createBid } from "../../ApiCalls/bid";
-import { getCompanyDrivers } from "../../ApiCalls/driver";
+import { companyDrivers, getCompanyDrivers } from "../../ApiCalls/driver";
 import { timingSafeEqual } from "crypto";
 
 import SuccessModal from "./SuccessModal";
@@ -46,7 +46,7 @@ export default class UserDetailsModal extends Component {
       isSuccessModalVisible: false,
       successModalTitle: "Sucessful",
       modalSuccessMessage: "",
-      loading:false,
+      loading: false
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -64,19 +64,20 @@ export default class UserDetailsModal extends Component {
 
   async handleSubmit(e, id) {
     e.preventDefault();
-    this.setState({loading:true});
+    this.setState({ loading: true });
     try {
       const response = await activateUser(id);
       console.log(response);
       const data = response.data;
       console.log(data);
+      this.setState({ loading: false });
       if (data.status) {
         this.props.toggleModal();
         const modalSuccessMessage = "Successfully company activated";
         this.setState({ modalSuccessMessage, rate: "", isBidPressed: false });
         // this.toggleSuccessModal();
         alert(this.state.modalSuccessMessage);
-        this.props.reloadPendingUsers();
+        this.props.reloadAllUsers();
       } else {
         const errormessage = data.errors.join("\n");
         this.setState({ errors: errormessage });
@@ -90,16 +91,19 @@ export default class UserDetailsModal extends Component {
         this.userService.clearData();
         this.props.history.push("/login");
       } else {
-        const errormessage = "Something wrong, please try again later";
-        this.setState({ errors: errormessage });
-        this.toggleDangerModal();
+        const errorMessage = "Something wrong, please try again later";
+        alert(errorMessage);
+        // this.setState({ errors: errorMessage });
+        // this.toggleDangerModal();
       }
     }
-    this.setState({loading:false});
+    this.setState({ loading: false });
   }
 
   render() {
     const user = this.props.userDetails;
+    const drivers = this.props.drivers;
+    console.log(user);
     return (
       <Modal
         isOpen={this.props.isVisible}
@@ -117,18 +121,18 @@ export default class UserDetailsModal extends Component {
           Name : {user.name}
         </ModalHeader>
         <ModalBody>
-        <LoadingOverlay
-          active={this.state.loading}
-          styles={{
-            spinner: base => ({
-              ...base,
-              width: "250px",
-              background: "rgba(0, 0, 0, 0.2)"
-            })
-          }}
-          spinner
-          text=""
-        />
+          <LoadingOverlay
+            active={this.state.loading}
+            styles={{
+              spinner: base => ({
+                ...base,
+                width: "250px",
+                background: "rgba(0, 0, 0, 0.2)"
+              })
+            }}
+            spinner
+            text=""
+          />
           <pre>
             Phone : {user.phone}
             <br />
@@ -138,10 +142,35 @@ export default class UserDetailsModal extends Component {
             <br />
             DOT# : {user.DOT}
             <br />
+            State : {user.state}
+            <br />
+            City : {user.city}
+            <br />
+            Address : {user.address}
+            <br />
             Description : {user.description}
             <br />
           </pre>
           <br />
+          {drivers.length > 0 ? (
+            <h3>Drivers</h3>
+          ) : (
+            "No drivers added by this company"
+          )}
+          {drivers.map(driver => {
+            const view = (
+              <div key={driver.id}>
+                <h4>Name : {driver.name}</h4>
+                <p>Phone : {driver.phone}</p>
+                <p>Email : {driver.email}</p>
+                <p>License Number : {driver.license}</p>
+                <p>State : {driver.state}</p>
+                <p>City : {driver.city}</p>
+                <p>Address : {driver.address}</p>
+              </div>
+            );
+            return view;
+          })}
         </ModalBody>
         <ModalFooter>
           <Button
@@ -152,14 +181,18 @@ export default class UserDetailsModal extends Component {
           >
             Close
           </Button>
-          <Button
-            color="success"
-            onClick={e => {
-              this.handleSubmit(e, user.id);
-            }}
-          >
-            Activate this company
-          </Button>
+          {!user.active ? (
+            <Button
+              color="success"
+              onClick={e => {
+                this.handleSubmit(e, user.id);
+              }}
+            >
+              Activate this company
+            </Button>
+          ) : (
+            ""
+          )}
         </ModalFooter>
       </Modal>
     );

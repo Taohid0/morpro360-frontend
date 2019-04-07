@@ -102,7 +102,14 @@ class AdminLogin extends Component {
   render() {
     return (
       <div className="app flex-row align-items-center">
-      <LoadingOverlay
+    
+        <DangerModal
+          isVisible={this.state.isVisible}
+          errors={this.state.modalErrors}
+          toggleModal={this.toggleModal}
+        />
+        <Container>
+        <LoadingOverlay
           active={this.state.loading}
           styles={{
             spinner: base => ({
@@ -114,12 +121,6 @@ class AdminLogin extends Component {
           spinner
           text=""
         />
-        <DangerModal
-          isVisible={this.state.isVisible}
-          errors={this.state.modalErrors}
-          toggleModal={this.toggleModal}
-        />
-        <Container>
           <Row className="justify-content-center">
             <Col md="8">
               <CardGroup>

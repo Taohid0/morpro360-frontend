@@ -33,7 +33,7 @@ let adminItems = [
     icon: "fa fa-suitcase",
     children: [
       {
-        name: "Pending Companies",
+        name: "All Companies",
         url: "/pending-users",
         icon: ""
       },
@@ -41,10 +41,10 @@ let adminItems = [
     ]
   },
 
-  {
-    name: "Bid",
+  //{
+    //name: "Bid",
     // url: "/base",
-    icon: "fa fa-hand-paper-o ",
+    //icon: "fa fa-hand-paper-o ",
     // children: [
     //   {
     //     name: "My Bids",
@@ -57,11 +57,11 @@ let adminItems = [
     //     icon: ""
     //   },
     // ]
-  },
-  {
-    name: "Driver",
+  //},
+  //{
+    //name: "Driver",
     // url: "/base",
-    icon: "fa fa-truck",
+    //icon: "fa fa-truck",
     // children: [
     //   {
     //     name: "Add Driver",
@@ -69,7 +69,7 @@ let adminItems = [
     //     icon: ""
     //   },
     // ]
-  },
+  //},
   {
     name: "Admin",
     // url: "/base",

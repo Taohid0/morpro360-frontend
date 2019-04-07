@@ -12,19 +12,20 @@ import {
   ListGroupItemText,
   Row,
   TabContent,
-  TabPane
+  TabPane,
+  Input
 } from "reactstrap";
 import LoadingOverlay from "react-loading-overlay";
-import { getPendingUsers } from "../../../ApiCalls/user";
+import { getAllUsersAdmin } from "../../../ApiCalls/user";
 import UserService from "../../../services/User";
 import validateInput from "../../../validation/input";
 
-import { getOwnedCompanies } from "../../../ApiCalls/company";
+import { getCompanyDrivers } from "../../../ApiCalls/driver";
 import DangerModal from "../../CustomModals/DangerModal";
 import SuccessModal from "../../CustomModals/SuccessModal";
 import UserDetailsModal from "../../CustomModals/UserDetailsModal";
 
-export default class PendingUsers extends Component {
+export default class ShowUsersAdmin extends Component {
   constructor(props) {
     super(props);
 
@@ -37,9 +38,11 @@ export default class PendingUsers extends Component {
       modalSuccessMessage: "",
       isLoadDetailsModalVisible: false,
       userDetails: {},
+      drivers : [],
       userId: "",
       user:{},
       loading:false,
+      companyStatus:0,
     };
 
     this.userService = new UserService();
@@ -50,18 +53,18 @@ export default class PendingUsers extends Component {
     this.toggleSuccessModal = this.toggleSuccessModal.bind(this);
     this.toggleLoadDetaildModal = this.toggleLoadDetaildModal.bind(this);
     this.loadUserOrRedirect = this.loadUserOrRedirect.bind(this);
-    this.loadPendingUsers = this.loadPendingUsers.bind(this);
+    this.loadAllUsers = this.loadAllUsers.bind(this);
+    this.loadCompanyDrivers = this.loadCompanyDrivers.bind(this);
   }
   componentWillMount() {
     this.loadUserOrRedirect();
-    this.loadPendingUsers();
+    this.loadAllUsers();
   }
-  async loadPendingUsers() {
+  async loadAllUsers() {
     this.setState({loading:true});
     try{
-    const promise = await getPendingUsers();
+    const promise = await getAllUsersAdmin(this.state.companyStatus);
     const data = promise.data.data;
-    console.log(data);
     this.setState({ users: data });
     } catch (err) {
       const response = err.response;
@@ -75,6 +78,28 @@ export default class PendingUsers extends Component {
     }
     this.setState({loading:false});
   }
+  async loadCompanyDrivers(id)
+  {
+    console.log("id",id);
+    this.setState({loading:true});
+    try{
+    const promise = await getCompanyDrivers(id);
+    const data = promise.data.data;
+    console.log("driver data",promise.data);
+    this.setState({drivers:data,loading:false});
+    }
+    catch (err) {
+      const response = err.response;
+      console.log(err.response);
+      if (response && response.status === 401) {
+        const errorMessage = "Session expired, please login to continue";
+        alert(errorMessage);
+        this.userService.clearData();
+        this.props.history.push("/login");
+      }
+    }
+  }
+
 
   async loadUserOrRedirect() {
     const user = await this.userService.getUser();
@@ -130,8 +155,37 @@ export default class PendingUsers extends Component {
           toggleModal={this.toggleLoadDetaildModal}
           //title = {this.state.successModalTitle}
           userDetails={this.state.user}
-          reloadPendingUsers={this.loadPendingUsers}
+          reloadAllUsers={this.loadAllUsers}
+          drivers = {this.state.drivers}
+
         />
+          <div className="row">
+          <div className="col-md-2">
+            <h3>Select status </h3>
+          </div>
+          <div className="col-md-2">
+            <Input
+              type="select"
+              name="companyStatus"
+              id="companyStatus"
+              value={this.state.companyStatus}
+              onChange={this.handleChange}
+            >
+              <option key="0" value="0">
+                Inactive
+              </option>
+              <option key="1" value="1">
+                Active
+              </option>
+            </Input>
+          </div>
+          <div className="col-md-2">
+            <button className="btn btn-info" onClick={this.loadAllUsers}>
+              Search companies
+            </button>
+          </div>
+        </div>
+        <br />
         <Row>
           <Col>
             <Card>
@@ -158,6 +212,7 @@ export default class PendingUsers extends Component {
                           <Button
                             className="col-sm btn btn-info"
                             onClick={() => {
+                              this.loadCompanyDrivers(user.id);
                               this.toggleLoadDetaildModal();
                               this.setState({ user:user });
                             }}
