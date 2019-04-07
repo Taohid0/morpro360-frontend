@@ -40,6 +40,24 @@ export async function getMyBids()
     return promise;
 }
 
+export async function getWinnningBids()
+{
+    const userService= new UserService();
+    const user = await userService.getUser();
+
+    const {winningBidsURL} = AppConfig;
+ 
+    const promise = await axios({
+        headers:{
+            "Authorization":user.token,
+        },
+        method: "GET",
+        url:winningBidsURL,
+
+    });
+    return promise;
+}
+
 export async function assignBid(bidId,loadId)
 {
     const userService= new UserService();

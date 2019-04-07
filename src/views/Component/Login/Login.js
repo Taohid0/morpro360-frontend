@@ -103,18 +103,6 @@ class Login extends Component {
   render() {
     return (
       <div className="app flex-row align-items-center">
-       <LoadingOverlay
-          active={this.state.loading}
-          styles={{
-            spinner: base => ({
-              ...base,
-              width: "250px",
-              background: "rgba(0, 0, 0, 0.2)"
-            })
-          }}
-          spinner
-          text=""
-        />
         <DangerModal
           isVisible={this.state.isVisible}
           errors={this.state.modalErrors}
@@ -208,6 +196,18 @@ class Login extends Component {
             </Col>
           </Row>
         </Container>
+        <LoadingOverlay
+          active={this.state.loading}
+          styles={{
+            spinner: base => ({
+              ...base,
+              width: "250px",
+              background: "rgba(0, 0, 0, 0.2)"
+            })
+          }}
+          spinner
+          text=""
+        />
       </div>
     );
   }
