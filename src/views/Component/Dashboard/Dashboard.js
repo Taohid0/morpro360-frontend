@@ -561,7 +561,7 @@ class Dashboard extends Component {
         <Col xs="12" sm="6" lg="3">
           <Card className="text-white bg-info">
             <CardBody className="pb-0">
-              <ButtonGroup className="float-right">
+              {/* <ButtonGroup className="float-right">
                 <ButtonDropdown
                   id="card1"
                   isOpen={this.state.card1}
@@ -571,21 +571,21 @@ class Dashboard extends Component {
                 >
                   <DropdownToggle caret className="p-0" color="transparent">
                     <i className="icon-settings" />
-                  </DropdownToggle>
-                  <DropdownMenu right>
-                    <DropdownItem
+                  </DropdownToggle> */}
+                  {/* <DropdownMenu right> */}
+                    {/* <DropdownItem
                       onClick={() => {
                         this.props.history.push("/available-load");
                       }}
                     >
                       See Available Loads
-                    </DropdownItem>
+                    </DropdownItem> */}
                     {/* <DropdownItem>Another action</DropdownItem>
                 <DropdownItem disabled>Disabled action</DropdownItem>
                 <DropdownItem>Something else here</DropdownItem> */}
-                  </DropdownMenu>
-                </ButtonDropdown>
-              </ButtonGroup>
+                  {/* </DropdownMenu> */}
+                {/* </ButtonDropdown>
+              </ButtonGroup> */}
               <div className="text-value">100</div>
               <div>Available Loads</div>
             </CardBody>
@@ -602,7 +602,7 @@ class Dashboard extends Component {
         <Col xs="12" sm="6" lg="3">
           <Card className="text-white bg-primary">
             <CardBody className="pb-0">
-              <ButtonGroup className="float-right">
+              {/* <ButtonGroup className="float-right">
                 <Dropdown
                   id="card2"
                   isOpen={this.state.card2}
@@ -613,13 +613,13 @@ class Dashboard extends Component {
                   <DropdownToggle className="p-0" color="transparent">
                     <i className="icon-location-pin" />
                   </DropdownToggle>
-                  <DropdownMenu right>
+                  <DropdownMenu right> */}
                     {/* <DropdownItem>Action</DropdownItem>
                 <DropdownItem>Another action</DropdownItem>
                 <DropdownItem>Something else here</DropdownItem> */}
-                  </DropdownMenu>
+                  {/* </DropdownMenu>
                 </Dropdown>
-              </ButtonGroup>
+              </ButtonGroup> */}
               <div className="text-value">100</div>
               <div>Completed Loads</div>
             </CardBody>
@@ -636,7 +636,7 @@ class Dashboard extends Component {
         <Col xs="12" sm="6" lg="3">
           <Card className="text-white bg-warning">
             <CardBody className="pb-0">
-              <ButtonGroup className="float-right">
+              {/* <ButtonGroup className="float-right">
                 <Dropdown
                   id="card3"
                   isOpen={this.state.card3}
@@ -661,11 +661,11 @@ class Dashboard extends Component {
                       }}
                     >
                       My Winning Bids
-                    </DropdownItem>
+                    </DropdownItem> */}
                     {/* <DropdownItem>Something else here</DropdownItem> */}
-                  </DropdownMenu>
+                  {/* </DropdownMenu>
                 </Dropdown>
-              </ButtonGroup>
+              </ButtonGroup> */}
               <div className="text-value">My Bids</div>
               <div>100</div>
             </CardBody>
@@ -682,7 +682,7 @@ class Dashboard extends Component {
         <Col xs="12" sm="6" lg="3">
           <Card className="text-white bg-danger">
             <CardBody className="pb-0">
-              <ButtonGroup className="float-right">
+              {/* <ButtonGroup className="float-right">
                 <ButtonDropdown
                   id="card4"
                   isOpen={this.state.card4}
@@ -693,13 +693,13 @@ class Dashboard extends Component {
                   <DropdownToggle caret className="p-0" color="transparent">
                     <i className="icon-settings" />
                   </DropdownToggle>
-                  <DropdownMenu right>
+                  <DropdownMenu right> */}
                     {/* <DropdownItem>Action</DropdownItem>
                 <DropdownItem>Another action</DropdownItem>
                 <DropdownItem>Something else here</DropdownItem> */}
-                  </DropdownMenu>
+                  {/* </DropdownMenu>
                 </ButtonDropdown>
-              </ButtonGroup>
+              </ButtonGroup> */}
               <div className="text-value">100</div>
               <div>Income</div>
             </CardBody>
