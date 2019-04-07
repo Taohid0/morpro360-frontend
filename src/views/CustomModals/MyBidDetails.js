@@ -53,7 +53,7 @@ export default class MyBidDetails extends Component {
         <ModalHeader toggle={this.toggleSuccess}>{bid.load.name}</ModalHeader>
         <ModalBody>
           <pre>
-            <b>Load's Informations</b>
+            <b>Load board Informations</b>
             <br />
             Product : {bid.load.productDetails}
             <br />
@@ -68,9 +68,12 @@ export default class MyBidDetails extends Component {
             <br />
             Pick Up City : {bid.load.pickUpCity}
             <br />
-            Pick Up Date : {bid.load.pickUpDate}
-            <br />
             Pick Up Zip Code : {bid.load.pickUpZipCode}
+            <br />
+            {bid.load.pickUpAddress
+              ? "Pick Up Address : " + bid.load.pickUpAddress + "\n"
+              : ""}
+            Pick Up Date : {bid.load.pickUpDate}
             <br />
             <br />
             Drop Off State : {bid.load.dropOffState}
@@ -79,6 +82,9 @@ export default class MyBidDetails extends Component {
             <br />
             Drop Off Zip Code : {bid.load.dropOffZipCode}
             <br />
+            {bid.load.dropOffAddress
+              ? "Pick Up Address : " + bid.load.dropOffAddress + "\n"
+              : ""}
             Drop Off Date : {bid.load.dropOffDate}
             <br />
             <br />

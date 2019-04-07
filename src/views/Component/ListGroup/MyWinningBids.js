@@ -48,7 +48,6 @@ export default class MyWinnningBids extends Component {
     this.userService = new UserService();
 
     this.toggleLoadDetaildModal = this.toggleLoadDetaildModal.bind(this);
-    this.getLoadDetails = this.getLoadDetails.bind(this);
     this.loadUserOrRedirect = this.loadUserOrRedirect.bind(this);
   }
   componentWillMount() {
@@ -63,26 +62,7 @@ export default class MyWinnningBids extends Component {
       this.props.history.push("/login");
     }
   }
-  async getLoadDetails(id) {
-    // this.setState({ loading: true });
-    // try {
-    //   const promise = await loadDetails(id);
-    //   const data = promise.data.data;
-    //   console.log(data);
-    //   this.setState({ loadDetails: data });
-    // } catch (err) {
-    //   const response = err.response;
-    //   console.log(err.response);
 
-    //   if (response && response.status === 401) {
-    //     const errorMessage = "Session expired, please login to continue";
-    //     alert(errorMessage);
-    //     this.userService.clearData();
-    //     this.props.history.push("/login");
-    //   }
-    // }
-    // this.setState({ loading: false });
-  }
 
   async loadWinningBids() {
     this.setState({loading:true});
