@@ -21,7 +21,6 @@ import { loadDetails } from "../../../ApiCalls/load";
 import UserService from "../../../services/User";
 import validateInput from "../../../validation/input";
 
-import { getOwnedCompanies } from "../../../ApiCalls/company";
 import DangerModal from "../../CustomModals/DangerModal";
 import SuccessModal from "../../CustomModals/SuccessModal";
 import MyBidDetails from "../../CustomModals/MyBidDetails";

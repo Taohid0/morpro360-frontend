@@ -64,6 +64,7 @@ export default class ShowUsersAdmin extends Component {
     this.setState({loading:true});
     try{
     const promise = await getAllUsersAdmin(this.state.companyStatus);
+    console.log("user data",promise);
     const data = promise.data.data;
     this.setState({ users: data });
     } catch (err) {
@@ -126,7 +127,6 @@ export default class ShowUsersAdmin extends Component {
       isSuccessModalVisible: !state.isSuccessModalVisible
     }));
   }
-  assignLoadId(id) {}
 
   handleChange(e) {
     this.setState({ [e.target.name]: e.target.value });

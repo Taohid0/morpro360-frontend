@@ -21,7 +21,6 @@ import { allLoadAdmin, loadDetails } from "../../../ApiCalls/load";
 import UserService from "../../../services/User";
 import validateInput from "../../../validation/input";
 
-import { getOwnedCompanies } from "../../../ApiCalls/company";
 import DangerModal from "../../CustomModals/DangerModal";
 import SuccessModal from "../../CustomModals/SuccessModal";
 import LoadDetailsModal from "../../CustomModals/LoadDetailsModal";
@@ -71,6 +70,7 @@ export default class AllLoadsAdmin extends Component {
     this.setState({ loading: true });
     try {
       const promise = await allLoadAdmin(this.state.status);
+      this.setState({ loading: false });
       console.log(promise);
       if (!promise.data.status) {
         alert(promise.data.errors);
@@ -94,7 +94,7 @@ export default class AllLoadsAdmin extends Component {
         this.props.history.push("/login");
       }
     }
-    this.setState({ loading: false });
+    
   }
 
   toggleDangerModal() {

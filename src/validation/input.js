@@ -38,6 +38,8 @@ function validateInput(obj,arr)
         "driverId":"Driver cannot blank",
         "note":"Note cannot be blank",
         "loadId":"Load cannot be blank",
+        "MC":"MC cannot be blank",
+        "DOT":"DOT cannot be blank",
         
 
     }

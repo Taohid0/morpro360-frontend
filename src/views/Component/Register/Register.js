@@ -89,6 +89,7 @@ class Register extends Component {
     delete stateData.repeatPassword;
     delete stateData.isVisible;
     delete stateData.modalErrors;
+    delete stateData.loading;
 
     const validationErrors = validateInput(stateData, [
       "name",
@@ -99,7 +100,6 @@ class Register extends Component {
       "state",
       "city",
       "address",
-      "description",
       "password"
     ]);
 
@@ -142,7 +142,14 @@ class Register extends Component {
   render() {
     return (
       <div className="app flex-row align-items-center">
-         <LoadingOverlay
+     
+        <DangerModal
+          isVisible={this.state.isVisible}
+          errors={this.state.modalErrors}
+          toggleModal={this.toggleModal}
+        />
+        <Container>
+        <LoadingOverlay
           active={this.state.loading}
           styles={{
             spinner: base => ({
@@ -154,12 +161,6 @@ class Register extends Component {
           spinner
           text=""
         />
-        <DangerModal
-          isVisible={this.state.isVisible}
-          errors={this.state.modalErrors}
-          toggleModal={this.toggleModal}
-        />
-        <Container>
           <Row className="justify-content-center">
             <Col md="9" lg="7" xl="6">
               <Card className="mx-4">

@@ -41,7 +41,7 @@ let adminItems = [
       ]
     },
   
-    {
+    // {
       //name: "Bid",
       // url: "/base",
       // icon: "fa fa-hand-paper-o ",
@@ -57,11 +57,11 @@ let adminItems = [
       //     icon: ""
       //   },
       // ]
-    },
-    {
-      name: "Driver",
+    // },
+    // {
+    //   name: "Driver",
       // url: "/base",
-      icon: "fa fa-truck",
+      // icon: "fa fa-truck",
       // children: [
       //   {
       //     name: "Add Driver",
@@ -69,7 +69,7 @@ let adminItems = [
       //     icon: ""
       //   },
       // ]
-    },
+    // },
     // {
     //   name: "Admin",
     //   // url: "/base",

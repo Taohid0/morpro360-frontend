@@ -28,7 +28,6 @@ import LoadingOverlay from "react-loading-overlay";
 import UserService from "../../../services/User";
 import validateInput from "../../../validation/input";
 import { createLoad } from "../../../ApiCalls/load";
-import { getOwnedCompanies } from "../../../ApiCalls/company";
 import DangerModal from "../../CustomModals/DangerModal";
 import SuccessModal from "../../CustomModals/SuccessModal";
 
@@ -95,6 +94,7 @@ export default class AddLoadForm extends Component {
       modalSuccessMessage,
       successModalTitle,
       companyDropdown,
+      loading,
       ...stateData
     } = this.state;
     const validationErrors = validateInput(stateData, [

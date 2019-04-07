@@ -106,6 +106,7 @@ export default class AddAdminForm extends Component {
       successModalTitle,
       roleDropdown,
       repeatPassword,
+      loading,
       ...stateData
     } = this.state;
     const validationErrors = validateInput(stateData, [

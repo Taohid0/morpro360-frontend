@@ -28,7 +28,6 @@ import LoadingOverlay from "react-loading-overlay";
 import UserService from "../../../services/User";
 import validateInput from "../../../validation/input";
 import { createDriver } from "../../../ApiCalls/driver";
-import { getOwnedCompanies } from "../../../ApiCalls/company";
 import DangerModal from "../../CustomModals/DangerModal";
 import SuccessModal from "../../CustomModals/SuccessModal";
 
@@ -91,6 +90,7 @@ export default class AddDriverForm extends Component {
       successModalTitle,
       companyDropdown,
       repeatPassword,
+      loading,
       ...stateData
     } = this.state;
     const validationErrors = validateInput(stateData, [

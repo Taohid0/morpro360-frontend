@@ -20,7 +20,6 @@ import { availableLoad, loadDetails } from "../../../ApiCalls/load";
 import UserService from "../../../services/User";
 import validateInput from "../../../validation/input";
 
-import { getOwnedCompanies } from "../../../ApiCalls/company";
 import DangerModal from "../../CustomModals/DangerModal";
 import SuccessModal from "../../CustomModals/SuccessModal";
 import LoadDetailsModal from "../../CustomModals/LoadDetailsModal";
@@ -87,6 +86,7 @@ export default class AvailableLoadBoardListing extends Component {
 
   async getAvailableLoad() {
     this.setState({ loading: true });
+    this.setState({ loading: false });
     try {
       const promise = await availableLoad();
       console.log(promise);
@@ -111,7 +111,7 @@ export default class AvailableLoadBoardListing extends Component {
         this.props.history.push("/login");
       }
     }
-    this.setState({ loading: false });
+    
   }
 
   toggleDangerModal() {

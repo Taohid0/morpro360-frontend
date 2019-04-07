@@ -30,7 +30,6 @@ import {
   Row
 } from "reactstrap";
 
-import { getOwnedCompanies } from "../../ApiCalls/company";
 import validateInput from "../../validation/input";
 import { createBid } from "../../ApiCalls/bid";
 import { getCompanyDrivers } from "../../ApiCalls/driver";
