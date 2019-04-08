@@ -34,6 +34,7 @@ import validateInput from "../../validation/input";
 import { createBid } from "../../ApiCalls/bid";
 import { getCompanyDrivers } from "../../ApiCalls/driver";
 import LoadingOverlay from "react-loading-overlay";
+import UserService from "../../services/User";
 import { timingSafeEqual } from "crypto";
 
 import SuccessModal from "./SuccessModal";
@@ -53,6 +54,9 @@ export default class LoadDetailsModal extends Component {
       modalSuccessMessage: "",
       loading: false
     };
+
+    this.userService = new UserService();
+
     this.allCompanies = [];
     this.allDrivers = [];
     this.handleChange = this.handleChange.bind(this);
@@ -109,7 +113,12 @@ export default class LoadDetailsModal extends Component {
       if (data.status) {
         this.props.toggleModal();
         const modalSuccessMessage = "Successfully your bid placed";
-        this.setState({ modalSuccessMessage, rate: "",errors:"", isBidPressed: false });
+        this.setState({
+          modalSuccessMessage,
+          rate: "",
+          errors: "",
+          isBidPressed: false
+        });
         // this.toggleSuccessModal();
         alert(this.state.modalSuccessMessage);
         this.props.reloadAvailableLoads();
@@ -134,9 +143,10 @@ export default class LoadDetailsModal extends Component {
   }
 
   async fillUpDrivers() {
-    this.setState({loading:true});
-    const promise = await getCompanyDrivers();
-    this.setState({loading:false});
+    this.setState({ loading: true });
+    const user = await this.userService.getUser();
+    const promise = await getCompanyDrivers(user.id);
+    this.setState({ loading: false });
     const data = promise.data.data;
 
     const tempDrivers = [];
@@ -290,7 +300,7 @@ export default class LoadDetailsModal extends Component {
             onClick={() => {
               this.props.toggleModal();
               this.setState({
-                isBidPressed: false,
+                isBidPressed: false
               });
             }}
           >

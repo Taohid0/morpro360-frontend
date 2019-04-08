@@ -132,21 +132,23 @@ export default class LoadDetailsAdmin extends Component {
       D: 4
     };
     const statusDetailsObject = {
-      "A":"Available",
-      "P":"Picked Up",
-      "I":"Inroute",
-      "D":"Delivered"
-    }
+      A: "Available",
+      P: "Picked Up",
+      I: "Inroute",
+      D: "Delivered"
+    };
     if (
       statusPriorityObject[this.state.status] <
       statusPriorityObject[this.previousStatus]
     ) {
       alert("Load board status shouldn't go in backward");
       return;
-    }
-    else if(this.state.status===this.previousStatus)
-    {
-      alert("This load board is aleady in "+statusDetailsObject[this.state.status]+" status");
+    } else if (this.state.status === this.previousStatus) {
+      alert(
+        "This load board is aleady in " +
+          statusDetailsObject[this.state.status] +
+          " status"
+      );
       return;
     }
     this.setState({ loading: true });
@@ -390,18 +392,37 @@ export default class LoadDetailsAdmin extends Component {
           <CardBody>
             <div key={bid.id}>
               <div className="row">
-                <div className="col-md-3">Proposed rate : ${bid.rate}</div>
-                <div className="col-md-3">Email : {bid.bidder.email}</div>
-                <div className="col-md-3">Phone : {bid.bidder.phone}</div>
+                <div className="col-md-4">
+                  <strong>Proposed rate : ${bid.rate}</strong>
+                </div>
+                <div className="col-md-4">Email : {bid.bidder.email}</div>
+                <div className="col-md-4">Phone : {bid.bidder.phone}</div>
               </div>
+              <div className="row">
+                <div className="col-md-4">State : {bid.bidder.state}</div>
+                <div className="col-md-4">City : {bid.bidder.city}</div>
+                <div className="col-md-4">Address : {bid.bidder.address}</div>
+              </div>
+
+              <div>
+                {bid.bidder.description
+                  ? "Company Description : " + bid.bidder.description
+                  : ""}
+              </div>
+              <br />
               <div>{bid.note ? "Additional Note :" + bid.note : ""}</div>
               <h5>Driver Information</h5>
               <div className="row">
-                <div className="col-md-3">Name : {bid.driver.name}</div>
-                <div className="col-md-3">Phone : {bid.driver.phone}</div>
-                <div className="col-md-3">Email : {bid.driver.email}</div>
-                <div className="col-md-3">License : {bid.driver.license}</div>
+                <div className="col-md-4">Name : {bid.driver.name}</div>
+                <div className="col-md-4">Phone : {bid.driver.phone}</div>
+                <div className="col-md-4">Email : {bid.driver.email}</div>
               </div>
+              <div className="row">
+              <div className="col-md-4">License : {bid.driver.license}</div>
+                <div className="col-md-4">State : {bid.driver.state}</div>
+                <div className="col-md-4">City : {bid.driver.city}</div>
+              </div>
+              <div>Address : {bid.driver.address}</div>
               <br />
               {this.state.loadDetails.status === "A" ? (
                 <button

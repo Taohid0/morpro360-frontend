@@ -195,7 +195,7 @@ export default class AllLoadsAdmin extends Component {
                           </b>
                           <b className="col-sm">Distance : {load.distance}</b>
                           <b className="col-sm">Weight : {load.weight}</b>
-                          <b className="col-sm">Minimum Rate : {load.rate}</b>
+                          <b className="col-sm">Rate : {load.rate}</b>
                           <Button
                             className="col-sm btn btn-info"
                             onClick={() => {

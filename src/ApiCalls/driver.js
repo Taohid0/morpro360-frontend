@@ -21,13 +21,13 @@ export async function createDriver(data)
     return promise;
 }
 
-export async function getCompanyDrivers()
+export async function getCompanyDrivers(id)
 {
     const userService= new UserService();
     const user = await userService.getUser()
 
     let {companyDriversURL} = AppConfig;
-
+    companyDriversURL +="/"+id;
     const promise = await axios({
         headers:{
             "Authorization":user.token,
