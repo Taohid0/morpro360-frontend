@@ -69,6 +69,7 @@ const LoadDetailsAdmin = React.lazy(() =>
 const CompanyDrivers = React.lazy(() =>
   import("./views/Component/Profile")
 );
+const AllAdmins = React.lazy(()=>import("./views/Component/Admin/AllAdmins"));
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -178,6 +179,12 @@ const routes = [
     exact: true,
     name: "Profile",
     component: CompanyDrivers
+  },
+  {
+    path:"/all-admins",
+    exact:true,
+    name:"All Admins",
+    component:AllAdmins,
   }
 ];
 

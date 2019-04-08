@@ -147,7 +147,7 @@ export default class ShowUsersAdmin extends Component {
               <div>
                 <h3>Drivers</h3>
                 <h3>
-                  <strong>Number of drivers : {drivers.length}</strong>
+                  Number of drivers : {drivers.length}
                 </h3>
               </div>
             ) : (
@@ -156,7 +156,7 @@ export default class ShowUsersAdmin extends Component {
             {drivers.map(driver => {
               const view = (
                 <div key={driver.id}>
-                  <h4>Name : {driver.name}</h4>
+                  <h4><strong>Name : {driver.name}</strong></h4>
                   <p>Phone : {driver.phone}</p>
                   <p>Email : {driver.email}</p>
                   <p>License Number : {driver.license}</p>

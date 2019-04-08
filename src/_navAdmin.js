@@ -82,7 +82,7 @@ let adminItems = [
       },
       {
         name: "All Admins",
-        url: "/to-be-added-son",
+        url: "/all-admins",
         icon: ""
       },
     ]
