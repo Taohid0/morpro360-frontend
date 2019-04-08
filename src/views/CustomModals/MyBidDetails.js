@@ -60,7 +60,7 @@ export default class MyBidDetails extends Component {
             <br />
             Distance :{bid.load.distance} Miles
             <br />
-            Minimunm bid Rate : ${bid.load.rate}
+            Rate : ${bid.load.rate}
             <br />
             <br />
             Pick Up State : {bid.load.pickUpState}

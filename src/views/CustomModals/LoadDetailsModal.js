@@ -33,6 +33,7 @@ import {
 import validateInput from "../../validation/input";
 import { createBid } from "../../ApiCalls/bid";
 import { getCompanyDrivers } from "../../ApiCalls/driver";
+import LoadingOverlay from "react-loading-overlay";
 import { timingSafeEqual } from "crypto";
 
 import SuccessModal from "./SuccessModal";
@@ -49,7 +50,8 @@ export default class LoadDetailsModal extends Component {
       errors: "",
       isSuccessModalVisible: false,
       successModalTitle: "Sucessful",
-      modalSuccessMessage: ""
+      modalSuccessMessage: "",
+      loading: false
     };
     this.allCompanies = [];
     this.allDrivers = [];
@@ -82,6 +84,7 @@ export default class LoadDetailsModal extends Component {
       isBidPressed,
       driverDropdown,
       errors,
+      loading,
       ...stateData
     } = this.state;
     stateData.loadId = this.props.loadId;
@@ -99,14 +102,14 @@ export default class LoadDetailsModal extends Component {
     }
 
     try {
+      this.setState({ loading: true });
       const response = await createBid(stateData);
-      console.log(response);
+      this.setState({ loading: false });
       const data = response.data;
-      console.log(data);
       if (data.status) {
         this.props.toggleModal();
         const modalSuccessMessage = "Successfully your bid placed";
-        this.setState({ modalSuccessMessage, rate: "", isBidPressed: false });
+        this.setState({ modalSuccessMessage, rate: "",errors:"", isBidPressed: false });
         // this.toggleSuccessModal();
         alert(this.state.modalSuccessMessage);
         this.props.reloadAvailableLoads();
@@ -130,9 +133,10 @@ export default class LoadDetailsModal extends Component {
     }
   }
 
-
   async fillUpDrivers() {
+    this.setState({loading:true});
     const promise = await getCompanyDrivers();
+    this.setState({loading:false});
     const data = promise.data.data;
 
     const tempDrivers = [];
@@ -157,10 +161,22 @@ export default class LoadDetailsModal extends Component {
       return (
         <Card>
           <CardHeader>
-            <strong>Load</strong>
+            <strong>Bidding</strong>
             <small> Form</small>
           </CardHeader>
           <CardBody>
+            <LoadingOverlay
+              active={this.state.loading}
+              styles={{
+                spinner: base => ({
+                  ...base,
+                  width: "250px",
+                  background: "rgba(0, 0, 0, 0.2)"
+                })
+              }}
+              spinner
+              text=""
+            />
             <pre>
               <h4 className="text-danger">{this.state.errors}</h4>
             </pre>
@@ -180,7 +196,7 @@ export default class LoadDetailsModal extends Component {
                 </FormGroup>
               </Col>
             </Row>
-        
+
             <Row>
               <Col>
                 <FormGroup>
@@ -244,12 +260,14 @@ export default class LoadDetailsModal extends Component {
             <br />
             Distance :{load.distance} Miles
             <br />
-            Minimunm bid Rate : ${load.rate}
+            Proposed Rate : ${load.rate}
             <br />
             <br />
             Pick Up State : {load.pickUpState}
             <br />
             Pick Up City : {load.pickUpCity}
+            <br />
+            Pick Up Zip Code : {load.pickUpZipCode}
             <br />
             Pick Up Date : {load.pickUpDate}
             <br />
@@ -257,6 +275,8 @@ export default class LoadDetailsModal extends Component {
             Drop Off State : {load.dropOffState}
             <br />
             Drop Off City : {load.dropOffCity}
+            <br />
+            Drop Off Zip Code : {load.dropOffZipCode}
             <br />
             Drop Off Date : {load.dropOffDate}
             <br />
@@ -271,7 +291,6 @@ export default class LoadDetailsModal extends Component {
               this.props.toggleModal();
               this.setState({
                 isBidPressed: false,
-                okButtonTitle: "Bid on this load"
               });
             }}
           >

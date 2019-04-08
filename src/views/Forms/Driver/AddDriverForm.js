@@ -81,7 +81,7 @@ export default class AddDriverForm extends Component {
   }
   async handleSubmit(e) {
     e.preventDefault();
-
+    console.log(this.state);
     const {
       isErrorModalVisible,
       modalErrorMessage,
@@ -128,7 +128,7 @@ export default class AddDriverForm extends Component {
         this.toggleSuccessModal();
       } else {
         const errormessage = data.errors.join("\n");
-        this.setState({ modalErrorMessage: errormessage });
+        this.setState({ modalErrorMessage: errormessage,password:"",repeatPassword:"" });
         this.toggleDangerModal();
       }
     } catch (err) {

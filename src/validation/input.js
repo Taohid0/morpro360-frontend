@@ -13,7 +13,7 @@ function validateInput(obj,arr)
         "pickUpDate":"Pick Up Date cannot be blank",
         "dropOffDate":"Drop Off Date cannot be blank",
         "weight":"Weight cannot be blank",
-        "rate":"Rate  cannot be blank",
+        "rate":"Rate cannot be blank",
         "driverStatus":"Driver Status cannot be blank",
         "productDetails":"Product Details cannot be blank",
         "pickUpAddress":"Pick Up Address cannot be blank",

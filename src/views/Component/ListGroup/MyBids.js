@@ -43,7 +43,7 @@ export default class MyBids extends Component {
       loadId: "",
       loading: false
     };
-    this.getAvailableLoad = this.getAvailableLoad.bind(this);
+    this.loadMyBids = this.loadMyBids.bind(this);
     this.userService = new UserService();
 
     this.toggleLoadDetaildModal = this.toggleLoadDetaildModal.bind(this);
@@ -51,7 +51,7 @@ export default class MyBids extends Component {
     this.loadUserOrRedirect = this.loadUserOrRedirect.bind(this);
   }
   componentWillMount() {
-    this.getAvailableLoad();
+    this.loadMyBids();
     this.loadUserOrRedirect();
   }
 
@@ -83,7 +83,7 @@ export default class MyBids extends Component {
     this.setState({ loading: false });
   }
 
-  async getAvailableLoad() {
+  async loadMyBids() {
     this.setState({ loading: true });
     try {
       const promise = await getMyBids();
@@ -146,7 +146,7 @@ export default class MyBids extends Component {
             <Card>
               <CardHeader>
                 <i className="fa fa-align-justify" />
-                <strong>Available Load Boards</strong>
+                <strong>Load Boards</strong>
                 {/* <small> custom content</small> */}
               </CardHeader>
               <CardBody>

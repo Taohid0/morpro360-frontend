@@ -21,14 +21,12 @@ export async function createDriver(data)
     return promise;
 }
 
-export async function getCompanyDrivers(id)
+export async function getCompanyDrivers()
 {
     const userService= new UserService();
     const user = await userService.getUser()
 
     let {companyDriversURL} = AppConfig;
-
-    companyDriversURL += "/"+id;
 
     const promise = await axios({
         headers:{
