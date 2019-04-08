@@ -4,6 +4,7 @@ const host = localhost;
 
 const APPCONFIG = {
   userURL: host + "/user",
+  userDetailsURL:host+"/user/details",
   loginURL: host + "/auth/login",
   logoutURL: host + "/auth/logout",
   adminURL: host + "/admin",

@@ -50,6 +50,18 @@ let userItems = [
       },
     ]
   },
+  {
+    name: "Company",
+    // url: "/base",
+    icon: "fa fa-truck",
+    children: [
+      {
+        name: "My Company Profile",
+        url: "/profile",
+        icon: ""
+      },
+    ]
+  },
   // {
   //   name: "Admin",
   //   // url: "/base",
